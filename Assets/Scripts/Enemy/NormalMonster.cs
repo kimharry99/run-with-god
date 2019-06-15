@@ -4,13 +4,26 @@ using UnityEngine;
 
 public abstract class NormalMonster : MonoBehaviour
 {
-	public int Health { get; private set; }
+	private int _health;
+	public int Health
+	{
+		get
+		{
+			return _health;
+		}
+		set
+		{
+			if (Health <= 0)
+			{
+				OnDead();
+			}
+		}
+	}
 	
-	protected StateMachine stateMachine;
+	protected StateMachine stateMachine = new StateMachine();
 
     protected virtual void Start()
     {
-		stateMachine = new StateMachine();
 		InitMonster();
     }
 
@@ -19,7 +32,20 @@ public abstract class NormalMonster : MonoBehaviour
 		stateMachine.UpdateStateMachine();
     }
 
+	#region Monster Basic Functions
 	protected abstract void InitMonster();
+	protected virtual void GetDamaged(int damage)
+	{
+
+	}
+	protected virtual void OnDead()
+	{
+
+	}
+
+	#endregion
+
+	#region Monster AI Functions
 
 	protected void FollowPlayer()
 	{
@@ -40,4 +66,10 @@ public abstract class NormalMonster : MonoBehaviour
 	{
 		//Short range attack
 	}
+
+	protected void AttackProjectile()
+	{
+		//Long range attack
+	}
+	#endregion
 }
