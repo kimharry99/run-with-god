@@ -19,7 +19,8 @@ public abstract class NormalMonster : MonoBehaviour
 			}
 		}
 	}
-	
+
+	public ParticleSystem hitEffect;
 	protected StateMachine stateMachine = new StateMachine();
 
     protected virtual void Start()
