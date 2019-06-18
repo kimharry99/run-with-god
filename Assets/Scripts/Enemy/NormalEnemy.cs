@@ -43,9 +43,14 @@ public abstract class NormalEnemy : MonoBehaviour
 	/// <summary>
 	/// Called when hit by bullet
 	/// </summary>
-	protected virtual void GetDamaged()
+	public virtual void GetDamaged()
 	{
 		Health--;
+	}
+
+	public void GetDamagedToDeath()
+	{
+		Health = 0;
 	}
 
 	/// <summary>
