@@ -248,6 +248,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
 		Vector2 center = new Vector2(screenPos.x / Screen.width, screenPos.y / Screen.height);
 		CameraController.ShockWave(center);
+		CameraController.ChromaticAberration();
 		SoundManager.inst.PlaySFX(gameObject, boomSFX);
 
 		foreach (var enemy in Physics2D.OverlapCircleAll(transform.position,explodeRange,1 << LayerMask.NameToLayer("Enemy")))

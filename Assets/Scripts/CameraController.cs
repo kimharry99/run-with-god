@@ -7,17 +7,20 @@ public class CameraController : MonoBehaviour
 {
 	public static Action<float, float> Shake;
 	public static Action<Vector2> ShockWave;
+	public static Action ChromaticAberration;
+
 
 	private Transform target;
 	private const float offsetY = 0.5f, offsetZ = -9;
 
-	public Material shockwave;
+	public Material shockwave, chromatic;
 	
 	private void Start()
 	{
 		target = PlayerController.inst.transform;
 		Shake = CameraShake;
 		ShockWave = ShockwaveEffect;
+		ChromaticAberration = ChromaticAberrationEffect;
 	}
 
 	private void Update()
@@ -43,6 +46,21 @@ public class CameraController : MonoBehaviour
 		}
 	}
 
+	private void ChromaticAberrationEffect()
+	{
+		StartCoroutine(ChromaticAberrationEffectRoutine());
+	}
+
+	IEnumerator ChromaticAberrationEffectRoutine()
+	{
+		for (float t = 0; t < 1; t += Time.deltaTime)
+		{
+			chromatic.SetFloat("_Bias", (1 - 4 * (t - 0.5f) * (t - 0.5f)) / 100);
+			yield return null;
+		}
+		chromatic.SetFloat("_Bias", 0);
+	}
+
 	private void ShockwaveEffect(Vector2 center)
 	{
 		StartCoroutine(ShockWaveEffectRoutine(center));
@@ -54,6 +72,7 @@ public class CameraController : MonoBehaviour
 		shockwave.SetFloat("_CenterY", center.y);
 
 		float oriThickness = shockwave.GetFloat("_Thickness");
+		float oriRadius = shockwave.GetFloat("_Radius");
 
 		float t = 0;
 		float x = 0;
@@ -63,17 +82,24 @@ public class CameraController : MonoBehaviour
 			x += Time.deltaTime;
 			t = 1 - (x - 1) * (x - 1);
 			shockwave.SetFloat("_Thickness", oriThickness * ((x - 1) * (x - 1)));
-			waveRadius = Mathf.Lerp(-0.2f, 2, t);
+			waveRadius = Mathf.Lerp(-0.2f, oriRadius, t);
 			shockwave.SetFloat("_Radius", waveRadius);
 			yield return null;
 		}
 		shockwave.SetFloat("_Thickness", oriThickness);
+		shockwave.SetFloat("_Radius", oriRadius);
+
+		shockwave.SetFloat("_CenterX", 0.5f);
+		shockwave.SetFloat("_CenterY", 0.5f);
 	}
 
 	
 	private void OnRenderImage(RenderTexture source, RenderTexture destination)
 	{
-		Graphics.Blit(source, destination, shockwave);
+		RenderTexture tmp = RenderTexture.GetTemporary(source.width, source.height);
+		Graphics.Blit(source, tmp, shockwave);
+		Graphics.Blit(tmp, destination, chromatic);
+		RenderTexture.ReleaseTemporary(tmp);
 	}
 	
 }
