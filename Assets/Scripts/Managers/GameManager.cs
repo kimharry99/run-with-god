@@ -17,18 +17,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 		}
 	}
 
-	private int _lifeCount;
-	public int LifeCount
-	{
-		get
-		{
-			return _lifeCount;
-		}
-		private set
-		{
-			//Update IngameUIManager's life UI
-		}
-	}
+	private StateMachine gameState = new StateMachine();
 
 	private void OnEnable()
 	{
@@ -38,5 +27,16 @@ public class GameManager : SingletonBehaviour<GameManager>
 	private void Update()
 	{
 		//Update Playtime
+	}
+
+	private void InitGameState()
+	{
+		State play = new State();
+		State pause = new State();
+		State load = new State();
+
+		gameState.AddNewState("play", play);
+		gameState.AddNewState("pause", pause);
+		gameState.AddNewState("load", load);
 	}
 }

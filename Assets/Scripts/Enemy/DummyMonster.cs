@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class DummyMonster : NormalMonster
+public class DummyMonster : NormalEnemy
 {
 	protected override void InitMonster()
 	{

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class NormalMonster : MonoBehaviour
+public abstract class NormalEnemy : MonoBehaviour
 {
 	private int _health;
 	public int Health
@@ -11,14 +11,18 @@ public abstract class NormalMonster : MonoBehaviour
 		{
 			return _health;
 		}
-		set
+		private set
 		{
-			if (Health <= 0)
+			_health = value;
+			if (_health <= 0)
 			{
 				OnDead();
 			}
 		}
 	}
+	protected float speed;
+	protected float eyesight;
+	protected float power;
 
 	public ParticleSystem hitEffect;
 	protected StateMachine stateMachine = new StateMachine();
@@ -35,27 +39,36 @@ public abstract class NormalMonster : MonoBehaviour
 
 	#region Monster Basic Functions
 	protected abstract void InitMonster();
-	protected virtual void GetDamaged(int damage)
-	{
 
+	/// <summary>
+	/// Called when hit by bullet
+	/// </summary>
+	protected virtual void GetDamaged()
+	{
+		Health--;
 	}
+
+	/// <summary>
+	/// Called when health is lower or equal 0
+	/// </summary>
 	protected virtual void OnDead()
 	{
-
+		//Play dead anim
+		//Destroy
 	}
 
 	#endregion
 
-	#region Monster AI Functions
+	#region General Monster AI Functions
 
-	protected void FollowPlayer()
+	protected void Chase()
 	{
 		//Follow the player
 	}
 
 	protected void Moving()
 	{
-		//Wander
+		//Wander around
 	}
 
 	protected void Idle()

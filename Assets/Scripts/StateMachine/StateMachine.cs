@@ -19,16 +19,22 @@ public class StateMachine
 
 	public void Transtion(string stateName)
 	{
-		if (CurState != null)
-		{
-			CurState.Exit?.Invoke();
-		}
+		CurState?.Exit?.Invoke();
 		CurState = states[stateName];
-		CurState.Enter?.Invoke();
+		CurState?.Enter?.Invoke();
+	}
+
+	/// <summary>
+	/// Check current state's name is same with input
+	/// </summary>
+	/// <param name="stateName"></param>
+	public bool IsState(string stateName)
+	{
+		return states[stateName] == CurState;
 	}
 
 	public void UpdateStateMachine()
 	{
-		CurState.StateUpdate?.Invoke();
+		CurState?.StateUpdate?.Invoke();
 	}
 }

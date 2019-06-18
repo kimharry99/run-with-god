@@ -13,6 +13,8 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 	public RectTransform lifeGrid;
 	public GameObject lifeUIPrefab;
 
+	public GameObject pauseUIPanel;
+
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
 		//Check Scene is ingame, boss scene
@@ -44,5 +46,10 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 	public void UpdateLifeUI(int lifeCount)
 	{
 		//Update LifeUI as input
+	}
+
+	public void OpenPauseUI()
+	{
+
 	}
 }

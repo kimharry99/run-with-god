@@ -11,10 +11,18 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	private int shotCount;
 	private float shotCooltime;
 
+	private const int maxLife = 10;
+	private int _life;
+	public int Life { get { return _life; } private set { _life = value; } }
+
 	private Rigidbody2D rb;
 	private SpriteRenderer sr;
 	private Transform landChecker;
 	private Transform shotPosition;
+
+	private const float gracePeriod = 2.5f;
+	private float graceTimer = 0;
+	public bool IsDamagable { get { return graceTimer <= 0; } }
 
 	[SerializeField]
 	private AudioClip shotSFX;
@@ -40,13 +48,18 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 	private void Update()
 	{
+		PlayerMovementControl();
+		gunState.UpdateStateMachine();
+	}
+
+	private void PlayerMovementControl()
+	{
 		float vertical = Input.GetAxis("Vertical"); //left, right input
 		float horizontal = Input.GetAxis("Horizontal"); //up, down input
 		float jump = Input.GetAxis("Jump"); //jump input
 		float fire = Input.GetAxis("Fire"); //attack input
 
 		transform.position += new Vector3(horizontal * maxSpeed * Time.deltaTime, 0, 0);
-		//rb.AddForce(new Vector3(horizontal * maxSpeed, 0, 0));
 
 		if (IsGround)
 		{
@@ -64,8 +77,6 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			//rb.velocity +=  rb.velocity.y < 0 ? new Vector2(0, jumpSpeed - rb.velocity.y) : new Vector2(0, jumpSpeed);
 			jumpCount--;
 		}
-
-		gunState.UpdateStateMachine();
 	}
 
 	private void InitGunStateMachine()
@@ -129,14 +140,46 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	{
 		Vector2 direction = Vector2.zero;
 		float vertical = Input.GetAxis("Vertical");
-		if (vertical != 0)
+
+		if (!IsGround)
 		{
-			direction = new Vector2(0, 25 * (vertical > 0 ? 1 : -1));
+			if (vertical != 0)
+			{
+				direction = new Vector2(0, 25 * (vertical > 0 ? 1 : -1));
+			}
+			else
+			{
+				direction = new Vector2(25 * (sr.flipX ? -1 : 1), 0);
+			}
 		}
 		else
 		{
-			direction = new Vector2(25 * (sr.flipX ? -1 : 1), 0);
+			if (vertical > 0)
+			{
+				direction = new Vector2(0, 25 * (vertical > 0 ? 1 : -1));
+			}
+			else
+			{
+				direction = new Vector2(25 * (sr.flipX ? -1 : 1), 0);
+			}
 		}
 		return direction;
+	}
+
+	public void GetDamaged()
+	{
+		graceTimer = gracePeriod;
+		Life--;
+		Explode();
+	}
+
+	private void Explode()
+	{
+		
+	}
+
+	private void OnDead()
+	{
+		
 	}
 }
