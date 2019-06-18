@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Zombie : NormalEnemy
 {
-	protected override void InitMonster()
+	protected override void InitEnemy()
 	{
 		
 	}

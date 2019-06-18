@@ -11,7 +11,7 @@ public abstract class NormalEnemy : MonoBehaviour
 		{
 			return _health;
 		}
-		private set
+		protected set
 		{
 			_health = value;
 			if (_health <= 0)
@@ -29,7 +29,7 @@ public abstract class NormalEnemy : MonoBehaviour
 
     protected virtual void Start()
     {
-		InitMonster();
+		InitEnemy();
     }
 
     protected virtual void Update()
@@ -38,7 +38,7 @@ public abstract class NormalEnemy : MonoBehaviour
     }
 
 	#region Monster Basic Functions
-	protected abstract void InitMonster();
+	protected abstract void InitEnemy();
 
 	/// <summary>
 	/// Called when hit by bullet

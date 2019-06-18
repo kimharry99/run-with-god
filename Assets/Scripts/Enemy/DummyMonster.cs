@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class DummyMonster : NormalEnemy
 {
-	protected override void InitMonster()
+	protected override void InitEnemy()
 	{
 		State idle = new State();
 		idle.StateUpdate += Idle;
