@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class PlayerController : SingletonBehaviour<PlayerController>
 {
+
 	private const float maxSpeed = 5;
-	private float speed = 0;
 	private const float jumpSpeed = 5;
+	private const float explodeRange = 5;
+	private const int maxLife = 10;
+
+	private float speed = 0;
 	private int jumpCount = 2;
 	private int shotCount;
 	private float shotCooltime;
 
-	private const int maxLife = 10;
 	private int _life;
 	public int Life { get { return _life; } private set { _life = value; } }
 
@@ -22,10 +25,11 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 	private const float gracePeriod = 2.5f;
 	private float graceTimer = 0;
+	private float hitTimer;
 	public bool IsDamagable { get { return graceTimer <= 0; } }
 
 	[SerializeField]
-	private AudioClip shotSFX;
+	private AudioClip shotSFX, hitSFX, boomSFX;
 
 	private bool IsGround
 	{
@@ -36,6 +40,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	private GameObject bulletPrefab;
 
 	private StateMachine gunState = new StateMachine();
+	private StateMachine playerState = new StateMachine();
 
 	private void Start()
 	{
@@ -44,12 +49,19 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		shotPosition = transform.Find("ShotPosition");
 		sr = GetComponent<SpriteRenderer>();
 		InitGunStateMachine();
+		InitPlayerStateMachine();
 	}
 
 	private void Update()
 	{
-		PlayerMovementControl();
+		//PlayerMovementControl();
 		gunState.UpdateStateMachine();
+		playerState.UpdateStateMachine();
+
+		if (graceTimer > 0)
+			graceTimer -= Time.deltaTime;
+		if (hitTimer > 0)
+			hitTimer -= Time.deltaTime;
 	}
 
 	private void PlayerMovementControl()
@@ -77,6 +89,62 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			//rb.velocity +=  rb.velocity.y < 0 ? new Vector2(0, jumpSpeed - rb.velocity.y) : new Vector2(0, jumpSpeed);
 			jumpCount--;
 		}
+
+		if (Input.GetButtonDown("Fire"))
+		{
+			gunState.Transtion("fire");
+		}
+	}
+
+	private void InitPlayerStateMachine()
+	{
+		State idle = new State();
+		idle.StateUpdate += PlayerMovementControl;
+
+		State hit = new State();
+		hit.Enter += delegate
+		{
+			graceTimer = gracePeriod;
+			hitTimer = 1.0f;
+			StartCoroutine(GraceTimeRoutine());
+			StartCoroutine(HitRoutine());
+		};
+
+		hit.StateUpdate += delegate
+		{
+			if (hitTimer <= 0)
+			{
+				playerState.Transtion("idle");
+			}
+		};
+
+		playerState.AddNewState("idle", idle);
+		playerState.AddNewState("hit", hit);
+
+		playerState.Transtion("idle");
+	}
+
+	private IEnumerator GraceTimeRoutine()
+	{
+		Color oriColor = sr.color;
+		while (graceTimer > 0)
+		{
+			sr.color = new Color(oriColor.r, oriColor.g, oriColor.b, Mathf.Round(5 * graceTimer - (int)(5 * graceTimer)));
+			yield return null;
+		}
+		sr.color = oriColor;
+	}
+
+	private IEnumerator HitRoutine()
+	{
+		Color oriColor = sr.color;
+		for (float t = 0; t <= hitTimer; t += Time.deltaTime)
+		{
+			Vector2 force = new Vector2(hitTimer * (sr.flipX ? 1 : -1), 0);
+			rb.AddForce(force * 10);
+
+			yield return null;
+		}
 	}
 
 	private void InitGunStateMachine()
@@ -84,10 +152,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		State idle = new State();
 		idle.StateUpdate += delegate
 		{
-			if (Input.GetButtonDown("Fire"))
-			{
-				gunState.Transtion("fire");
-			}
+
 		};
 		State fire = new State();
 
@@ -170,12 +235,25 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	{
 		graceTimer = gracePeriod;
 		Life--;
+		SoundManager.inst.PlaySFX(gameObject, hitSFX);
+		playerState.Transtion("hit");
+		gunState.Transtion("idle");
 		Explode();
 	}
 
 	private void Explode()
 	{
-		
+		CameraController.Shake(0.1f, 0.5f);
+
+		Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
+		Vector2 center = new Vector2(screenPos.x / Screen.width, screenPos.y / Screen.height);
+		CameraController.ShockWave(center);
+		SoundManager.inst.PlaySFX(gameObject, boomSFX);
+
+		foreach (var enemy in Physics2D.OverlapCircleAll(transform.position,explodeRange,1 << LayerMask.NameToLayer("Enemy")))
+		{
+			enemy.GetComponent<NormalEnemy>()?.GetDamagedToDeath();
+		}
 	}
 
 	private void OnDead()

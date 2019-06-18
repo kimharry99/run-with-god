@@ -22,4 +22,16 @@ public class DummyMonster : NormalEnemy
 
 		stateMachine.Transtion("idle");
 	}
+
+	protected override void OnDead()
+	{
+		Debug.Log("Dead!");
+	}
+
+	private void OnTriggerEnter2D(Collider2D collision)
+	{
+		PlayerController pc = collision.GetComponent<PlayerController>();
+		if (pc != null && pc.IsDamagable)
+			pc?.GetDamaged();
+	}
 }
