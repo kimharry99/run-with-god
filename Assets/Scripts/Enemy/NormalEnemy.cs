@@ -4,31 +4,72 @@ using UnityEngine;
 
 public abstract class NormalEnemy : MonoBehaviour
 {
-	private int _health;
-	public int Health
-	{
-		get
-		{
-			return _health;
-		}
-		protected set
-		{
-			_health = value;
-			if (_health <= 0)
-			{
-				OnDead();
-			}
-		}
-	}
-	protected float speed;
-	protected float eyesight;
-	protected float power;
+    float unit = 1f;//0.1f;          //거리의 임시 단위입니다. 플레이어의 가로가 확정되면 그 값을 배정합니다. 굳이 여기에 있을 필요는 없습니다.
 
-	public ParticleSystem hitEffect;
+    //protected Vector3 velocity;   //'현재 속도'입니다. 가속도가 없으면 _speed = speed입니다.
+    private int jumpCount = 1;
+
+    /*private Vector3 _direction = Vector3.left;  //몹이 바라보고 있는 방향입니다.
+    protected Vector3 direction {
+        get
+        {
+            return _direction;
+        }
+        set
+        {
+            _direction = value;
+            if ((_direction.normalized == Vector3.left && !sr.flipX) ||       
+                (_direction.normalized == Vector3.right && sr.flipX))
+            {
+                Flip();
+            }
+        }
+    }*/
+    private Vector2 Direction
+    {
+        get { return sr.flipX ? Vector2.left : Vector2.right; }
+        //set { if (Direction != value.normalized) Flip(); }
+    }
+
+    [SerializeField]
+    private int _health;
+    public int Health
+    {
+        get
+        {
+            return _health;
+        }
+        set
+        {
+            _health = value;
+
+            if (Health <= 0)
+            {
+                OnDead();
+            }
+        }
+    }
+    [SerializeField]
+    protected int speed;           //'목표 속력' 입니다.
+    [SerializeField]
+    protected int acceleration;    //'가속도의 크기'입니다.
+    [SerializeField]
+    protected int range;           //'시야 범위'입니다.
+    [SerializeField]
+    protected int attack = 1;      //'공격력'입니다.
+    [SerializeField]
+    protected int jumpSpeed = 0;
+
+    public ParticleSystem hitEffect;
+	public Shader dissolve;
 	protected StateMachine stateMachine = new StateMachine();
+    private SpriteRenderer sr;
+    private Rigidbody2D rb;
 
     protected virtual void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
 		InitEnemy();
     }
 
@@ -39,56 +80,150 @@ public abstract class NormalEnemy : MonoBehaviour
 
 	#region Monster Basic Functions
 	protected abstract void InitEnemy();
-
-	/// <summary>
-	/// Called when hit by bullet
-	/// </summary>
-	public virtual void GetDamaged()
+	public virtual void GetDamaged(int damage)
 	{
-		Health--;
+        Health -= damage;   //피해만큼 체력을 낮춥니다.
 	}
-
 	public void GetDamagedToDeath()
 	{
 		Health = 0;
 	}
 
-	/// <summary>
-	/// Called when health is lower or equal 0
-	/// </summary>
 	protected virtual void OnDead()
 	{
-		//Play dead anim
-		//Destroy
+        Destroy(gameObject);            //이 오브젝트를 파괴합니다.
+	}
+
+	protected IEnumerator DissolveEffectRoutine(float time)
+	{
+		Material mat = new Material(dissolve);
+		GetComponent<SpriteRenderer>().material = mat;
+		Texture2D noise = new Texture2D(100, 100);
+
+		float scale = Random.Range(1, 10);
+		for (int i = 0; i < noise.width; ++i)
+		{
+			for (int j = 0; j < noise.height; ++j)
+			{
+				float noiseVal = Mathf.PerlinNoise(scale * i / noise.width, scale * j / noise.height);
+				noise.SetPixel(i, j, new Color(noiseVal, noiseVal, noiseVal, 1));
+			}
+		}
+		noise.Apply();
+		mat.SetTexture("_NoiseTex", noise);
+
+		for (float t = 0; t < time; t += Time.deltaTime)
+		{
+			print(t / time);
+			mat.SetFloat("_Threshold", t / time);
+			yield return null;
+		}
+		mat.SetFloat("_Threshold", 1);
 	}
 
 	#endregion
 
-	#region General Monster AI Functions
+	#region Monster AI Functions
 
-	protected void Chase()
+	protected void FollowPlayer()   //플레이어를 따라 움직이는 함수입니다.
 	{
-		//Follow the player
+        SeePlayer();    //항상 플레이어를 보도록 합니다.
+        Moving();       //움직입니다.
 	}
 
-	protected void Moving()
-	{
-		//Wander around
-	}
+    protected void Moving()         //보는 방향으로 움직이는 함수입니다.
+    {
+        if (acceleration == 0)      //가속이 없으면,
+            rb.velocity = speed * Direction; //지정 속력 대로만 움직입니다.
+        else
+        {
+            if (rb.velocity.magnitude < speed || rb.velocity.normalized != Direction) //목표 속력보다 현재 속력이 작을때 또는 현재 속도의 방향과 자신의 방향이 다를때
+                rb.AddForce(acceleration * Direction); //가속도만큼 속도에 더합니다.
+        }
 
-	protected void Idle()
-	{
-		//Stop
-	}
+        //transform.position += rb.velocity * unit * Time.deltaTime;
+    }
 
-	protected void AttackMelee()
+    protected void Idle()           
 	{
-		//Short range attack
-	}
+        SeePlayer();    //항상 플레이어를 보도록 합니다.
+        if (DetectPlayer(range))
+        {
+            stateMachine.Transtion("move");
+        }
+    }
+
+    private void OnTrigger(Collision2D collision)
+    {
+        
+
+
+    }
+
+    /*protected void Jump()
+    {
+        if (jumpCount > 0)
+        {
+            rb.velocity += new Vector2(0, jumpSpeed - rb.velocity.y);
+
+            jumpCount--;
+        }
+    }*/
+
+    protected void AttackMelee()
+	{
+
+
+        int range = 1;
+
+        bool ret = (DistanceWithPlayer() <= range * unit);
+
+        //PlayerController.inst.Life--;  //참조 방법 필요
+    }
 
 	protected void AttackProjectile()
 	{
 		//Long range attack
 	}
+
+    protected void SeePlayer()  //플레이어를 보는 함수입니다.
+    {
+        //direction = DirectionToPlayer();
+        //Vector3 ret = Vector3.zero;
+        sr.flipX = PlayerController.inst.PlayerPosition.x < transform.position.x;
+    }
+
+    private void Flip()
+    {
+        sr.flipX = !sr.flipX;
+    }
+
+	#endregion
+
+	#region Usual Variables Terms
+
+	protected bool DetectPlayer(int range)  //플레이어가 시야 범위 내에 있는지를 반환하는 함수입니다.
+    {
+        bool ret = (DistanceWithPlayer() <= range * unit);
+
+        return ret;
+    }
+
+    protected float DistanceWithPlayer()    //플레이어와의 거리를 반환합니다.
+    {
+        return Vector3.Distance(PlayerController.inst.PlayerPosition, transform.position);
+    }
+
+    protected Vector3 DirectionToPlayer()   //플레이어를 바라보는 방향의 표준 벡터를 반환하는 함수입니다.(x축 한정으로만 작동)
+    {
+        Vector3 ret = Vector3.zero;
+
+        if (PlayerController.inst.PlayerPosition.x < transform.position.x) //x 좌표가 더 크면(더 오른쪽에 있으면)
+            ret = Vector3.left;
+        else
+            ret = Vector3.right;
+
+        return ret;
+    }
 	#endregion
 }
