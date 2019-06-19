@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Dingo : NormalMonster
+public class Dingo : NormalEnemy
 {
-    protected override void InitMonster()
+    protected override void InitEnemy()
     {
         State idle = new State();
         State move = new State();

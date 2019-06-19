@@ -11,8 +11,8 @@ public class Bullet : MonoBehaviour
 		if (collision.tag == "Enemy")
 		{
 			//collision.GetComponent<NormalMonster>().hitEffect.transform.position = transform.position;
-			collision.GetComponent<NormalMonster>().hitEffect.Play();
-            collision.GetComponent<NormalMonster>().GetDamaged(attack);
+			collision.GetComponent<NormalEnemy>()?.hitEffect.Play();
+            collision.GetComponent<NormalEnemy>()?.GetDamaged(attack);
             Destroy(gameObject);
 		}
 	}

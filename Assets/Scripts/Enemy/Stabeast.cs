@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Stabeast : NormalMonster
+public class Stabeast : NormalEnemy
 {
     public int height;
     private int rushCount;
     public int maxRush;
 
-    protected override void InitMonster()
+    protected override void InitEnemy()
     {
         State idle = new State();
         State fly = new State();
@@ -38,7 +38,7 @@ public class Stabeast : NormalMonster
         if (Vector3.Distance(transform.position, destination) < 0.5)
         {
             stateMachine.Transtion("rush");
-            rushTo = GetPlayer().transform.position;
+            rushTo = PlayerController.inst.PlayerPosition;
         }
     }
 
