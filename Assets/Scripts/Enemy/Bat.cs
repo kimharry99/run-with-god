@@ -1,25 +1,60 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Bat : NormalEnemy
 {
-	protected override void InitEnemy()
+    
+    private double coordinate = 0;
+    public ParticleSystem dead;
+    protected void Roam()
+    {
+        if (coordinate < 2 * Math.PI) {
+            transform.position = new Vector3(transform.position.x + 0.01f, (float)Math.Sin(coordinate), transform.position.z);
+            coordinate += 0.05;
+        }
+        else
+        {
+            transform.position = new Vector3(transform.position.x - 0.01f, (float)Math.Sin(coordinate), transform.position.z);
+            coordinate += 0.05;
+            if (coordinate > 4 * Math.PI)
+            {
+                coordinate -= 4 * Math.PI;
+            }
+        }
+    }
+
+    protected override void InitEnemy()
 	{
 
-        State idle = new State();
-        idle.StateUpdate += Idle;
+        State roam = new State();
 
-        State move = new State();
-        idle.StateUpdate += Moving;
+        roam.StateUpdate += Roam;
 
-        State attack = new State();
-        attack.StateUpdate += AttackMelee;
+        stateMachine.AddNewState("roam", roam);
 
-        stateMachine.AddNewState("idle", idle);
-        stateMachine.AddNewState("move", move);
-        stateMachine.AddNewState("attack", attack);
+        stateMachine.Transtion("roam");
+    }
 
-        stateMachine.Transtion("idle");
+    protected override void OnDead()
+    {
+        dead.Play();
+        StartCoroutine(DissolveEffectRoutine(2));
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        PlayerController pc = collision.gameObject.GetComponent<PlayerController>();
+        if (pc != null && pc.IsDamagable)
+            pc?.GetDamaged();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        PlayerController pc = collision.GetComponent<PlayerController>();
+        if (pc != null && pc.IsDamagable)
+            pc?.GetDamaged();
     }
 }
+
