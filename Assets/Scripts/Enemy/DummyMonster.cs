@@ -30,7 +30,7 @@ public class DummyMonster : NormalEnemy
 	protected override void OnDead()
 	{
 		dead.Play();
-		StartCoroutine(DissolveEffectRoutine(2));
+		StartCoroutine(DissolveEffectRoutine(1));
 	}
 
 	private void OnCollisionEnter2D(Collision2D collision)

@@ -100,7 +100,7 @@ public abstract class NormalEnemy : MonoBehaviour
 		GetComponent<SpriteRenderer>().material = mat;
 		Texture2D noise = new Texture2D(100, 100);
 
-		float scale = Random.Range(1, 10);
+		float scale = Random.Range(10, 50);
 		for (int i = 0; i < noise.width; ++i)
 		{
 			for (int j = 0; j < noise.height; ++j)
