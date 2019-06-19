@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
 public class CameraController : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class CameraController : MonoBehaviour
 	private const float offsetY = 0.5f, offsetZ = -9;
 
 	public Material shockwave, chromatic;
-	
+	public Material asdf;
 	private void Start()
 	{
 		target = PlayerController.inst.transform;
@@ -55,7 +56,7 @@ public class CameraController : MonoBehaviour
 	{
 		for (float t = 0; t < 1; t += Time.deltaTime)
 		{
-			chromatic.SetFloat("_Bias", (1 - 4 * (t - 0.5f) * (t - 0.5f)) / 100);
+			chromatic.SetFloat("_Bias", (1 - 4 * (t - 0.5f) * (t - 0.5f)) / 40);
 			yield return null;
 		}
 		chromatic.SetFloat("_Bias", 0);

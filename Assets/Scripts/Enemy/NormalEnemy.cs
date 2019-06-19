@@ -27,6 +27,9 @@ public abstract class NormalEnemy : MonoBehaviour
 	public ParticleSystem hitEffect;
 	protected StateMachine stateMachine = new StateMachine();
 
+	[SerializeField]
+	private Shader dissolve;
+
     protected virtual void Start()
     {
 		InitMonster();
@@ -58,8 +61,36 @@ public abstract class NormalEnemy : MonoBehaviour
 	/// </summary>
 	protected virtual void OnDead()
 	{
+		StartCoroutine(DissolveEffectRoutine(2));
 		//Play dead anim
 		//Destroy
+	}
+
+	protected IEnumerator DissolveEffectRoutine(float time)
+	{
+		Material mat = new Material(dissolve);
+		GetComponent<SpriteRenderer>().material = mat;
+		Texture2D noise = new Texture2D(100, 100);
+
+		float scale = Random.Range(1, 10);
+		for (int i = 0; i < noise.width; ++i)
+		{
+			for (int j = 0; j < noise.height; ++j)
+			{
+				float noiseVal = Mathf.PerlinNoise(scale * i / noise.width, scale * j / noise.height);
+				noise.SetPixel(i, j, new Color(noiseVal, noiseVal, noiseVal, 1));
+			}
+		}
+		noise.Apply();
+		mat.SetTexture("_NoiseTex", noise);
+
+		for (float t = 0; t < time; t += Time.deltaTime)
+		{
+			print(t / time);
+			mat.SetFloat("_Threshold", t / time);
+			yield return null;
+		}
+		mat.SetFloat("_Threshold", 1);
 	}
 
 	#endregion

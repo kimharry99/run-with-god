@@ -5,6 +5,8 @@ using UnityEngine.Events;
 
 public class DummyMonster : NormalEnemy
 {
+	public ParticleSystem dead;
+
 	protected override void InitMonster()
 	{
 		State idle = new State();
@@ -25,7 +27,8 @@ public class DummyMonster : NormalEnemy
 
 	protected override void OnDead()
 	{
-		Debug.Log("Dead!");
+		dead.Play();
+		StartCoroutine(DissolveEffectRoutine(2));
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision)
