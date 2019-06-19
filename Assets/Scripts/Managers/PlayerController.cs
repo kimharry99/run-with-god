@@ -47,12 +47,15 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	private StateMachine gunState = new StateMachine();
 	private StateMachine playerState = new StateMachine();
 
+    private Animator playerAnimator;
+
 	private void Start()
 	{
 		rb = GetComponent<Rigidbody2D>();
 		landChecker = transform.Find("LandChecker");
 		shotPosition = transform.Find("ShotPosition");
 		sr = GetComponent<SpriteRenderer>();
+        playerAnimator = GetComponent<Animator>();
 		InitGunStateMachine();
 		InitPlayerStateMachine();
 	}
@@ -76,7 +79,9 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		float jump = Input.GetAxis("Jump"); //jump input
 		float fire = Input.GetAxis("Fire"); //attack input
 
-		transform.position += new Vector3(horizontal * maxSpeed * Time.deltaTime, 0, 0);
+        playerAnimator.SetBool("isRunning", horizontal != 0);
+        playerAnimator.SetBool("isGround", IsGround);
+        transform.position += new Vector3(horizontal * maxSpeed * Time.deltaTime, 0, 0);
 
 		if (IsGround)
 		{
