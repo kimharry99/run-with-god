@@ -26,7 +26,7 @@ public class CameraController : MonoBehaviour
 
 	private void Update()
 	{
-		transform.position = Vector3.Lerp(transform.position, target.position + new Vector3(0, offsetY, offsetZ), 3);
+		transform.position = Vector3.Lerp(transform.position, target.position + new Vector3(0, offsetY, offsetZ), 0.2f);
 	}
 
 	private void CameraShake(float amount, float time)
@@ -87,8 +87,8 @@ public class CameraController : MonoBehaviour
 			shockwave.SetFloat("_Radius", waveRadius);
 			yield return null;
 		}
-		shockwave.SetFloat("_Thickness", oriThickness);
-		shockwave.SetFloat("_Radius", oriRadius);
+		shockwave.SetFloat("_Thickness", 0.2f);
+		shockwave.SetFloat("_Radius", 1f);
 
 		shockwave.SetFloat("_CenterX", 0.5f);
 		shockwave.SetFloat("_CenterY", 0.5f);
@@ -98,8 +98,8 @@ public class CameraController : MonoBehaviour
 	private void OnRenderImage(RenderTexture source, RenderTexture destination)
 	{
 		RenderTexture tmp = RenderTexture.GetTemporary(source.width, source.height);
-		Graphics.Blit(source, tmp, shockwave);
-		Graphics.Blit(tmp, destination, chromatic);
+		Graphics.Blit(source, tmp, chromatic);
+		Graphics.Blit(tmp, destination, shockwave);
 		RenderTexture.ReleaseTemporary(tmp);
 	}
 	

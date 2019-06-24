@@ -26,6 +26,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	private const float gracePeriod = 2.5f;
 	private float graceTimer = 0;
 	private float hitTimer;
+	private float dashTimer;
 	public bool IsDamagable { get { return graceTimer <= 0; } }
 
 	[SerializeField]
@@ -67,6 +68,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			graceTimer -= Time.deltaTime;
 		if (hitTimer > 0)
 			hitTimer -= Time.deltaTime;
+		if (dashTimer > 0)
+			dashTimer -= Time.deltaTime;
 	}
 
 	private void PlayerMovementControl()
@@ -99,6 +102,11 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		{
 			gunState.Transtion("fire");
 		}
+
+		if (Input.GetButtonDown("Dash") && dashTimer <= 0)
+		{
+			playerState.Transtion("dash");
+		}
 	}
 
 	private void InitPlayerStateMachine()
@@ -123,8 +131,23 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			}
 		};
 
+		State dash = new State();
+		dash.Enter += delegate
+		{
+			graceTimer = 0.5f;
+			gameObject.layer = LayerMask.NameToLayer("Player Grace");
+			StartCoroutine(DashRoutine())
+;		};
+
+		dash.Exit += delegate
+		{
+			gameObject.layer = LayerMask.NameToLayer("Player");
+			dashTimer = 0.5f;
+		};
+
 		playerState.AddNewState("idle", idle);
 		playerState.AddNewState("hit", hit);
+		playerState.AddNewState("dash", dash);
 
 		playerState.Transtion("idle");
 	}
@@ -132,12 +155,14 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	private IEnumerator GraceTimeRoutine()
 	{
 		Color oriColor = sr.color;
+		gameObject.layer = LayerMask.NameToLayer("Player Grace");
 		while (graceTimer > 0)
 		{
 			sr.color = new Color(oriColor.r, oriColor.g, oriColor.b, Mathf.Round(5 * graceTimer - (int)(5 * graceTimer)));
 			yield return null;
 		}
 		sr.color = oriColor;
+		gameObject.layer = LayerMask.NameToLayer("Player");
 	}
 
 	private IEnumerator HitRoutine()
@@ -152,6 +177,26 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		}
 	}
 
+	private IEnumerator DashRoutine()
+	{
+		float oriGraceTimer = graceTimer;
+		Vector3 oriPosition = transform.position;
+		Vector3 destination = transform.position + (sr.flipX ? new Vector3(-3, 0) : new Vector3(3, 0));
+		rb.simulated = false;
+		sr.color = sr.color - new Color(0, 0, 0, 0.5f);
+
+		while (graceTimer > 0)
+		{
+			transform.position = Vector3.Lerp(oriPosition, destination, 1 - Mathf.Pow(graceTimer / oriGraceTimer, 3));
+			yield return null;
+		}
+
+		rb.simulated = true;
+		//transform.position = destination;
+		playerState.Transtion("idle");
+		sr.color = sr.color + new Color(0, 0, 0, 0.5f);
+	}
+
 	private void InitGunStateMachine()
 	{
 		State idle = new State();
@@ -163,7 +208,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 		fire.Enter += delegate
 		{
-			shotCount = 5;
+			shotCount = 3;
 			shotCooltime = 0;
 		};
 
@@ -180,7 +225,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			}
 			if (Input.GetButtonDown("Fire"))
 			{
-				shotCount = 5;
+				shotCount = 3;
 			}
 		};
 		gunState.AddNewState("idle", idle);
