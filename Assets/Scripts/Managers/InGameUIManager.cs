@@ -10,8 +10,7 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 	public Text playtimeText;
 	public Text killCountText;
 
-	public RectTransform lifeGrid;
-	public GameObject lifeUIPrefab;
+	public GameObject[] lifeUIs = new GameObject[3];
 
 	public GameObject pauseUIPanel;
 
@@ -21,7 +20,7 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 		//If not, disable gameobect
 	}
 
-	private void Start()
+    private void Start()
 	{
 		if (inst != this)
 		{
@@ -49,7 +48,10 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 
 	public void UpdateLifeUI(int lifeCount)
 	{
-		//Update LifeUI as input
+		for(int i= 0; i<3; i++)
+        {
+            lifeUIs[i].SetActive(lifeCount > i);
+        }
 	}
 
 	public void OpenPauseUI()
