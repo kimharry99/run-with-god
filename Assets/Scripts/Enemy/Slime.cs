@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Slime : NormalEnemy
 {
-    public GameObject itself;
-
     protected override void InitEnemy()
     {
         State idle = new State();
