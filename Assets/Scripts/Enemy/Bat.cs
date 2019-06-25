@@ -6,7 +6,6 @@ using System;
 public class Bat : NormalEnemy
 {
 
-    private double temp;
     private double coordinate = 0;
     public ParticleSystem dead;
     protected void Roam()
