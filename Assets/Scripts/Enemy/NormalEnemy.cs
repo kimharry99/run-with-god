@@ -25,7 +25,7 @@ public abstract class NormalEnemy : MonoBehaviour
             }
         }
     }*/
-    private Vector2 Direction
+    protected Vector2 Direction
     {
         get { return sr.flipX ? Vector2.left : Vector2.right; }
         //set { if (Direction != value.normalized) Flip(); }
@@ -63,7 +63,7 @@ public abstract class NormalEnemy : MonoBehaviour
     public ParticleSystem hitEffect;
 	public Shader dissolve;
 	protected StateMachine stateMachine = new StateMachine();
-    private SpriteRenderer sr;
+    protected SpriteRenderer sr;
     private Rigidbody2D rb;
 
     protected virtual void Start()
