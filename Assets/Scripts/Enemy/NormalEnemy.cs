@@ -16,7 +16,7 @@ public abstract class NormalEnemy : MonoBehaviour
         //set { if (Direction != value.normalized) Flip(); }
     }
 
-    [SerializeField]
+    //[SerializeField]
     private int _health;
     public int Health
     {
@@ -34,6 +34,9 @@ public abstract class NormalEnemy : MonoBehaviour
             }
         }
     }
+
+    [SerializeField]
+    protected int maxHealth;
     [SerializeField]
     protected int speed;           //'목표 속력' 입니다.
     [SerializeField]
@@ -42,8 +45,8 @@ public abstract class NormalEnemy : MonoBehaviour
     protected int range;           //'시야 범위'입니다.
     [SerializeField]
     protected int attack = 1;      //'공격력'입니다.
-    [SerializeField]
-    protected int rangeAttack = 0;  //'근거리 공격 범위'입니다.
+    //[SerializeField]
+    //protected int rangeAttack = 0;  //'근거리 공격 범위'입니다.
 
     public ParticleSystem hitEffect;
 	public Shader dissolve;
@@ -68,6 +71,7 @@ public abstract class NormalEnemy : MonoBehaviour
 
     protected virtual void Start()
     {
+        Health = maxHealth;
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
 		InitEnemy();
@@ -78,17 +82,31 @@ public abstract class NormalEnemy : MonoBehaviour
 		stateMachine.UpdateStateMachine();
     }
 
-    private void OnTriggerEnter2D(Collider2D col)
+    /*private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.tag == "Player")
+        if (col.gameObject == PlayerController.inst.gameObject)
             isTouched = true;
     }
 
     private void OnTriggerExit2D(Collider2D col)
     {
-        if (col.gameObject.tag == "Player")
+        if (col.gameObject == PlayerController.inst.gameObject)
+            isTouched = false;
+    }*/
+
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+
+        if (col.gameObject == PlayerController.inst.gameObject)
+            isTouched = true;
+    }
+
+    private void OnCollisionExit2D(Collision2D col)
+    {
+        if (col.gameObject == PlayerController.inst.gameObject)
             isTouched = false;
     }
+
 
     //기본 함수들
     #region Monster Basic Functions
@@ -177,10 +195,10 @@ public abstract class NormalEnemy : MonoBehaviour
 
     protected void AttackMelee()    //근거리 공격
 	{
-        if (DistanceWithPlayer() <= rangeAttack && PlayerController.inst.IsDamagable)
-        {
-            PlayerController.inst.GetDamaged();
-        }
+        //if (DistanceWithPlayer() <= rangeAttack && PlayerController.inst.IsDamagable)
+        //{
+        //    PlayerController.inst.GetDamaged();
+        //}
     }
 
 	protected void AttackProjectile()   //원거리 공격. 총알이 없어서 제대로 구현되지 않았습니다.
