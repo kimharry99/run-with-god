@@ -91,6 +91,7 @@ public abstract class NormalEnemy : MonoBehaviour
 
 	protected virtual void OnDead()
 	{
+		GameManager.inst.KillCount++;
         Destroy(gameObject);            //이 오브젝트를 파괴합니다.
 	}
 

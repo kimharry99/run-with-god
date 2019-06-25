@@ -29,6 +29,7 @@ public class DummyMonster : NormalEnemy
 
 	protected override void OnDead()
 	{
+		GameManager.inst.KillCount++;
 		dead.Play();
 		StartCoroutine(DissolveEffectRoutine(1));
 	}

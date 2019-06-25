@@ -16,7 +16,14 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	private float shotCooltime;
 
 	private int _life;
-	public int Life { get { return _life; } private set { _life = value; } }
+	public int Life {
+		get { return _life; }
+
+		private set {
+			_life = value;
+			InGameUIManager.inst.UpdateLifeUI(_life);
+		}
+	}
 
 	private Rigidbody2D rb;
 	private SpriteRenderer sr;

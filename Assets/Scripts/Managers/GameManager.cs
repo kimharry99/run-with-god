@@ -7,13 +7,22 @@ public class GameManager : SingletonBehaviour<GameManager>
 	private float _playtime;
 	public float Playtime
 	{
-		get
-		{
-			return _playtime;
-		}
+		get	{ return _playtime;	}
 		private set
 		{
-			//Update IngameUIManager's playtimer UI
+			_playtime = value;
+			InGameUIManager.inst.UpdatePlaytimeText(_playtime);
+		}
+	}
+
+	private int _killCount;
+	public int KillCount
+	{
+		get { return _killCount; }
+		set
+		{
+			_killCount = value;
+			InGameUIManager.inst.UpdateKillCountText(_killCount);
 		}
 	}
 
@@ -26,7 +35,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 
 	private void Update()
 	{
-		//Update Playtime
+		Playtime += Time.deltaTime;
 	}
 
 	private void InitGameState()
