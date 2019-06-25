@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8255848804799629964}
   - component: {fileID: 8255848804799629963}
   - component: {fileID: 5890865022728897831}
-  - component: {fileID: 9223337232853805171}
+  - component: {fileID: 660751539422435181}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Untagged
@@ -224,7 +224,7 @@ TrailRenderer:
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
   m_Emitting: 1
---- !u!114 &9223337232853805171
+--- !u!114 &660751539422435181
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -233,6 +233,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8255848804799629962}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ee5c92e3c25b1949ad1969cda4d0181, type: 3}
+  m_Script: {fileID: 11500000, guid: 70b90e3d082a5f04f8a4f15a38043700, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attack: 1
+  reach: 60
+  type: 0
