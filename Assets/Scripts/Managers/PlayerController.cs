@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerController : SingletonBehaviour<PlayerController>
 {
-
 	private const float maxSpeed = 5;
 	private const float jumpSpeed = 5;
 	private const float explodeRange = 5;
@@ -66,6 +65,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
         playerAnimator = GetComponent<Animator>();
 		InitGunStateMachine();
 		InitPlayerStateMachine();
+		Life = 3;
 	}
 
 	private void Update()

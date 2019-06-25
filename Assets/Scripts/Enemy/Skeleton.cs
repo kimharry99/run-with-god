@@ -1,23 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class Zombie : NormalEnemy
+public class Skeleton : NormalEnemy
 {
     protected override void InitEnemy()
-	{
+    {
         State idle = new State();
         State move = new State();
 
         idle.StateUpdate += Idle;
 
-		move.StateUpdate += Moving;
-        move.StateUpdate += AttackTouch;
+        move.StateUpdate += FollowPlayer;
 
         stateMachine.AddNewState("idle", idle);
-		stateMachine.AddNewState("move", move);
+        stateMachine.AddNewState("move", move);
 
-		stateMachine.Transtion("idle");
-	}
+        stateMachine.Transtion("idle");
+    }
 }

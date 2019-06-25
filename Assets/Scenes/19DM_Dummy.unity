@@ -154,8 +154,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playtimeText: {fileID: 0}
   killCountText: {fileID: 0}
-  lifeGrid: {fileID: 0}
-  lifeUIPrefab: {fileID: 0}
+  lifeUIs:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   pauseUIPanel: {fileID: 0}
 --- !u!114 &85071645
 MonoBehaviour:
@@ -293,14 +295,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 994f0bc2963e13f449d18dba27a5c537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 1
+  maxHealth: 1
   speed: 1
   acceleration: 0
   range: 0
   attack: 1
-  jumpSpeed: 0
   hitEffect: {fileID: 1176384693}
   dissolve: {fileID: 4800000, guid: 588349a7a5b2c584f8732a9b5c4ba62c, type: 3}
+  bulletPrefab: {fileID: 0}
+  shotSFX: {fileID: 0}
   dead: {fileID: 144743396}
 --- !u!212 &128085470
 SpriteRenderer:
@@ -5351,14 +5354,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed9c80878976f2943bf9d4d01453fd4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 2
+  maxHealth: 1
   speed: 1
   acceleration: 0
   range: 0
   attack: 1
-  jumpSpeed: 0
   hitEffect: {fileID: 1176384693}
   dissolve: {fileID: 4800000, guid: 588349a7a5b2c584f8732a9b5c4ba62c, type: 3}
+  bulletPrefab: {fileID: 0}
+  shotSFX: {fileID: 0}
   dead: {fileID: 144743396}
 --- !u!212 &359440033
 SpriteRenderer:
@@ -5479,14 +5483,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 994f0bc2963e13f449d18dba27a5c537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 1
+  maxHealth: 1
   speed: 1
   acceleration: 0
   range: 0
   attack: 1
-  jumpSpeed: 0
   hitEffect: {fileID: 1176384693}
   dissolve: {fileID: 4800000, guid: 588349a7a5b2c584f8732a9b5c4ba62c, type: 3}
+  bulletPrefab: {fileID: 0}
+  shotSFX: {fileID: 0}
   dead: {fileID: 144743396}
 --- !u!212 &442801175
 SpriteRenderer:
@@ -5567,6 +5572,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1205422381347208394, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5622,11 +5632,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
-        type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4138772146777199517, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
       propertyPath: m_SortingOrder
@@ -5665,14 +5670,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd420077ad3c55247a7a291f7cae4557, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 0
+  maxHealth: 0
   speed: 0
   acceleration: 0
   range: 0
   attack: 1
-  jumpSpeed: 0
   hitEffect: {fileID: 1176384693}
   dissolve: {fileID: 4800000, guid: 588349a7a5b2c584f8732a9b5c4ba62c, type: 3}
+  bulletPrefab: {fileID: 0}
+  shotSFX: {fileID: 0}
   dead: {fileID: 144743396}
 --- !u!61 &1128465052
 BoxCollider2D:
@@ -5912,14 +5918,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 994f0bc2963e13f449d18dba27a5c537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 1
+  maxHealth: 1
   speed: 1
   acceleration: 0
   range: 0
   attack: 1
-  jumpSpeed: 0
   hitEffect: {fileID: 1176384693}
   dissolve: {fileID: 4800000, guid: 588349a7a5b2c584f8732a9b5c4ba62c, type: 3}
+  bulletPrefab: {fileID: 0}
+  shotSFX: {fileID: 0}
   dead: {fileID: 144743396}
 --- !u!61 &1275990476
 BoxCollider2D:
@@ -6176,14 +6183,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 994f0bc2963e13f449d18dba27a5c537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 1
+  maxHealth: 1
   speed: 1
   acceleration: 0
   range: 0
   attack: 1
-  jumpSpeed: 0
   hitEffect: {fileID: 1176384693}
   dissolve: {fileID: 4800000, guid: 588349a7a5b2c584f8732a9b5c4ba62c, type: 3}
+  bulletPrefab: {fileID: 0}
+  shotSFX: {fileID: 0}
   dead: {fileID: 144743396}
 --- !u!212 &1434370472
 SpriteRenderer:

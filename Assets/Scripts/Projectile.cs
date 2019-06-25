@@ -36,7 +36,6 @@ public class Projectile : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		Debug.Log("A");
 		switch (type)
 		{
 			case ProjectileType.PLAYER:
@@ -59,7 +58,6 @@ public class Projectile : MonoBehaviour
 
 	private IEnumerator DestroyRoutine(float time)
 	{
-		Debug.Log(time);
 		yield return new WaitForSeconds(time);
 		Destroy(gameObject);
 	}
