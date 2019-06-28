@@ -110,6 +110,7 @@ public abstract class NormalEnemy : MonoBehaviour
             isTouched = false;
     }*/
 
+    /*노말몹은 따로 isTouched 판정안하는 걸로 결정함.
     private void OnCollisionEnter2D(Collision2D col)
     {
 
@@ -122,7 +123,7 @@ public abstract class NormalEnemy : MonoBehaviour
         if (col.gameObject == PlayerController.inst.gameObject)
             isTouched = false;
     }
-
+   */
 
     //기본 함수들
     #region Monster Basic Functions
@@ -171,12 +172,19 @@ public abstract class NormalEnemy : MonoBehaviour
 		mat.SetFloat("_Threshold", 1);
 	}
 
-	#endregion
+    protected virtual void OnCollisionEnter2D(Collision2D collision)//노말몹과 플레이어 충돌판정함수
+    {
+        PlayerController pc = collision.gameObject.GetComponent<PlayerController>();
+        if (pc != null && pc.IsDamagable)
+            pc?.GetDamaged();
+    }
+
+    #endregion
 
 
-	#region Monster AI Functions
+    #region Monster AI Functions
 
-	protected void FollowPlayer()   //플레이어를 따라 움직이는 함수
+    protected void FollowPlayer()   //플레이어를 따라 움직이는 함수
 	{
         SeePlayer();    //항상 플레이어를 보도록 합니다.
         Moving();       //움직입니다.

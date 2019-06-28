@@ -6,18 +6,19 @@ using System;
 public class Bat : NormalEnemy
 {
 
-    private double coordinate = 0;
+    private float coordinate = 0;
     public ParticleSystem dead;
+
     protected void Roam()
     {
         
         if (coordinate < 2 * Math.PI) {
-            transform.position = new Vector3(transform.position.x + 0.01f, transform.position.y + ((float)Math.Sin(coordinate + 0.05) - (float)Math.Sin(coordinate))/2, transform.position.z);
+            transform.position = new Vector3(transform.position.x + 0.01f, transform.position.y + (Math.Sin(coordinate + 0.05) - Math.Sin(coordinate))/2, transform.position.z);
             coordinate += 0.05;
         }
         else
         {
-            transform.position = new Vector3(transform.position.x - 0.01f, transform.position.y + ((float)Math.Sin(coordinate + 0.05) - (float)Math.Sin(coordinate))/2, transform.position.z);
+            transform.position = new Vector3(transform.position.x - 0.01f, transform.position.y + (Math.Sin(coordinate + 0.05) - Math.Sin(coordinate))/2, transform.position.z);
             coordinate += 0.05;
             if (coordinate > 4 * Math.PI)
             {
@@ -42,20 +43,6 @@ public class Bat : NormalEnemy
     {
         dead.Play();
         StartCoroutine(DissolveEffectRoutine(2));
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        PlayerController pc = collision.gameObject.GetComponent<PlayerController>();
-        if (pc != null && pc.IsDamagable)
-            pc?.GetDamaged();
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        PlayerController pc = collision.GetComponent<PlayerController>();
-        if (pc != null && pc.IsDamagable)
-            pc?.GetDamaged();
     }
 }
 

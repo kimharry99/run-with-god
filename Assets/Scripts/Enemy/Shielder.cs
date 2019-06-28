@@ -8,16 +8,17 @@ public class Shielder : NormalEnemy
 
     protected override void InitEnemy()
     {
-        State idle = new State();
+        State stand = new State();
         State move = new State();
 
-        idle.StateUpdate += Idle;
-        move.StateUpdate += Moving;
+        stand.StateUpdate += Stand;
+        move.StateUpdate += FollowPlayer;
 
-        stateMachine.AddNewState("idle", idle);
+        stateMachine.AddNewState("stand", stand);
         stateMachine.AddNewState("move", move);
 
-        stateMachine.Transtion("idle");
+        stateMachine.Transtion("stand");
+
     }
 
     public override void GetDamaged(int damage)
@@ -26,6 +27,7 @@ public class Shielder : NormalEnemy
         {
             if(PlayerController.inst.transform.position.x > transform.position.x)
             {
+                hitEffect.Play();
                 Health -= damage;
             }
         }
@@ -33,29 +35,19 @@ public class Shielder : NormalEnemy
         {
             if(PlayerController.inst.transform.position.x < transform.position.x)
             {
+                hitEffect.Play();
                 Health -= damage;
             }
         }
     }
 
-    protected override void OnDead()
+    private void Stand()
     {
-        dead.Play();
-        StartCoroutine(DissolveEffectRoutine(2));
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        PlayerController pc = collision.gameObject.GetComponent<PlayerController>();
-        if (pc != null && pc.IsDamagable)
-            pc?.GetDamaged();
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        PlayerController pc = collision.GetComponent<PlayerController>();
-        if (pc != null && pc.IsDamagable)
-            pc?.GetDamaged();
+        if (DetectPlayer(range))
+        {
+            stateMachine.Transtion("move");
+        }
+   
     }
 
 }

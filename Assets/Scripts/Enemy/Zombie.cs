@@ -11,13 +11,12 @@ public class Zombie : NormalEnemy
         State move = new State();
 
         idle.StateUpdate += Idle;
-
 		move.StateUpdate += Moving;
-        move.StateUpdate += AttackTouch;
 
         stateMachine.AddNewState("idle", idle);
 		stateMachine.AddNewState("move", move);
 
 		stateMachine.Transtion("idle");
 	}
+ 
 }
