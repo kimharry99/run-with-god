@@ -98,22 +98,31 @@ public abstract class NormalEnemy : MonoBehaviour
 		stateMachine.UpdateStateMachine();
     }
 
-    /*private void OnTriggerEnter2D(Collider2D col)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (col.gameObject == PlayerController.inst.gameObject)
+        PlayerController pc = collision.gameObject.GetComponent<PlayerController>();
+        if (pc != null && pc.IsDamagable)
+            pc?.GetDamaged();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        PlayerController pc = collision.GetComponent<PlayerController>();
+        if (pc != null && pc.IsDamagable)
+            pc?.GetDamaged();
+    }
+
+    /*private void OnCollisionEnter2D(Collision2D collision)
+    {
+        PlayerController pc = collision.gameObject.GetComponent<PlayerController>();
+        if (pc != null && pc.IsDamagable)
             isTouched = true;
     }
 
-    private void OnTriggerExit2D(Collider2D col)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (col.gameObject == PlayerController.inst.gameObject)
-            isTouched = false;
-    }*/
-
-    private void OnCollisionEnter2D(Collision2D col)
-    {
-
-        if (col.gameObject == PlayerController.inst.gameObject)
+        PlayerController pc = collision.GetComponent<PlayerController>();
+        if (pc != null && pc.IsDamagable)
             isTouched = true;
     }
 
@@ -121,7 +130,7 @@ public abstract class NormalEnemy : MonoBehaviour
     {
         if (col.gameObject == PlayerController.inst.gameObject)
             isTouched = false;
-    }
+    }*///이후 확장성 고려
 
 
     //기본 함수들
@@ -204,7 +213,7 @@ public abstract class NormalEnemy : MonoBehaviour
         }
     }
 
-    protected void AttackTouch()    //접촉 공격
+    /*protected void AttackTouch()    //접촉 공격
     {
         if(isTouched && PlayerController.inst.IsDamagable)
         {
@@ -218,7 +227,7 @@ public abstract class NormalEnemy : MonoBehaviour
         //{
         //    PlayerController.inst.GetDamaged();
         //}
-    }
+    }*/
 
 	protected void AttackProjectile()   //원거리 공격. 총알이 없어서 제대로 구현되지 않았습니다.
 	{
