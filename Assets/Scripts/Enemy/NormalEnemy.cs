@@ -195,6 +195,14 @@ public abstract class NormalEnemy : MonoBehaviour
         //transform.position += rb.velocity * unit * Time.deltaTime;
     }
 
+	protected void Flying()
+	{
+		Vector2 direction = PlayerController.inst.transform.position - transform.position;
+		direction = direction.normalized;
+
+		rb.velocity = speed * direction;
+	}
+
     protected void Idle()           //감시하는 함수
 	{
         SeePlayer();    //항상 플레이어를 보도록 합니다.

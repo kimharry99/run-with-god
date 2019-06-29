@@ -313,7 +313,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		CameraController.ChromaticAberration();
 		SoundManager.inst.PlaySFX(gameObject, boomSFX);
 
-		foreach (var enemy in Physics2D.OverlapCircleAll(transform.position,explodeRange,1 << LayerMask.NameToLayer("Enemy")))
+		foreach (var enemy in Physics2D.OverlapCircleAll(transform.position,explodeRange,1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Enemy Ghost")))
 		{
 			enemy.GetComponent<NormalEnemy>()?.GetDamagedToDeath();
 		}
