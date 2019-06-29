@@ -8,6 +8,6 @@ public abstract class Trust : ScriptableObject
 	public string trustName = null;
 	public string description = null;
 	public abstract bool IsDone { get; }
-
-	public Action OnTrustUpdated;
+	public abstract string TrustToText();
+	public abstract void Init();
 }

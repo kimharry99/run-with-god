@@ -9,6 +9,7 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 {
 	public Text playtimeText;
 	public Text killCountText;
+	public Text trustText;
 
 	public GameObject[] lifeUIs = new GameObject[3];
 
@@ -55,6 +56,11 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 	}
 
 	public void OpenPauseUI()
+	{
+
+	}
+
+	public void UpdateTrustUI(Trust trust)
 	{
 
 	}

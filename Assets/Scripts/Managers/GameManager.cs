@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,15 +23,23 @@ public class GameManager : SingletonBehaviour<GameManager>
 		set
 		{
 			_killCount = value;
-			InGameUIManager.inst.UpdateKillCountText(_killCount);
+			OnKillCountChanged?.Invoke(_killCount);
 		}
 	}
+	public Action<int> OnKillCountChanged;
 
 	private StateMachine gameState = new StateMachine();
+	public Trust trust;
 
 	private void OnEnable()
 	{
 		//Reset GameManager
+	}
+
+	private void Start()
+	{
+		OnKillCountChanged += InGameUIManager.inst.UpdateKillCountText;
+		trust = new KillCountTrust();
 	}
 
 	private void Update()
