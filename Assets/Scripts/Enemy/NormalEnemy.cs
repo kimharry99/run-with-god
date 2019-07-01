@@ -186,8 +186,15 @@ public abstract class NormalEnemy : MonoBehaviour
 
     protected void FollowPlayer()   //플레이어를 따라 움직이는 함수
 	{
-        SeePlayer();    //항상 플레이어를 보도록 합니다.
-        Moving();       //움직입니다.
+        if (DetectPlayer(range))
+        {
+            SeePlayer();    //플레이어가 시야 내에 있다면 플레이어를 보도록 합니다.
+            Moving();       //움직입니다.
+            if (!DetectPlayer(range))//플레이어가 시야를 벗어난다면
+            {
+                stateMachine.Transition("idle");//보통 상태로 전환합니다
+            }
+        }
 	}
 
     protected void Moving()         //몹이 자신이 보는 방향으로 움직이는 함수
@@ -205,7 +212,6 @@ public abstract class NormalEnemy : MonoBehaviour
 
     protected void Idle()           //감시하는 함수
 	{
-        SeePlayer();    //항상 플레이어를 보도록 합니다.
         if (DetectPlayer(range))
         {
             stateMachine.Transtion("move");
