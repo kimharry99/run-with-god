@@ -192,7 +192,7 @@ public abstract class NormalEnemy : MonoBehaviour
             Moving();       //움직입니다.
             if (!DetectPlayer(range))//플레이어가 시야를 벗어난다면
             {
-                stateMachine.Transition("idle");//보통 상태로 전환합니다
+                stateMachine.Transtion("idle");//보통 상태로 전환합니다
             }
         }
 	}
