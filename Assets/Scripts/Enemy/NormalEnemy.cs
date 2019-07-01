@@ -246,10 +246,12 @@ public abstract class NormalEnemy : MonoBehaviour
 
     protected void SeePlayer()  //플레이어를 보는 함수
     {
-        sr.flipX = PlayerController.inst.PlayerPosition.x < transform.position.x;
+        if (PlayerController.inst.PlayerPosition.x > transform.position.x == sr.flipX)
+            Flip();
+        //sr.flipX = PlayerController.inst.PlayerPosition.x < transform.position.x;
     }
 
-    private void Flip() //방향을 바꾸는 함수
+    protected virtual void Flip() //방향을 바꾸는 함수
     {
         sr.flipX = !sr.flipX;
     }

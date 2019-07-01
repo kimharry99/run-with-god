@@ -4,50 +4,40 @@ using UnityEngine;
 
 public class Shielder : NormalEnemy
 {
-    public ParticleSystem dead;
+    public Transform Shield;
 
+    protected override void Start()
+    {
+        base.Start();
+        Shield = transform.Find("Shield");
+    }
     protected override void InitEnemy()
     {
-        State stand = new State();
+        State idle = new State();
         State move = new State();
 
-        stand.StateUpdate += Stand;
+        idle.StateUpdate += Idle;
         move.StateUpdate += FollowPlayer;
 
-        stateMachine.AddNewState("stand", stand);
+        stateMachine.AddNewState("idle", idle);
         stateMachine.AddNewState("move", move);
 
-        stateMachine.Transtion("stand");
+        stateMachine.Transtion("idle");
 
     }
 
-    public override void GetDamaged(int damage)
+    protected override void OnDead()
     {
-        if (sr.flipX)
-        {
-            if(PlayerController.inst.transform.position.x > transform.position.x)
-            {
-                hitEffect.Play();
-                Health -= damage;
-            }
-        }
-        else
-        {
-            if(PlayerController.inst.transform.position.x < transform.position.x)
-            {
-                hitEffect.Play();
-                Health -= damage;
-            }
-        }
+        GameManager.inst.KillCount++;
+        Destroy(gameObject);
+        Destroy(transform.Find("Shield"));
     }
 
-    private void Stand()
+    protected override void Flip()
     {
-        if (DetectPlayer(range))
-        {
-            stateMachine.Transtion("move");
-        }
-   
+        base.Flip();
+        Vector3 pos = Shield.transform.localPosition;
+        pos.x = -pos.x;
+        Shield.transform.localPosition = pos;
     }
-
 }
