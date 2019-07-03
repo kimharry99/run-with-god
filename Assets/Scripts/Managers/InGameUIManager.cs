@@ -32,12 +32,11 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 			SetStatic();
 		SceneManager.sceneLoaded += OnSceneLoaded;
     }
-
     public void UpdatePlaytimeText(float playtime)
 	{
         //Update playtimeText's text as input
-        string minutes = ((int)playtime / 60).ToString();
-        string seconds = (playtime % 60).ToString("f0");
+        string minutes = ((int)playtime / 60).ToString("00");
+        string seconds = (playtime % 60).ToString("00");
         playtimeText.text = minutes + ":" + seconds;
 	}
 	
