@@ -10,6 +10,7 @@ public class Skeleton : NormalEnemy
         State move = new State();
 
         idle.StateUpdate += Idle;
+        //idle.StateUpdate += AttackTouch;
 
         move.StateUpdate += FollowPlayer;
 

@@ -39,7 +39,6 @@ public class GameManager : SingletonBehaviour<GameManager>
 	private void Start()
 	{
 		OnKillCountChanged += InGameUIManager.inst.UpdateKillCountText;
-		trust = new KillCountTrust();
 	}
 
 	private void Update()

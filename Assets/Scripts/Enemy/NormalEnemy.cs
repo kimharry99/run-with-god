@@ -98,23 +98,18 @@ public abstract class NormalEnemy : MonoBehaviour
 		stateMachine.UpdateStateMachine();
     }
 
-    /*private void OnTriggerEnter2D(Collider2D col)
+    /*노말몹은 따로 isTouched 판정안하는 걸로 결정함.
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (col.gameObject == PlayerController.inst.gameObject)
+        PlayerController pc = collision.gameObject.GetComponent<PlayerController>();
+        if (pc != null && pc.IsDamagable)
             isTouched = true;
     }
 
-    private void OnTriggerExit2D(Collider2D col)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (col.gameObject == PlayerController.inst.gameObject)
-            isTouched = false;
-    }*/
-
-    /*노말몹은 따로 isTouched 판정안하는 걸로 결정함.
-    private void OnCollisionEnter2D(Collision2D col)
-    {
-
-        if (col.gameObject == PlayerController.inst.gameObject)
+        PlayerController pc = collision.GetComponent<PlayerController>();
+        if (pc != null && pc.IsDamagable)
             isTouched = true;
     }
 
@@ -122,8 +117,8 @@ public abstract class NormalEnemy : MonoBehaviour
     {
         if (col.gameObject == PlayerController.inst.gameObject)
             isTouched = false;
-    }
-   */
+    }*///이후 확장성 고려
+
 
     //기본 함수들
     #region Monster Basic Functions
@@ -177,7 +172,7 @@ public abstract class NormalEnemy : MonoBehaviour
     protected virtual void OnCollisionEnter2D(Collision2D collision)//노말몹과 플레이어 충돌판정함수
     {
         PlayerController pc = collision.gameObject.GetComponent<PlayerController>();
-        if (pc != null && pc.IsDamagable)
+		if (pc != null && pc.IsDamagable)
             pc?.GetDamaged();
     }
 
@@ -201,13 +196,13 @@ public abstract class NormalEnemy : MonoBehaviour
 
     protected void Moving()         //몹이 자신이 보는 방향으로 움직이는 함수
     {
-        if (acceleration == 0)      //가속이 없으면,
-            rb.velocity = speed * Direction; //지정 속력 대로만 움직입니다.
-        else
-        {
-            if (rb.velocity.magnitude < speed || rb.velocity.normalized != Direction) //목표 속력보다 현재 속력이 작을때 또는 현재 속도의 방향과 자신의 방향이 다를때
-                rb.AddForce(acceleration * Direction); //가속도만큼 속도에 더합니다.
-        }
+		if (acceleration == 0)      //가속이 없으면,
+			rb.velocity = speed * Direction + new Vector2(0, rb.velocity.y); //지정 속력 대로만 움직입니다.
+		else
+		{
+			if (rb.velocity.magnitude < speed || rb.velocity.normalized != Direction) //목표 속력보다 현재 속력이 작을때 또는 현재 속도의 방향과 자신의 방향이 다를때
+				rb.AddForce(acceleration * Direction); //가속도만큼 속도에 더합니다.
+		}
 
         //transform.position += rb.velocity * unit * Time.deltaTime;
     }
@@ -228,7 +223,7 @@ public abstract class NormalEnemy : MonoBehaviour
         }
     }
 
-    protected void AttackTouch()    //접촉 공격
+    /*protected void AttackTouch()    //접촉 공격
     {
         if(isTouched && PlayerController.inst.IsDamagable)
         {
@@ -242,7 +237,7 @@ public abstract class NormalEnemy : MonoBehaviour
         //{
         //    PlayerController.inst.GetDamaged();
         //}
-    }
+    }*/
 
 	protected void AttackProjectile()   //원거리 공격. 총알이 없어서 제대로 구현되지 않았습니다.
 	{

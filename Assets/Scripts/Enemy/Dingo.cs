@@ -11,6 +11,7 @@ public class Dingo : NormalEnemy
         State move = new State();
 
         idle.StateUpdate += Idle;
+
         move.StateUpdate += FollowPlayer;
 
         stateMachine.AddNewState("idle", idle);
