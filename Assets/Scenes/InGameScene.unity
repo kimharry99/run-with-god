@@ -5297,6 +5297,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1128465054}
     m_Modifications:
+    - target: {fileID: 7510235709339390430, guid: cf5b43d29a393fa4cb369c6042b07403,
+        type: 3}
+      propertyPath: m_Name
+      value: BloodEffect
+      objectReference: {fileID: 0}
+    - target: {fileID: 7510235709339390430, guid: cf5b43d29a393fa4cb369c6042b07403,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
       propertyPath: playOnAwake
@@ -5356,16 +5366,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7510235709339390430, guid: cf5b43d29a393fa4cb369c6042b07403,
-        type: 3}
-      propertyPath: m_Name
-      value: BloodEffect
-      objectReference: {fileID: 0}
-    - target: {fileID: 7510235709339390430, guid: cf5b43d29a393fa4cb369c6042b07403,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4138772146777199517, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
@@ -6580,7 +6580,7 @@ Transform:
   m_GameObject: {fileID: 1430391011}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.11, y: -0.339, z: -1.2601527}
-  m_LocalScale: {x: 50071.85, y: 4.518, z: 1}
+  m_LocalScale: {x: 500, y: 4.518, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 10

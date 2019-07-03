@@ -9,7 +9,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	private const float explodeRange = 5;
 	private const int maxLife = 10;
 
-	private float speed = 0;
+	//private float speed = 0;
 	private int jumpCount = 2;
 	private int shotCount;
 	private float shotCooltime;
@@ -36,7 +36,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	public bool IsDamagable { get { return graceTimer <= 0; } }
 
 	[SerializeField]
-	private AudioClip shotSFX, hitSFX, boomSFX;
+	private AudioClip shotSFX = null, hitSFX = null, boomSFX = null;
 
 	private bool IsGround
 	{
@@ -96,6 +96,10 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		if (IsGround)
 		{
 			jumpCount = 2;
+		}
+		else if (jumpCount > 1)
+		{
+			jumpCount = 1;
 		}
 
 		if ((horizontal < 0 && !sr.flipX) || (horizontal > 0 && sr.flipX))
