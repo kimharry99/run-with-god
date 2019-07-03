@@ -39,10 +39,5 @@ public class Bat : NormalEnemy
         stateMachine.Transtion("roam");
     }
 
-    protected override void OnDead()
-    {
-        dead.Play();
-        StartCoroutine(DissolveEffectRoutine(2));
-    }
 }
 

@@ -64,7 +64,7 @@ public abstract class NormalEnemy : MonoBehaviour
     //[SerializeField]
     //protected int rangeAttack = 0;  //'근거리 공격 범위'입니다.
 
-    public ParticleSystem hitEffect;
+    public ParticleSystem hitEffect = null;
 	public Shader dissolve;
 	protected StateMachine stateMachine = new StateMachine();
     protected SpriteRenderer sr;
@@ -130,12 +130,14 @@ public abstract class NormalEnemy : MonoBehaviour
     protected abstract void InitEnemy();
 	public virtual void GetDamaged(int damage)
 	{
-		hitEffect.Play();
+        if (hitEffect != null)
+            hitEffect.Play();
         Health -= damage;   //피해만큼 체력을 낮춥니다.
 	}
-	public void GetDamagedToDeath()
+	public virtual void GetDamagedToDeath()
 	{
-		hitEffect.Play();
+        if (hitEffect != null)
+		    hitEffect.Play();
 		Health = 0;
 	}
 
