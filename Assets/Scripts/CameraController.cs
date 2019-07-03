@@ -15,7 +15,6 @@ public class CameraController : MonoBehaviour
 	private const float offsetY = 0.5f, offsetZ = -9;
 
 	public Material shockwave, chromatic;
-	public Material asdf;
 	private void Start()
 	{
 		target = PlayerController.inst.transform;

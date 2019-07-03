@@ -14,17 +14,20 @@ public class TrustSelector : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		//if player, Onhighlighted()
+		OnHighlighted();
 	}
 
 	private void OnTriggerStay2D(Collider2D collision)
 	{
-		//if input up, OnSelected()
+		if (Input.GetAxis("Vertical") > 0)
+		{
+			OnSelected();
+		}
 	}
 
 	private void OnTriggerExit2D(Collider2D collision)
 	{
-		//if player, OnUnhighlighted()
+		OnUnhighlighted();
 	}
 
 	/// <summary>
