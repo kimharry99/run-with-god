@@ -4,58 +4,40 @@ using UnityEngine;
 
 public class Shielder : NormalEnemy
 {
-    public ParticleSystem dead;
+    public Transform Shield;
 
+    protected override void Start()
+    {
+        base.Start();
+        Shield = transform.Find("Shield");
+    }
     protected override void InitEnemy()
     {
         State idle = new State();
         State move = new State();
 
         idle.StateUpdate += Idle;
-        move.StateUpdate += Moving;
+        move.StateUpdate += FollowPlayer;
 
         stateMachine.AddNewState("idle", idle);
         stateMachine.AddNewState("move", move);
 
         stateMachine.Transtion("idle");
-    }
 
-    public override void GetDamaged(int damage)
-    {
-        if (sr.flipX)
-        {
-            if(PlayerController.inst.transform.position.x > transform.position.x)
-            {
-                Health -= damage;
-            }
-        }
-        else
-        {
-            if(PlayerController.inst.transform.position.x < transform.position.x)
-            {
-                Health -= damage;
-            }
-        }
     }
 
     protected override void OnDead()
     {
-        dead.Play();
-        StartCoroutine(DissolveEffectRoutine(2));
+        GameManager.inst.KillCount++;
+        Destroy(gameObject);
+        Destroy(transform.Find("Shield"));
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    protected override void Flip()
     {
-        PlayerController pc = collision.gameObject.GetComponent<PlayerController>();
-        if (pc != null && pc.IsDamagable)
-            pc?.GetDamaged();
+        base.Flip();
+        Vector3 pos = Shield.transform.localPosition;
+        pos.x = -pos.x;
+        Shield.transform.localPosition = pos;
     }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        PlayerController pc = collision.GetComponent<PlayerController>();
-        if (pc != null && pc.IsDamagable)
-            pc?.GetDamaged();
-    }
-
 }

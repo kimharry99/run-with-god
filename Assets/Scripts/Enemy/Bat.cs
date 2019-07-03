@@ -8,6 +8,7 @@ public class Bat : NormalEnemy
 
     private double coordinate = 0;
     public ParticleSystem dead;
+
     protected void Roam()
     {
         
@@ -38,24 +39,5 @@ public class Bat : NormalEnemy
         stateMachine.Transtion("roam");
     }
 
-    protected override void OnDead()
-    {
-        dead.Play();
-        StartCoroutine(DissolveEffectRoutine(2));
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        PlayerController pc = collision.gameObject.GetComponent<PlayerController>();
-        if (pc != null && pc.IsDamagable)
-            pc?.GetDamaged();
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        PlayerController pc = collision.GetComponent<PlayerController>();
-        if (pc != null && pc.IsDamagable)
-            pc?.GetDamaged();
-    }
 }
 

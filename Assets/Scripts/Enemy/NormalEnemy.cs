@@ -64,7 +64,7 @@ public abstract class NormalEnemy : MonoBehaviour
     //[SerializeField]
     //protected int rangeAttack = 0;  //'근거리 공격 범위'입니다.
 
-    public ParticleSystem hitEffect;
+    public ParticleSystem hitEffect = null;
 	public Shader dissolve;
 	protected StateMachine stateMachine = new StateMachine();
     protected SpriteRenderer sr;
@@ -110,6 +110,7 @@ public abstract class NormalEnemy : MonoBehaviour
             isTouched = false;
     }*/
 
+    /*노말몹은 따로 isTouched 판정안하는 걸로 결정함.
     private void OnCollisionEnter2D(Collision2D col)
     {
 
@@ -122,19 +123,21 @@ public abstract class NormalEnemy : MonoBehaviour
         if (col.gameObject == PlayerController.inst.gameObject)
             isTouched = false;
     }
-
+   */
 
     //기본 함수들
     #region Monster Basic Functions
     protected abstract void InitEnemy();
 	public virtual void GetDamaged(int damage)
 	{
-		hitEffect.Play();
+        if (hitEffect != null)
+            hitEffect.Play();
         Health -= damage;   //피해만큼 체력을 낮춥니다.
 	}
-	public void GetDamagedToDeath()
+	public virtual void GetDamagedToDeath()
 	{
-		hitEffect.Play();
+        if (hitEffect != null)
+		    hitEffect.Play();
 		Health = 0;
 	}
 
@@ -171,15 +174,29 @@ public abstract class NormalEnemy : MonoBehaviour
 		mat.SetFloat("_Threshold", 1);
 	}
 
-	#endregion
+    protected virtual void OnCollisionEnter2D(Collision2D collision)//노말몹과 플레이어 충돌판정함수
+    {
+        PlayerController pc = collision.gameObject.GetComponent<PlayerController>();
+        if (pc != null && pc.IsDamagable)
+            pc?.GetDamaged();
+    }
+
+    #endregion
 
 
-	#region Monster AI Functions
+    #region Monster AI Functions
 
-	protected void FollowPlayer()   //플레이어를 따라 움직이는 함수
+    protected void FollowPlayer()   //플레이어를 따라 움직이는 함수
 	{
-        SeePlayer();    //항상 플레이어를 보도록 합니다.
-        Moving();       //움직입니다.
+        if (DetectPlayer(range))
+        {
+            SeePlayer();    //플레이어가 시야 내에 있다면 플레이어를 보도록 합니다.
+            Moving();       //움직입니다.
+            if (!DetectPlayer(range))//플레이어가 시야를 벗어난다면
+            {
+                stateMachine.Transtion("idle");//보통 상태로 전환합니다
+            }
+        }
 	}
 
     protected void Moving()         //몹이 자신이 보는 방향으로 움직이는 함수
@@ -205,7 +222,6 @@ public abstract class NormalEnemy : MonoBehaviour
 
     protected void Idle()           //감시하는 함수
 	{
-        SeePlayer();    //항상 플레이어를 보도록 합니다.
         if (DetectPlayer(range))
         {
             stateMachine.Transtion("move");
@@ -240,10 +256,12 @@ public abstract class NormalEnemy : MonoBehaviour
 
     protected void SeePlayer()  //플레이어를 보는 함수
     {
-        sr.flipX = PlayerController.inst.PlayerPosition.x < transform.position.x;
+        if (PlayerController.inst.PlayerPosition.x > transform.position.x == sr.flipX)
+            Flip();
+        //sr.flipX = PlayerController.inst.PlayerPosition.x < transform.position.x;
     }
 
-    private void Flip() //방향을 바꾸는 함수
+    protected virtual void Flip() //방향을 바꾸는 함수
     {
         sr.flipX = !sr.flipX;
     }
