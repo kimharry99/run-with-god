@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TrustSelector : MonoBehaviour
-{
+{   
 	public static Trust SelectedTrust { get; private set; }
 
 	[SerializeField]
@@ -11,14 +11,22 @@ public class TrustSelector : MonoBehaviour
 
 	[SerializeField]
 	private ParticleSystem spotlight;
+    public Light Light;
+    private float time;
 
-	private void OnTriggerEnter2D(Collider2D collision)
+    private void Start()
+    {
+        spotlight.Stop();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
 	{
 		OnHighlighted();
 	}
 
 	private void OnTriggerStay2D(Collider2D collision)
 	{
+
 		if (Input.GetAxis("Vertical") > 0)
 		{
 			OnSelected();
@@ -30,15 +38,18 @@ public class TrustSelector : MonoBehaviour
 		OnUnhighlighted();
 	}
 
-	/// <summary>
-	/// Called when player is nearby
-	/// </summary>
-	private void OnHighlighted()
-	{
-		//get brighter & start spotlight effect
-	}
+    /// <summary>
+    /// Called when player is nearby
+    /// </summary>
+    private void OnHighlighted()
+    {
+        //get brighter & start spotlight effect
+        spotlight.Play();
+        StopCoroutine("FadeOut");
+        StartCoroutine("FadeIn");
+    }
 
-	private void OnSelected()
+    private void OnSelected()
 	{
 		//Update SelectedTrust
 		//Selection confirm UI Opened
@@ -46,6 +57,27 @@ public class TrustSelector : MonoBehaviour
 
 	private void OnUnhighlighted()
 	{
-		//get darker & stop spotlight effect
-	}
+        //get darker & stop spotlight effect
+        spotlight.Stop();
+        StopCoroutine("FadeIn");
+        StartCoroutine("FadeOut");
+    }
+
+    IEnumerator FadeIn()
+    {
+        while(Light.intensity < 30f)
+        {
+            Light.intensity += 2;
+            yield return new WaitForSeconds(0.02f);
+        }  
+    }
+
+    IEnumerator FadeOut()
+    {
+        while (Light.intensity > 0.0f)
+        {
+            Light.intensity -= 2.5f;
+            yield return new WaitForSeconds(0.02f);
+        }
+    }
 }
