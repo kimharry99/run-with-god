@@ -49,9 +49,11 @@ public class Projectile : MonoBehaviour
 				break;
 			case ProjectileType.ENEMY:
 				if (collision.tag == "Player")
+				{
 					collision.GetComponent<PlayerController>()?.GetDamaged();
-				StopAllCoroutines();
-				Destroy(gameObject);
+					StopAllCoroutines();
+					Destroy(gameObject);
+				}
 				break;
 		}
 	}

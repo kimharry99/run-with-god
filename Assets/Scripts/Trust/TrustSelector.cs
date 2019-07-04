@@ -36,6 +36,7 @@ public class TrustSelector : MonoBehaviour
 	private void OnHighlighted()
 	{
 		//get brighter & start spotlight effect
+		//Trust info UI Update
 	}
 
 	private void OnSelected()
