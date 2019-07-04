@@ -1,0 +1,203 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ClockBoss : NormalEnemy
+{
+	public static float projSpeed = 1.0f;
+
+	public Transform handOrigin;
+	public Transform hourHand, minuteHand, secondHand;
+	public Transform hourShot, minuteShot, secondShot;
+	public GameObject hourBulletPrefab, minBulletPrefab, secBulletPrefab;
+	public float hourShotTimer, minShotTimer, secShotTimer;
+	public float shakeTimer = 5f;
+
+	protected override void Update()
+	{
+		base.Update();
+		if (hourShotTimer > 0)
+			hourShotTimer -= Time.deltaTime;
+		if (minShotTimer > 0)
+			minShotTimer -= Time.deltaTime;
+		if (secShotTimer > 0)
+			secShotTimer -= Time.deltaTime;
+		if (shakeTimer > 0)
+			shakeTimer -= Time.deltaTime;
+	}
+
+	protected override void InitEnemy()
+	{
+		InGameUIManager.inst.UpdateBossHelthUI(1);
+
+		State phase1 = new State();
+		State phase2 = new State();
+		State phase3 = new State();
+
+		State P1To2 = new State();
+		State P2To3 = new State();
+
+
+		phase1.StateUpdate += delegate
+		{
+			RotateHand(hourHand, handOrigin, 40);
+			if (hourShotTimer <= 0)
+			{
+				ShotBullet(hourHand, hourShot, hourBulletPrefab);
+				hourShotTimer = 0.2f;
+			}
+			if (shakeTimer <= 0)
+			{
+				StartCoroutine(ShakeHand(secondHand));
+				StartCoroutine(ShakeHand(minuteHand));
+				shakeTimer = Random.Range(10, 15);
+			}
+			if (Health < 700)
+			{
+				stateMachine.Transtion("p1to2");
+			}
+		};
+
+		phase1.Exit += delegate { StopCoroutine(ShakeHand(minuteHand)); };
+
+		P1To2.Enter += delegate { StartCoroutine(MovePhaseRoutine(minuteHand, handOrigin, "phase2")); };
+
+		phase2.StateUpdate += delegate
+		{
+			RotateHand(hourHand, handOrigin, 40);
+			RotateHand(minuteHand, handOrigin, 60);
+			if (hourShotTimer <= 0)
+			{
+				ShotBullet(hourHand, hourShot, hourBulletPrefab);
+				hourShotTimer = 0.2f;
+			}
+			if (minShotTimer <= 0)
+			{
+				ShotBullet(minuteHand, minuteShot, minBulletPrefab);
+				minShotTimer = 0.2f;
+			}
+			if (shakeTimer <= 0)
+			{
+				StartCoroutine(ShakeHand(secondHand));
+				StartCoroutine(ShakeHand(minuteHand));
+				shakeTimer = Random.Range(10, 15);
+			}
+			if (Health < 400)
+			{
+				stateMachine.Transtion("p2to3");
+			}
+		};
+
+		phase2.Exit += delegate { StopCoroutine(ShakeHand(secondHand)); };
+
+		P2To3.Enter += delegate { StartCoroutine(MovePhaseRoutine(secondHand, handOrigin, "phase3")); };
+
+		phase3.Enter += delegate
+		{
+			hourShotTimer = 2f;
+			minShotTimer = 1.5f;
+			secShotTimer = 1f;
+		};
+
+		phase3.StateUpdate += delegate
+		{
+			RotateHand(hourHand, handOrigin, 40);
+			RotateHand(minuteHand, handOrigin, 60);
+			RotateHand(secondHand, handOrigin, 120);
+
+			if (hourShotTimer <= 0)
+			{
+				ShotBullet(hourHand, hourShot, hourBulletPrefab);
+				hourShotTimer = 0.2f;
+			}
+			if (minShotTimer <= 0)
+			{
+				ShotBullet(minuteHand, minuteShot, minBulletPrefab);
+				minShotTimer = 0.2f;
+			}
+			if (secShotTimer <= 0)
+			{
+				ShotBullet(secondHand, secondShot, secBulletPrefab);
+				secShotTimer = 0.2f;
+			}
+			if (shakeTimer <= 0)
+			{
+				StartCoroutine(ShakeHand(secondHand));
+				StartCoroutine(ShakeHand(minuteHand));
+				shakeTimer = Random.Range(10, 15);
+			}
+		};
+
+		stateMachine.AddNewState("phase1", phase1);
+		stateMachine.AddNewState("phase2", phase2);
+		stateMachine.AddNewState("phase3", phase3);
+
+		stateMachine.AddNewState("p1to2", P1To2);
+		stateMachine.AddNewState("p2to3", P2To3);
+
+		stateMachine.Transtion("phase1");
+	}
+
+	private void RotateHand(Transform target, Transform pivot, float speed)
+	{
+		target.Rotate(pivot.position, speed * Time.deltaTime);
+	}
+
+	private void ShotBullet(Transform hand, Transform shotOrigin, GameObject prefab)
+	{
+		float angle = Mathf.Deg2Rad * (hand.rotation.eulerAngles.z + 90);
+		GameObject bullet = Instantiate(prefab, shotOrigin.position, hand.rotation);
+		bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized * projSpeed;
+	}
+
+	private IEnumerator MovePhaseRoutine(Transform hand, Transform to, string nextState)
+	{
+		Vector3 oriPos = hand.position;
+		Quaternion oriRot = hand.rotation;
+		for (float t = 0; t <= 2.5f; t+= Time.deltaTime)
+		{
+			hand.position = Vector3.Lerp(oriPos, to.position, t / 2.5f);
+			hand.rotation = Quaternion.Lerp(oriRot, to.rotation, t / 2.5f);
+			yield return null;
+		}
+		stateMachine.Transtion(nextState);
+	}
+
+	private IEnumerator ShakeHand(Transform hand)
+	{
+		Vector3 randPos = Random.insideUnitCircle * 2;
+		Vector3 destination = PlayerController.inst.transform.position + randPos;
+		Vector3 oriPos = hand.position;
+
+		for (float t = 0; t < 2f; t += Time.deltaTime)
+		{
+			hand.position = Vector3.Lerp(oriPos, destination, 1- (t/2 - 1) * (t/2 - 1));
+			yield return null;
+		}
+
+		Quaternion oriRot = hand.rotation;
+		for (float t = 0; t <= 1f; t += Time.deltaTime)
+		{
+			hand.rotation = Quaternion.Euler(0, 0, oriRot.eulerAngles.z + 360 * t);
+			yield return null;
+		}
+		hand.rotation = oriRot;
+
+		for (float t = 0; t < 2f; t += Time.deltaTime)
+		{
+			hand.position = Vector3.Lerp(destination, oriPos, 1 - (t/2 - 1) * (t/2 - 1));
+			yield return null;
+		}
+	}
+
+	public override void GetDamaged(int damage)
+	{
+		base.GetDamaged(damage);
+		InGameUIManager.inst.UpdateBossHelthUI((float)Health / maxHealth);
+	}
+
+	public override void GetDamagedToDeath()
+	{
+		
+	}
+}

@@ -15,8 +15,11 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 
 	public GameObject pauseUIPanel;
 
+	public Slider bossHealthUI;
+
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
+		bossHealthUI.gameObject.SetActive(scene.name == "Boss");
 		//Check Scene is ingame, boss scene
 		//If not, disable gameobect
 	}
@@ -62,5 +65,10 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 	public void UpdateTrustUI(Trust trust)
 	{
 
+	}
+
+	public void UpdateBossHelthUI(float value)
+	{
+		bossHealthUI.value = value;
 	}
 }

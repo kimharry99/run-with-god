@@ -41,14 +41,14 @@ public class Projectile : MonoBehaviour
 			case ProjectileType.PLAYER:
 				if (collision.tag == "Enemy")
 					collision.GetComponent<NormalEnemy>()?.GetDamaged(attack);
-				if (collision.tag != "Player")
+				if (collision.tag != "Player" && collision.tag != "Projectile")
 				{
 					StopAllCoroutines();
 					Destroy(gameObject);
 				}
 				break;
 			case ProjectileType.ENEMY:
-				if (collision.tag == "Player")
+				if (collision.tag == "Player" && PlayerController.inst.IsDamagable)
 				{
 					collision.GetComponent<PlayerController>()?.GetDamaged();
 					StopAllCoroutines();
