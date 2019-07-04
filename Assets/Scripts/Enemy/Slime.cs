@@ -9,8 +9,7 @@ public class Slime : NormalEnemy
         State idle = new State();
         State move = new State();
 
-        idle.StateUpdate += Idle;
-        //idle.StateUpdate += AttackTouch;
+        idle.StateUpdate += MonitorAndTransition;
 
         move.StateUpdate += FollowPlayer;
 

@@ -8,24 +8,7 @@ public abstract class NormalEnemy : MonoBehaviour
     
     //변수들
     #region Monster Variables 
-    private int jumpCount = 1;
 
-    /*private Vector3 _direction = Vector3.left;  //몹이 바라보고 있는 방향입니다.
-    protected Vector3 direction {
-        get
-        {
-            return _direction;
-        }
-        set
-        {
-            _direction = value;
-            if ((_direction.normalized == Vector3.left && !sr.flipX) ||       
-                (_direction.normalized == Vector3.right && sr.flipX))
-            {
-                Flip();
-            }
-        }
-    }*/
     protected Vector2 Direction
     {
         get { return sr.flipX ? Vector2.left : Vector2.right; }
@@ -73,10 +56,12 @@ public abstract class NormalEnemy : MonoBehaviour
     protected bool isTouched = false;   //플레이어와의 접촉 여부를 보여주는 변수입니다.
     private Transform landChecker;
 
-    private Transform shotPosition;
+    [SerializeField]
+    protected Transform shotPosition;
+    [SerializeField]
+    protected int shotSpeed;
     public GameObject bulletPrefab;
     public AudioClip shotSFX;
-    //protected int jumpSpeed = 0;
 
     /*private bool IsGround
     {
@@ -215,19 +200,15 @@ public abstract class NormalEnemy : MonoBehaviour
 		rb.velocity = speed * direction;
 	}
 
-    protected void Idle()           //감시하는 함수
-	{
-        if (DetectPlayer(range))
-        {
-            stateMachine.Transtion("move");
-        }
-    }
-
-    /*protected void AttackTouch()    //접촉 공격
+    protected void MonitorAndTransition()
     {
-        if(isTouched && PlayerController.inst.IsDamagable)
+        MonitorAndTransition("move");
+    }
+    protected void MonitorAndTransition(string nextState = "move")
+    {
+        if(DetectPlayer(range))
         {
-            PlayerController.inst.GetDamaged();
+            stateMachine.Transtion(nextState);
         }
     }
 
@@ -237,16 +218,18 @@ public abstract class NormalEnemy : MonoBehaviour
         //{
         //    PlayerController.inst.GetDamaged();
         //}
-    }*/
+    }
 
-	protected void AttackProjectile()   //원거리 공격. 총알이 없어서 제대로 구현되지 않았습니다.
+	protected void AttackProjectile()   //원거리 공격.
 	{
-        GameObject bullet = Instantiate(bulletPrefab);
+        bulletPrefab.GetComponent<Projectile>().type = ProjectileType.ENEMY;
+
+        GameObject bullet = Instantiate(bulletPrefab) as GameObject;
         bullet.transform.position = shotPosition.position + new Vector3(0, Random.Range(-0.05f, 0.05f));
-        bullet.GetComponent<Rigidbody2D>().velocity = ShotDirection() * 1f;
-        //CameraController.Shake(0.02f, 0.05f);
-        SoundManager.inst.PlaySFX(gameObject, shotSFX);
-        //Long range attack
+        bullet.GetComponent<Rigidbody2D>().velocity = ShotDirection * shotSpeed;
+        bullet.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 180 + Mathf.Acos(ShotDirection.x) * 180 / Mathf.PI));
+
+        //SoundManager.inst.PlaySFX(gameObject, shotSFX);
     }
 
     protected void SeePlayer()  //플레이어를 보는 함수
@@ -260,16 +243,6 @@ public abstract class NormalEnemy : MonoBehaviour
     {
         sr.flipX = !sr.flipX;
     }
-
-    /*protected void Jump() //보스 전용 임시 점프 함수
-    {
-        if (jumpCount > 0)
-        {
-            rb.velocity += new Vector2(0, jumpSpeed - rb.velocity.y);
-
-            jumpCount--;
-        }
-    }*/
 
     #endregion
 
@@ -299,10 +272,15 @@ public abstract class NormalEnemy : MonoBehaviour
         return ret;
     }
 
-    protected Vector2 ShotDirection()
+    protected Vector2 ShotDirection
     {
-        Vector2 ret = Vector2.zero;
-        return ret;
+        get {
+            Vector2 difference = PlayerController.inst.transform.position - shotPosition.position;
+            Vector2 direction = difference.normalized;
+            
+            return direction;
+        }
     }
+
     #endregion
 }

@@ -16,7 +16,7 @@ public class Shielder : NormalEnemy
         State idle = new State();
         State move = new State();
 
-        idle.StateUpdate += Idle;
+        idle.StateUpdate += MonitorAndTransition;
         move.StateUpdate += FollowPlayer;
 
         stateMachine.AddNewState("idle", idle);

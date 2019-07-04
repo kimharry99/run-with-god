@@ -10,8 +10,8 @@ public class Zombie : NormalEnemy
         State idle = new State();
         State move = new State();
 
-        idle.StateUpdate += Idle;
-		move.StateUpdate += Moving;
+        idle.StateUpdate += MonitorAndTransition;
+        move.StateUpdate += Moving;
 
         stateMachine.AddNewState("idle", idle);
 		stateMachine.AddNewState("move", move);

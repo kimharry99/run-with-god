@@ -15,7 +15,7 @@ public class Projectile : MonoBehaviour
 	[SerializeField]
 	private float reach;
 	[SerializeField]
-	ProjectileType type;
+	public ProjectileType type;
 
 	private void Start()
 	{
@@ -48,10 +48,13 @@ public class Projectile : MonoBehaviour
 				}
 				break;
 			case ProjectileType.ENEMY:
-				if (collision.tag == "Player")
+				if (collision.tag == "Player" && PlayerController.inst.IsDamagable)
 					collision.GetComponent<PlayerController>()?.GetDamaged();
-				StopAllCoroutines();
-				Destroy(gameObject);
+                if (collision.tag != "Enemy")
+                {
+                    StopAllCoroutines();
+                    Destroy(gameObject);
+                }
 				break;
 		}
 	}
