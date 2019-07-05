@@ -24,6 +24,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		}
 	}
 
+    private Collider2D col;
 	private Rigidbody2D rb;
 	private SpriteRenderer sr;
 	private Transform landChecker;
@@ -40,7 +41,9 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 	private bool IsGround
 	{
-		get { return Physics2D.OverlapPoint(landChecker.position, 1 << LayerMask.NameToLayer("Ground")) != null; }
+		get {
+            return Physics2D.Linecast(landChecker.position + new Vector3(-col.bounds.size.x / 2 - 0.01f, 0), landChecker.position + new Vector3(col.bounds.size.x / 2 + 0.01f, 0), 1 << LayerMask.NameToLayer("Ground")).transform != null;
+        }
 	}
 
 	public Vector3 PlayerPosition
@@ -59,6 +62,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	private void Start()
 	{
 		rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<Collider2D>();
 		landChecker = transform.Find("LandChecker");
 		shotPosition = transform.Find("ShotPosition");
 		sr = GetComponent<SpriteRenderer>();
