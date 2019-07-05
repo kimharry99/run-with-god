@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class KillCountTrust : Trust
 {
-	public const int needKillCount = 30;
+	public const int needKillCount = 10;
 
 	public override bool IsDone { get { return GameManager.inst.KillCount >= needKillCount; } }
 

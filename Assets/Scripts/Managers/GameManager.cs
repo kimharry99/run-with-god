@@ -13,8 +13,10 @@ public class GameManager : SingletonBehaviour<GameManager>
 		{
 			_playtime = value;
 			InGameUIManager.inst.UpdatePlaytimeText(_playtime);
+            OnPlayTimeChanged?.Invoke(_playtime);
 		}
 	}
+    public Action<float> OnPlayTimeChanged;
 
 	private int _killCount;
 	public int KillCount
