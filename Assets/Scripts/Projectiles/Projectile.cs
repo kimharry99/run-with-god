@@ -17,7 +17,7 @@ public class Projectile : MonoBehaviour
 	[SerializeField]
 	ProjectileType type;
 
-	private void Start()
+	protected virtual void Start()
 	{
 		StartCoroutine(DestroyRoutine(reach / GetComponent<Rigidbody2D>().velocity.magnitude));
 	}
@@ -58,7 +58,7 @@ public class Projectile : MonoBehaviour
 		}
 	}
 
-	private IEnumerator DestroyRoutine(float time)
+	protected IEnumerator DestroyRoutine(float time)
 	{
 		yield return new WaitForSeconds(time);
 		Destroy(gameObject);

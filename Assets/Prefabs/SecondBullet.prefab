@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8900292760365586685}
   - component: {fileID: 8900292760365586682}
   - component: {fileID: 6401327172509734742}
-  - component: {fileID: 17431266570339612}
+  - component: {fileID: -4011622442492564524}
   m_Layer: 0
   m_Name: SecondBullet
   m_TagString: Projectile
@@ -224,7 +224,7 @@ TrailRenderer:
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
   m_Emitting: 1
---- !u!114 &17431266570339612
+--- !u!114 &-4011622442492564524
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -233,9 +233,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8900292760365586683}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70b90e3d082a5f04f8a4f15a38043700, type: 3}
+  m_Script: {fileID: 11500000, guid: 9345b922560631547a74006d06dc9a0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   attack: 1
-  reach: 60
+  reach: 20
   type: 1
