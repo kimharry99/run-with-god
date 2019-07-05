@@ -13,6 +13,8 @@ public class ClockBoss : NormalEnemy
 	public float hourShotTimer, minShotTimer, secShotTimer;
 	public float shakeTimer = 5f;
 
+    private Coroutine minuteShake, secondShake;
+
 	protected override void Update()
 	{
 		base.Update();
@@ -40,7 +42,7 @@ public class ClockBoss : NormalEnemy
 
 		phase1.StateUpdate += delegate
 		{
-			RotateHand(hourHand, handOrigin, 40);
+			RotateHand(hourHand, Vector3.back, 40);
 			if (hourShotTimer <= 0)
 			{
 				ShotBullet(hourHand, hourShot, hourBulletPrefab);
@@ -48,24 +50,24 @@ public class ClockBoss : NormalEnemy
 			}
 			if (shakeTimer <= 0)
 			{
-				StartCoroutine(ShakeHand(secondHand));
-				StartCoroutine(ShakeHand(minuteHand));
+				secondShake = StartCoroutine(ShakeHand(secondHand));
+				minuteShake = StartCoroutine(ShakeHand(minuteHand));
 				shakeTimer = Random.Range(10, 15);
 			}
-			if (Health < 700)
+			if (Health < 999)
 			{
 				stateMachine.Transtion("p1to2");
 			}
 		};
 
-		phase1.Exit += delegate { StopCoroutine(ShakeHand(minuteHand)); };
+		phase1.Exit += delegate { if (minuteShake != null) StopCoroutine(minuteShake); };
 
 		P1To2.Enter += delegate { StartCoroutine(MovePhaseRoutine(minuteHand, handOrigin, "phase2")); };
 
 		phase2.StateUpdate += delegate
 		{
-			RotateHand(hourHand, handOrigin, 40);
-			RotateHand(minuteHand, handOrigin, 60);
+			RotateHand(hourHand, Vector3.back, 40);
+			RotateHand(minuteHand, Vector3.back, 60);
 			if (hourShotTimer <= 0)
 			{
 				ShotBullet(hourHand, hourShot, hourBulletPrefab);
@@ -88,7 +90,7 @@ public class ClockBoss : NormalEnemy
 			}
 		};
 
-		phase2.Exit += delegate { StopCoroutine(ShakeHand(secondHand)); };
+		phase2.Exit += delegate { if (secondShake != null) StopCoroutine(secondShake); };
 
 		P2To3.Enter += delegate { StartCoroutine(MovePhaseRoutine(secondHand, handOrigin, "phase3")); };
 
@@ -101,9 +103,9 @@ public class ClockBoss : NormalEnemy
 
 		phase3.StateUpdate += delegate
 		{
-			RotateHand(hourHand, handOrigin, 40);
-			RotateHand(minuteHand, handOrigin, 60);
-			RotateHand(secondHand, handOrigin, 120);
+			RotateHand(hourHand, Vector3.back, 40);
+			RotateHand(minuteHand, Vector3.back, 60);
+			RotateHand(secondHand, Vector3.back, 120);
 
 			if (hourShotTimer <= 0)
 			{
@@ -138,9 +140,9 @@ public class ClockBoss : NormalEnemy
 		stateMachine.Transtion("phase1");
 	}
 
-	private void RotateHand(Transform target, Transform pivot, float speed)
+	private void RotateHand(Transform target, Vector3 axis, float speed)
 	{
-		target.Rotate(pivot.position, speed * Time.deltaTime);
+		target.Rotate(axis, speed * Time.deltaTime);
 	}
 
 	private void ShotBullet(Transform hand, Transform shotOrigin, GameObject prefab)
