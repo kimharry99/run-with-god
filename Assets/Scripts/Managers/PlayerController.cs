@@ -134,9 +134,9 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		hit.Enter += delegate
 		{
 			graceTimer = gracePeriod;
-			hitTimer = 1.0f;
+			hitTimer = 0.0f;
 			StartCoroutine(GraceTimeRoutine());
-			StartCoroutine(HitRoutine());
+			//StartCoroutine(HitRoutine());
 		};
 
 		hit.StateUpdate += delegate
@@ -181,6 +181,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		gameObject.layer = LayerMask.NameToLayer("Player");
 	}
 
+    /*
 	private IEnumerator HitRoutine()
 	{
 		Color oriColor = sr.color;
@@ -192,6 +193,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			yield return null;
 		}
 	}
+    */
 
 	private IEnumerator DashRoutine()
 	{
