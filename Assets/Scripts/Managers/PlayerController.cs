@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -58,6 +59,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	private StateMachine playerState = new StateMachine();
 
     private Animator playerAnimator;
+
+    public Action OnJump;
 
 	private void Start()
 	{
@@ -136,6 +139,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			rb.velocity += new Vector2(0, jumpSpeed - rb.velocity.y);
 			//rb.velocity +=  rb.velocity.y < 0 ? new Vector2(0, jumpSpeed - rb.velocity.y) : new Vector2(0, jumpSpeed);
 			jumpCount--;
+            OnJump?.Invoke();
 		}
 
 		if (Input.GetButtonDown("Dash") && dashTimer <= 0)
@@ -293,7 +297,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	private void ShotBullet()
 	{
 		GameObject bullet = Instantiate(bulletPrefab);
-		bullet.transform.position = shotPosition.position + new Vector3(0, Random.Range(-0.05f, 0.05f));
+		bullet.transform.position = shotPosition.position + new Vector3(0, UnityEngine.Random.Range(-0.05f, 0.05f));
 		bullet.GetComponent<Rigidbody2D>().velocity = ShotDirection() * 1f;
 		shotCount--;
 		shotCooltime = 0.05f;
