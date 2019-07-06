@@ -79,7 +79,6 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 	private void Update()
 	{
-		//PlayerMovementControl();
 		gunState.UpdateStateMachine();
 		playerState.UpdateStateMachine();
 
@@ -96,12 +95,12 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		if (scene.name == "InGameScene" || scene.name == "Boss")
 		{
 			gameObject.SetActive(true);
-			playerState.Transtion("idle");
+			playerState.Transition("idle");
 		}
 		else if (scene.name == "TrustSelection")
 		{
 			gameObject.SetActive(true);
-			playerState.Transtion("trustSelect");
+			playerState.Transition("trustSelect");
 		}
 		else
 		{
@@ -144,7 +143,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 		if (Input.GetButtonDown("Dash") && dashTimer <= 0)
 		{
-			playerState.Transtion("dash");
+			playerState.Transition("dash");
 		}
 	}
 
@@ -152,7 +151,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	{
 		if (Input.GetButtonDown("Fire"))
 		{
-			gunState.Transtion("fire");
+			gunState.Transition("fire");
 		}
 	}
 
@@ -175,7 +174,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		{
 			if (hitTimer <= 0)
 			{
-				playerState.Transtion("idle");
+				playerState.Transition("idle");
 			}
 		};
 
@@ -201,7 +200,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		playerState.AddNewState("dash", dash);
 		playerState.AddNewState("trustSelect", trustSelect);
 
-		playerState.Transtion("idle");
+		playerState.Transition("idle");
 	}
 
 	private IEnumerator GraceTimeRoutine()
@@ -247,7 +246,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 		rb.simulated = true;
 		//transform.position = destination;
-		playerState.Transtion("idle");
+		playerState.Transition("idle");
 		sr.color = sr.color + new Color(0, 0, 0, 0.5f);
 	}
 
@@ -275,7 +274,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			}
 			if (shotCount <= 0)
 			{
-				gunState.Transtion("idle");
+				gunState.Transition("idle");
 			}
 			if (Input.GetButtonDown("Fire"))
 			{
@@ -284,7 +283,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		};
 		gunState.AddNewState("idle", idle);
 		gunState.AddNewState("fire", fire);
-		gunState.Transtion("idle");
+		gunState.Transition("idle");
 	}
 
 	private void Flip()
@@ -340,8 +339,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		graceTimer = gracePeriod;
 		Life--;
 		SoundManager.inst.PlaySFX(gameObject, hitSFX);
-		playerState.Transtion("hit");
-		gunState.Transtion("idle");
+		playerState.Transition("hit");
+		gunState.Transition("idle");
 		Explode();
 	}
 

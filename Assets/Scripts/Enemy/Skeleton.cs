@@ -5,7 +5,9 @@ using UnityEngine.Events;
 
 public class Skeleton : NormalEnemy
 {
-    protected override void InitEnemy()
+	public override EnemyType Type { get { return EnemyType.SKELETON; } }
+
+	protected override void InitEnemy()
     {
         State idle = new State();
         State move = new State();
@@ -17,6 +19,6 @@ public class Skeleton : NormalEnemy
         stateMachine.AddNewState("idle", idle);
         stateMachine.AddNewState("move", move);
 
-        stateMachine.Transtion("idle");
+        stateMachine.Transition("idle");
     }
 }

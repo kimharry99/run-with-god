@@ -66,7 +66,7 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 
 	public void UpdateTrustUI(Trust trust)
 	{
-
+		//Update Trust Text
 	}
 
 	public void UpdateBossHelthUI(float value)

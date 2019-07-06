@@ -24,13 +24,11 @@ public class TrustSelectionUIManager : SingletonBehaviour<TrustSelectionUIManage
 	public void OpenConfirmPanel()
 	{
 		ConfirmPanel.SetActive(true);
-		//SetActive true ConfirmPanel
 	}
 
 	public void CloseConfirmPanel()
 	{
 		ConfirmPanel.SetActive(false);
-		//SetActive false ConfirmPanel
 	}
 
 	public void TrustConfirmYes()

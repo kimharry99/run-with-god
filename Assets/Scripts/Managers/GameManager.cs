@@ -19,17 +19,22 @@ public class GameManager : SingletonBehaviour<GameManager>
 	}
     public Action<float> OnPlayTimeChanged;
 
-	private int _killCount;
+	//private int _killCount;
 	public int KillCount
 	{
-		get { return _killCount; }
-		set
+		get
 		{
-			_killCount = value;
-			OnKillCountChanged?.Invoke(_killCount);
+			int _killCount = 0;
+			foreach (var killCount in enemyKillCounts.Values)
+			{
+				_killCount += killCount;
+			}
+			return _killCount;
 		}
 	}
-	public Action<int> OnKillCountChanged;
+
+	public Dictionary<EnemyType, int> enemyKillCounts = new Dictionary<EnemyType, int>();
+	public Action<EnemyType> OnEnemyKilled;
 
 	private StateMachine gameState = new StateMachine();
 	public Trust SelectedTrust { get { return TrustSelector.SelectedTrust; } }
@@ -45,7 +50,13 @@ public class GameManager : SingletonBehaviour<GameManager>
 
 	private void Awake()
 	{
-		OnKillCountChanged += InGameUIManager.inst.UpdateKillCountText;
+		if (inst != this)
+		{
+			Destroy(gameObject);
+			return;
+		}
+		else
+			SetStatic();
 
 		InitGameState();
 
@@ -56,7 +67,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 		foreach (var trust in Resources.LoadAll<Trust>("Trusts"))
 		{
 			Debug.Log(trust.name + " loaded");
-			Tuple<TrustType, int> tuple = new Tuple<TrustType, int>(trust.type, trust.tier);
+			Tuple<TrustType, int> tuple = new Tuple<TrustType, int>(trust.trustType, trust.tier);
 			if (!unplayedTrusts.ContainsKey(tuple))
 			{
 				unplayedTrusts.Add(tuple, new List<Trust>());
@@ -105,13 +116,17 @@ public class GameManager : SingletonBehaviour<GameManager>
 
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
+		if (scene.name == "InGameScene")
+		{
+			SelectedTrust.Init();
+		}
 		if (scene.name == "InGameScene" || scene.name == "Boss")
 		{
-			gameState.Transtion("play");
+			gameState.Transition("play");
 		}
 		else
 		{
-			gameState.Transtion("pause");
+			gameState.Transition("pause");
 		}
 	}
 
@@ -146,7 +161,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 
 	public void PlayTrust(Trust trust)
 	{
-		Tuple<TrustType, int> tuple = new Tuple<TrustType, int>(trust.type, trust.tier);
+		Tuple<TrustType, int> tuple = new Tuple<TrustType, int>(trust.trustType, trust.tier);
 		if (unplayedTrusts[tuple].Contains(trust))
 		{
 			unplayedTrusts[tuple].Remove(trust);
@@ -165,5 +180,13 @@ public class GameManager : SingletonBehaviour<GameManager>
 
 		unplayed.AddRange(played);
 		played.RemoveRange(0, played.Count);
+	}
+
+	public void OnEnemyKill(EnemyType type)
+	{
+		if (!enemyKillCounts.ContainsKey(type))
+			enemyKillCounts.Add(type, 0);
+		enemyKillCounts[type]++;
+		OnEnemyKilled?.Invoke(type);
 	}
 }

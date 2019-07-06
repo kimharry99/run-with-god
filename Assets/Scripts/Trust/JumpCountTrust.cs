@@ -17,6 +17,7 @@ public class JumpCountTrust : Trust
 
     public override void Init()
     {
+		jumpCount = 0;
         PlayerController.inst.OnJump += delegate { InGameUIManager.inst.UpdateTrustUI(this); };
         PlayerController.inst.OnJump += UpJumpCount;
     }
@@ -25,5 +26,4 @@ public class JumpCountTrust : Trust
     {
         return Mathf.Min(jumpCount, needJumpCount) + " / " + needJumpCount;
     }
-
 }

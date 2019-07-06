@@ -8,7 +8,7 @@ public class ClearTimeTrust : Trust
 
     public override bool IsDone { get { return GameManager.inst.Playtime <= needClearTime; } }
 
-    public override void Init()
+	public override void Init()
     {
         GameManager.inst.OnPlayTimeChanged += delegate { InGameUIManager.inst.UpdateTrustUI(this); };
     }

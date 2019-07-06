@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class ClockBoss : NormalEnemy
 {
-    public static float timeSpeed = 1.0f;
+	public override EnemyType Type { get { return EnemyType.BOSS_CLOCK; } }
+
+	public static float timeSpeed = 1.0f;
 
     public Transform handOrigin;
     public Transform hourHand, minuteHand, secondHand;
@@ -16,7 +18,7 @@ public class ClockBoss : NormalEnemy
 
     private Coroutine minuteShake, secondShake;
 
-    protected override void Update()
+	protected override void Update()
     {
         base.Update();
         if (hourShotTimer > 0)
@@ -63,7 +65,7 @@ public class ClockBoss : NormalEnemy
             }
             if (Health < 700)
             {
-                stateMachine.Transtion("p1to2");
+                stateMachine.Transition("p1to2");
             }
         };
 
@@ -97,7 +99,7 @@ public class ClockBoss : NormalEnemy
             }
             if (Health < 400)
             {
-                stateMachine.Transtion("p2to3");
+                stateMachine.Transition("p2to3");
             }
         };
 
@@ -152,7 +154,7 @@ public class ClockBoss : NormalEnemy
         stateMachine.AddNewState("p1to2", P1To2);
         stateMachine.AddNewState("p2to3", P2To3);
 
-        stateMachine.Transtion("phase1");
+        stateMachine.Transition("phase1");
     }
 
     private void RotateHand(Transform target, Vector3 axis, float speed)
@@ -177,7 +179,7 @@ public class ClockBoss : NormalEnemy
             hand.rotation = Quaternion.Lerp(oriRot, to.rotation, t / 2.5f);
             yield return null;
         }
-        stateMachine.Transtion(nextState);
+        stateMachine.Transition(nextState);
     }
 
     private IEnumerator ShakeHand(Transform hand)

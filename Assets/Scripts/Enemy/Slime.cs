@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Slime : NormalEnemy
 {
-    protected override void InitEnemy()
+	public override EnemyType Type { get { return EnemyType.SLIME; } }
+
+	protected override void InitEnemy()
     {
         State idle = new State();
         State move = new State();
@@ -16,7 +18,7 @@ public class Slime : NormalEnemy
         stateMachine.AddNewState("idle", idle);
         stateMachine.AddNewState("move", move);
 
-        stateMachine.Transtion("idle");
+        stateMachine.Transition("idle");
     }
 
     protected override void OnDead()

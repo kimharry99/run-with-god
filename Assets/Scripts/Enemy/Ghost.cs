@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Ghost : NormalEnemy
 {
+	public override EnemyType Type { get { return EnemyType.GHOST; } }
+
 	protected override void InitEnemy()
 	{
 		State idle = new State();
@@ -15,6 +17,6 @@ public class Ghost : NormalEnemy
 		stateMachine.AddNewState("idle", idle);
 		stateMachine.AddNewState("move", move);
 
-		stateMachine.Transtion("idle");
+		stateMachine.Transition("idle");
 	}
 }
