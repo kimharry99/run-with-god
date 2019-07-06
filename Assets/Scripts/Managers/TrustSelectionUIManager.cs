@@ -7,7 +7,6 @@ public class TrustSelectionUIManager : SingletonBehaviour<TrustSelectionUIManage
 {
 	public Text trustNameText;
 	public Text trustDescriptionText;
-
 	public Transform ConfirmPanel;
 
 
@@ -28,11 +27,28 @@ public class TrustSelectionUIManager : SingletonBehaviour<TrustSelectionUIManage
 
 	public void TrustConfirmYes()
 	{
-		//
+
 	}
 
 	public void TrustConfirmNo()
 	{
 
 	}
+
+    private void Start()
+    {
+
+    }
+
+    IEnumerator UpdateTrustInfoText(string trust)
+	{
+        string descript = trust.ToString();
+        yield return new WaitForSeconds(0.05f);
+        for(int i =0;i<=descript.Length;i++)
+        {
+            trustDescriptionText.text = descript.Substring(0, i);
+
+            yield return new WaitForSeconds(0.15f);
+        }
+    }
 }
