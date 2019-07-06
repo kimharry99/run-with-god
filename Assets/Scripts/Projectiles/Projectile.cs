@@ -15,7 +15,7 @@ public class Projectile : MonoBehaviour
 	[SerializeField]
 	private float reach;
 	[SerializeField]
-	ProjectileType type;
+	public ProjectileType type;
 
 	protected virtual void Start()
 	{
@@ -54,6 +54,11 @@ public class Projectile : MonoBehaviour
 					StopAllCoroutines();
 					Destroy(gameObject);
 				}
+                if (collision.tag != "Enemy")
+                {
+                    StopAllCoroutines();
+                    Destroy(gameObject);
+                }
 				break;
 		}
 	}

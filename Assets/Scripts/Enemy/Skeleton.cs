@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Skeleton : NormalEnemy
 {
@@ -9,8 +10,7 @@ public class Skeleton : NormalEnemy
         State idle = new State();
         State move = new State();
 
-        idle.StateUpdate += Idle;
-        //idle.StateUpdate += AttackTouch;
+        idle.StateUpdate += MonitorAndTransition;
 
         move.StateUpdate += FollowPlayer;
 

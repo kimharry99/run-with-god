@@ -9,7 +9,7 @@ public class Ghost : NormalEnemy
 		State idle = new State();
 		State move = new State();
 
-		idle.StateUpdate += Idle;
+		idle.StateUpdate += MonitorAndTransition;
 		move.StateUpdate += Flying;
 
 		stateMachine.AddNewState("idle", idle);
