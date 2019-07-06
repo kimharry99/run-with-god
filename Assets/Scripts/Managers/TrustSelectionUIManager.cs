@@ -8,13 +8,11 @@ public class TrustSelectionUIManager : SingletonBehaviour<TrustSelectionUIManage
 	public Text trustNameText;
 	public Text trustDescriptionText;
 
-    private void Start()
-    {
-        StartCoroutine(UpdateTrustInfoText("mamamammama"));
-    }
-    IEnumerator UpdateTrustInfoText(string trust)
+
+    IEnumerator UpdateTrustInfoText(Trust trust)
 	{
-        string descript = trust.ToString();
+        trustNameText.text = trust.trustName.ToString();
+        string descript = trust.description.ToString();
         yield return new WaitForSeconds(0.05f);
         for(int i =0;i<=descript.Length;i++)
         {
