@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : SingletonBehaviour<PlayerController>
 {
@@ -52,8 +53,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	}
 
 	[SerializeField]
-	private GameObject bulletPrefab;
-
+	private GameObject bulletPrefab = null;
 	private StateMachine gunState = new StateMachine();
 	private StateMachine playerState = new StateMachine();
 
@@ -70,6 +70,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		InitGunStateMachine();
 		InitPlayerStateMachine();
 		Life = 3;
+
+		OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
 	}
 
 	private void Update()
@@ -84,6 +86,24 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			hitTimer -= Time.deltaTime;
 		if (dashTimer > 0)
 			dashTimer -= Time.deltaTime;
+	}
+
+	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+	{
+		if (scene.name == "InGameScene" || scene.name == "Boss")
+		{
+			gameObject.SetActive(true);
+			playerState.Transtion("idle");
+		}
+		else if (scene.name == "TrustSelection")
+		{
+			gameObject.SetActive(true);
+			playerState.Transtion("trustSelect");
+		}
+		else
+		{
+			gameObject.SetActive(false);
+		}
 	}
 
 	private void PlayerMovementControl()
@@ -118,14 +138,17 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			jumpCount--;
 		}
 
-		if (Input.GetButtonDown("Fire"))
-		{
-			gunState.Transtion("fire");
-		}
-
 		if (Input.GetButtonDown("Dash") && dashTimer <= 0)
 		{
 			playerState.Transtion("dash");
+		}
+	}
+
+	private void PlayerAttackControl()
+	{
+		if (Input.GetButtonDown("Fire"))
+		{
+			gunState.Transtion("fire");
 		}
 	}
 
@@ -133,6 +156,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	{
 		State idle = new State();
 		idle.StateUpdate += PlayerMovementControl;
+		idle.StateUpdate += PlayerAttackControl;
 
 		State hit = new State();
 		hit.Enter += delegate
@@ -165,9 +189,13 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			dashTimer = 0.5f;
 		};
 
+		State trustSelect = new State();
+		trustSelect.StateUpdate += PlayerMovementControl;
+
 		playerState.AddNewState("idle", idle);
 		playerState.AddNewState("hit", hit);
 		playerState.AddNewState("dash", dash);
+		playerState.AddNewState("trustSelect", trustSelect);
 
 		playerState.Transtion("idle");
 	}

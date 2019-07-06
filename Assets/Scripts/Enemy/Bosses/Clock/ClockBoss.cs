@@ -227,7 +227,6 @@ public class ClockBoss : NormalEnemy
             StartCoroutine(ChangeTimeSpeedRoutine(2f));
         }
         changeTimeSpeedTimer = 5f;
-        Debug.Log(rand < 25 ? 0 : rand < 50 ? 0.5f : rand < 75 ? 1f : 2f);
     }
 
     private IEnumerator ChangeTimeSpeedRoutine(float speed)

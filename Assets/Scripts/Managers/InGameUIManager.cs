@@ -20,6 +20,7 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
 		bossHealthUI.gameObject.SetActive(scene.name == "Boss");
+		gameObject.SetActive(scene.name == "InGameScene" || scene.name == "Boss");
 		//Check Scene is ingame, boss scene
 		//If not, disable gameobect
 	}
@@ -34,6 +35,7 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 		else
 			SetStatic();
 		SceneManager.sceneLoaded += OnSceneLoaded;
+		OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
     }
     public void UpdatePlaytimeText(float playtime)
 	{

@@ -2,15 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum TrustType
+{
+	ATTACK,
+	MOVE,
+	ACTION
+}
+
 public class TrustSelector : MonoBehaviour
 {
 	public static Trust SelectedTrust { get; private set; }
 
+	public TrustType type;
 	[SerializeField]
 	private Trust trust;
 
 	[SerializeField]
 	private ParticleSystem spotlight;
+
+	private void Start()
+	{
+		trust = GameManager.inst.PickTrust(type);
+	}
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
@@ -28,6 +41,11 @@ public class TrustSelector : MonoBehaviour
 	private void OnTriggerExit2D(Collider2D collision)
 	{
 		OnUnhighlighted();
+	}
+
+	public void InitTrustSelector(Trust trust)
+	{
+		this.trust = trust;
 	}
 
 	/// <summary>
