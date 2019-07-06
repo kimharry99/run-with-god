@@ -17,11 +17,4 @@ public class Ghost : NormalEnemy
 
 		stateMachine.Transtion("idle");
 	}
-
-	private void OnCollisionEnter2D(Collision2D collision)
-	{
-		PlayerController pc = collision.gameObject.GetComponent<PlayerController>();
-		if (pc != null && pc.IsDamagable)
-			pc?.GetDamaged();
-	}
 }
