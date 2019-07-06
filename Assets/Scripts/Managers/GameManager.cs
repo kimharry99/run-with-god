@@ -43,7 +43,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 		//Reset GameManager
 	}
 
-	private void Start()
+	private void Awake()
 	{
 		OnKillCountChanged += InGameUIManager.inst.UpdateKillCountText;
 
@@ -90,6 +90,12 @@ public class GameManager : SingletonBehaviour<GameManager>
 				ts.InitTrustSelector(PickTrust(ts.type));
 			}
 		}
+		int i = 0;
+		foreach (var ts in FindObjectsOfType<TrustSelector>())
+		{
+			GUI.Label(new Rect(10, 90 + 20 * i++, 500, 20), ts.type + " : " + (ts.Trust != null ? ts.Trust.trustName : "Null"));
+		}
+
 	}
 #endif
 	private void Update()

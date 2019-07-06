@@ -15,7 +15,7 @@ public class TrustSelector : MonoBehaviour
 
 	public TrustType type;
 	[SerializeField]
-	private Trust trust;
+	public Trust Trust { get; private set; }
 
 	[SerializeField]
 	private ParticleSystem spotlight;
@@ -24,7 +24,7 @@ public class TrustSelector : MonoBehaviour
 
     private void Start()
     {
-		trust = GameManager.inst.PickTrust(type);
+		Trust = GameManager.inst.PickTrust(type);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -47,7 +47,7 @@ public class TrustSelector : MonoBehaviour
 
 	public void InitTrustSelector(Trust trust)
 	{
-		this.trust = trust;
+		this.Trust = trust;
 	}
     /// <summary>
     /// Called when player is nearby
@@ -62,8 +62,8 @@ public class TrustSelector : MonoBehaviour
 
     private void OnSelected()
 	{
-		//Update SelectedTrust
-		//Selection confirm UI Opened
+		SelectedTrust = Trust;
+		TrustSelectionUIManager.inst.OpenConfirmPanel();
 	}
 
 	private void OnUnhighlighted()
