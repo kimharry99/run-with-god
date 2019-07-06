@@ -46,14 +46,10 @@ public class TrustSelectionUIManager : SingletonBehaviour<TrustSelectionUIManage
 		CloseConfirmPanel();
 	}
 
-    private void Start()
-    {
-
-    }
-
-    IEnumerator UpdateTrustInfoText(string trust)
+    IEnumerator UpdateTrustInfoTextRoutine(Trust trust)
 	{
-        string descript = trust.ToString();
+        trustNameText.text = trust.trustName.ToString();
+        string descript = trust.description.ToString();
         yield return new WaitForSeconds(0.05f);
         for(int i =0;i<=descript.Length;i++)
         {
