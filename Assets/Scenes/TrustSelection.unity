@@ -1366,7 +1366,7 @@ Light:
   serializedVersion: 9
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 30
+  m_Intensity: 0
   m_Range: 2
   m_SpotAngle: 30
   m_InnerSpotAngle: 1
@@ -1492,6 +1492,7 @@ GameObject:
   - component: {fileID: 1668651231}
   - component: {fileID: 1668651230}
   - component: {fileID: 1668651229}
+  - component: {fileID: 1668651232}
   m_Layer: 0
   m_Name: TrustSelector
   m_TagString: Untagged
@@ -1514,6 +1515,7 @@ MonoBehaviour:
   type: 0
   trust: {fileID: 0}
   spotlight: {fileID: 1592586568901523478}
+  Light: {fileID: 1329024269}
 --- !u!212 &1668651230
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1578,6 +1580,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &1668651232
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668651228}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0.049999997, y: 0.049999997, z: 0.049999997, w: 0.049999997}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.16, y: 0.16}
+    newSize: {x: 0.16, y: 0.16}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.16, y: 0.16}
+  m_EdgeRadius: 0
 --- !u!1 &1720865853
 GameObject:
   m_ObjectHideFlags: 0
@@ -2040,6 +2068,11 @@ PrefabInstance:
         type: 3}
       propertyPath: ShapeModule.radius.value
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1592586568901523478, guid: fa3c0c2e7f3de0849934fce40f8f6fc6,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7488311485279717634, guid: fa3c0c2e7f3de0849934fce40f8f6fc6,
         type: 3}
