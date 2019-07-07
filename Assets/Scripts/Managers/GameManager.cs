@@ -119,6 +119,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 		if (scene.name == "InGameScene")
 		{
 			SelectedTrust.Init();
+            InGameUIManager.inst.UpdateTrustUI(SelectedTrust);
 		}
 		if (scene.name == "InGameScene" || scene.name == "Boss")
 		{
