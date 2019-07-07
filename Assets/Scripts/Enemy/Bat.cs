@@ -5,8 +5,9 @@ using System;
 
 public class Bat : NormalEnemy
 {
+	public override EnemyType Type { get { return EnemyType.BAT; } }
 
-    private double coordinate = 0;
+	private double coordinate = 0;
     public ParticleSystem dead;
 
     protected void Roam()
@@ -29,14 +30,13 @@ public class Bat : NormalEnemy
 
     protected override void InitEnemy()
 	{
-
         State roam = new State();
 
         roam.StateUpdate += Roam;
 
         stateMachine.AddNewState("roam", roam);
 
-        stateMachine.Transtion("roam");
+        stateMachine.Transition("roam");
     }
 
 }

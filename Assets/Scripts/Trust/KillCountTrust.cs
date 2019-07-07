@@ -4,17 +4,50 @@ using UnityEngine;
 
 public class KillCountTrust : Trust
 {
-	public const int needKillCount = 30;
+	public EnemyType enemyType;
+	public int needKillCount;
+	private int killCount;
 
-	public override bool IsDone { get { return GameManager.inst.KillCount >= needKillCount; } }
+	public override bool IsDone { get { return killCount >= needKillCount; } }
+
+	public override string GetDescription()
+	{
+		string desc = "";
+		foreach (var substring in description.Split(' ', '\n'))
+		{
+			if (substring == "%monster_name")
+			{
+				desc += NormalEnemy.TypeToName(enemyType);
+			}
+			else if (substring == "%monster_killcount")
+			{
+				desc += killCount;
+			}
+			else
+			{
+				desc += substring;
+			}
+			desc += " ";
+		}
+		return desc;
+	}
 
 	public override void Init()
 	{
-		GameManager.inst.OnKillCountChanged += delegate { InGameUIManager.inst.UpdateTrustUI(this); };
+		killCount = 0;
+		GameManager.inst.OnEnemyKilled += KillCheck;
+		GameManager.inst.OnEnemyKilled += delegate { InGameUIManager.inst.UpdateTrustUI(this); };
+	}
+
+	private void KillCheck(EnemyType type)
+	{
+		if (this.enemyType == EnemyType.ALL || this.enemyType == type)
+			++killCount;
+		Debug.Log(killCount);
 	}
 
 	public override string TrustToText()
 	{
 		return Mathf.Min(GameManager.inst.KillCount, needKillCount) + " / " + needKillCount;
-	}
+	} 
 }

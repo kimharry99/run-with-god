@@ -2,12 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum EnemyType
+{
+	ALL,
+	BAT,
+	DINGO,
+	GHOST,
+	SHIELDER,
+	SKELETON,
+	SKELETONARCHER,
+	SLIME,
+	STABEAST,
+	ZOMBIE,
+	BOSS_CLOCK
+}
+
 public abstract class NormalEnemy : MonoBehaviour
 {
     float unit = 1f;//0.1f;          //거리의 임시 단위입니다. 플레이어의 가로가 확정되면 그 값을 배정합니다. 굳이 여기에 있을 필요는 없습니다.
-    
-    //변수들
-    #region Monster Variables 
+
+	//변수들
+	#region Monster Variables 
+
+	public abstract EnemyType Type { get; }
 
     protected Vector2 Direction
     {
@@ -123,7 +140,7 @@ public abstract class NormalEnemy : MonoBehaviour
 
 	protected virtual void OnDead()
 	{
-		GameManager.inst.KillCount++;
+		GameManager.inst.OnEnemyKill(Type);
         Destroy(gameObject);            //이 오브젝트를 파괴합니다.
 	}
 
@@ -174,7 +191,7 @@ public abstract class NormalEnemy : MonoBehaviour
             Moving();       //움직입니다.
             if (!DetectPlayer(range))//플레이어가 시야를 벗어난다면
             {
-                stateMachine.Transtion("idle");//보통 상태로 전환합니다
+                stateMachine.Transition("idle");//보통 상태로 전환합니다
             }
         }
 	}
@@ -208,7 +225,7 @@ public abstract class NormalEnemy : MonoBehaviour
     {
         if(DetectPlayer(range))
         {
-            stateMachine.Transtion(nextState);
+            stateMachine.Transition(nextState);
         }
     }
 
@@ -281,6 +298,37 @@ public abstract class NormalEnemy : MonoBehaviour
             return direction;
         }
     }
+
+	public static string TypeToName(EnemyType type)
+	{
+		switch (type)
+		{
+			case EnemyType.ALL:
+				return "모든 적들";
+			case EnemyType.BAT:
+				return "박쥐";
+			case EnemyType.DINGO:
+				return "들개";
+			case EnemyType.GHOST:
+				return "유령";
+			case EnemyType.SHIELDER:
+				return "방패병";
+			case EnemyType.SKELETON:
+				return "해골";
+			case EnemyType.SKELETONARCHER:
+				return "해골 궁수";
+			case EnemyType.SLIME:
+				return "슬라임";
+			case EnemyType.STABEAST:
+				return "이건뭐지";
+			case EnemyType.ZOMBIE:
+				return "좀비";
+			case EnemyType.BOSS_CLOCK:
+				return "시계 보스";
+			default:
+				return "정보없는 몬스터";
+		}
+	}
 
     #endregion
 }

@@ -17,7 +17,7 @@ public class Projectile : MonoBehaviour
 	[SerializeField]
 	public ProjectileType type;
 
-	private void Start()
+	protected virtual void Start()
 	{
 		StartCoroutine(DestroyRoutine(reach / GetComponent<Rigidbody2D>().velocity.magnitude));
 	}
@@ -41,7 +41,7 @@ public class Projectile : MonoBehaviour
 			case ProjectileType.PLAYER:
 				if (collision.tag == "Enemy")
 					collision.GetComponent<NormalEnemy>()?.GetDamaged(attack);
-				if (collision.tag != "Player")
+				if (collision.tag != "Player" && collision.tag != "Projectile")
 				{
 					StopAllCoroutines();
 					Destroy(gameObject);
@@ -49,7 +49,11 @@ public class Projectile : MonoBehaviour
 				break;
 			case ProjectileType.ENEMY:
 				if (collision.tag == "Player" && PlayerController.inst.IsDamagable)
+				{
 					collision.GetComponent<PlayerController>()?.GetDamaged();
+					StopAllCoroutines();
+					Destroy(gameObject);
+				}
                 if (collision.tag != "Enemy")
                 {
                     StopAllCoroutines();
@@ -59,7 +63,7 @@ public class Projectile : MonoBehaviour
 		}
 	}
 
-	private IEnumerator DestroyRoutine(float time)
+	protected IEnumerator DestroyRoutine(float time)
 	{
 		yield return new WaitForSeconds(time);
 		Destroy(gameObject);

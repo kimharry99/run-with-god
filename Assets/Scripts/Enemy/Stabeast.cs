@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Stabeast : NormalEnemy
 {
-    public int height;
+	public override EnemyType Type { get { return EnemyType.STABEAST; } }
+
+	public int height;
     private int rushCount;
     public int maxRush;
 
@@ -22,12 +24,12 @@ public class Stabeast : NormalEnemy
         stateMachine.AddNewState("fly", fly);
         stateMachine.AddNewState("rush", rush);
 
-        stateMachine.Transtion("idle");
+        stateMachine.Transition("idle");
     }
 
     protected void Prepare()
     {
-        stateMachine.Transtion("fly");
+        stateMachine.Transition("fly");
     }
 
     protected void Fly()
@@ -37,7 +39,7 @@ public class Stabeast : NormalEnemy
 
         if (Vector3.Distance(transform.position, destination) < 0.5)
         {
-            stateMachine.Transtion("rush");
+            stateMachine.Transition("rush");
             rushTo = PlayerController.inst.PlayerPosition;
         }
     }
@@ -53,7 +55,7 @@ public class Stabeast : NormalEnemy
             rushCount++;
             if (rushCount > maxRush)
                 rushCount = 0;
-            stateMachine.Transtion("fly");
+            stateMachine.Transition("fly");
         }
     }
 }

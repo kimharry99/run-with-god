@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : SingletonBehaviour<PlayerController>
 {
@@ -9,7 +11,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	private const float explodeRange = 5;
 	private const int maxLife = 10;
 
-	private float speed = 0;
+	//private float speed = 0;
 	private int jumpCount = 2;
 	private int shotCount;
 	private float shotCooltime;
@@ -24,6 +26,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		}
 	}
 
+    private Collider2D col;
 	private Rigidbody2D rb;
 	private SpriteRenderer sr;
 	private Transform landChecker;
@@ -36,11 +39,13 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	public bool IsDamagable { get { return graceTimer <= 0; } }
 
 	[SerializeField]
-	private AudioClip shotSFX, hitSFX, boomSFX;
+	private AudioClip shotSFX = null, hitSFX = null, boomSFX = null;
 
 	private bool IsGround
 	{
-		get { return Physics2D.OverlapPoint(landChecker.position, 1 << LayerMask.NameToLayer("Ground")) != null; }
+		get {
+            return Physics2D.Linecast(landChecker.position + new Vector3(-col.bounds.size.x / 2 - 0.01f, 0), landChecker.position + new Vector3(col.bounds.size.x / 2 + 0.01f, 0), 1 << LayerMask.NameToLayer("Ground")).transform != null;
+        }
 	}
 
 	public Vector3 PlayerPosition
@@ -49,16 +54,18 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	}
 
 	[SerializeField]
-	private GameObject bulletPrefab;
-
+	private GameObject bulletPrefab = null;
 	private StateMachine gunState = new StateMachine();
 	private StateMachine playerState = new StateMachine();
 
     private Animator playerAnimator;
 
+    public Action OnJump;
+
 	private void Start()
 	{
 		rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<Collider2D>();
 		landChecker = transform.Find("LandChecker");
 		shotPosition = transform.Find("ShotPosition");
 		sr = GetComponent<SpriteRenderer>();
@@ -66,11 +73,12 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		InitGunStateMachine();
 		InitPlayerStateMachine();
 		Life = 3;
+
+		OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
 	}
 
 	private void Update()
 	{
-		//PlayerMovementControl();
 		gunState.UpdateStateMachine();
 		playerState.UpdateStateMachine();
 
@@ -80,6 +88,24 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			hitTimer -= Time.deltaTime;
 		if (dashTimer > 0)
 			dashTimer -= Time.deltaTime;
+	}
+
+	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+	{
+		if (scene.name == "InGameScene" || scene.name == "Boss")
+		{
+			gameObject.SetActive(true);
+			playerState.Transition("idle");
+		}
+		else if (scene.name == "TrustSelection")
+		{
+			gameObject.SetActive(true);
+			playerState.Transition("trustSelect");
+		}
+		else
+		{
+			gameObject.SetActive(false);
+		}
 	}
 
 	private void PlayerMovementControl()
@@ -97,6 +123,10 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		{
 			jumpCount = 2;
 		}
+		else if (jumpCount > 1)
+		{
+			jumpCount = 1;
+		}
 
 		if ((horizontal < 0 && !sr.flipX) || (horizontal > 0 && sr.flipX))
 		{
@@ -108,16 +138,20 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			rb.velocity += new Vector2(0, jumpSpeed - rb.velocity.y);
 			//rb.velocity +=  rb.velocity.y < 0 ? new Vector2(0, jumpSpeed - rb.velocity.y) : new Vector2(0, jumpSpeed);
 			jumpCount--;
-		}
-
-		if (Input.GetButtonDown("Fire"))
-		{
-			gunState.Transtion("fire");
+            OnJump?.Invoke();
 		}
 
 		if (Input.GetButtonDown("Dash") && dashTimer <= 0)
 		{
-			playerState.Transtion("dash");
+			playerState.Transition("dash");
+		}
+	}
+
+	private void PlayerAttackControl()
+	{
+		if (Input.GetButtonDown("Fire"))
+		{
+			gunState.Transition("fire");
 		}
 	}
 
@@ -125,21 +159,22 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	{
 		State idle = new State();
 		idle.StateUpdate += PlayerMovementControl;
+		idle.StateUpdate += PlayerAttackControl;
 
 		State hit = new State();
 		hit.Enter += delegate
 		{
 			graceTimer = gracePeriod;
-			hitTimer = 1.0f;
+			hitTimer = 0.0f;
 			StartCoroutine(GraceTimeRoutine());
-			StartCoroutine(HitRoutine());
+			//StartCoroutine(HitRoutine());
 		};
 
 		hit.StateUpdate += delegate
 		{
 			if (hitTimer <= 0)
 			{
-				playerState.Transtion("idle");
+				playerState.Transition("idle");
 			}
 		};
 
@@ -157,11 +192,15 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			dashTimer = 0.5f;
 		};
 
+		State trustSelect = new State();
+		trustSelect.StateUpdate += PlayerMovementControl;
+
 		playerState.AddNewState("idle", idle);
 		playerState.AddNewState("hit", hit);
 		playerState.AddNewState("dash", dash);
+		playerState.AddNewState("trustSelect", trustSelect);
 
-		playerState.Transtion("idle");
+		playerState.Transition("idle");
 	}
 
 	private IEnumerator GraceTimeRoutine()
@@ -177,6 +216,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		gameObject.layer = LayerMask.NameToLayer("Player");
 	}
 
+    /*
 	private IEnumerator HitRoutine()
 	{
 		Color oriColor = sr.color;
@@ -188,6 +228,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			yield return null;
 		}
 	}
+    */
 
 	private IEnumerator DashRoutine()
 	{
@@ -205,7 +246,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 		rb.simulated = true;
 		//transform.position = destination;
-		playerState.Transtion("idle");
+		playerState.Transition("idle");
 		sr.color = sr.color + new Color(0, 0, 0, 0.5f);
 	}
 
@@ -233,7 +274,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			}
 			if (shotCount <= 0)
 			{
-				gunState.Transtion("idle");
+				gunState.Transition("idle");
 			}
 			if (Input.GetButtonDown("Fire"))
 			{
@@ -242,7 +283,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		};
 		gunState.AddNewState("idle", idle);
 		gunState.AddNewState("fire", fire);
-		gunState.Transtion("idle");
+		gunState.Transition("idle");
 	}
 
 	private void Flip()
@@ -255,7 +296,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	private void ShotBullet()
 	{
 		GameObject bullet = Instantiate(bulletPrefab);
-		bullet.transform.position = shotPosition.position + new Vector3(0, Random.Range(-0.05f, 0.05f));
+		bullet.transform.position = shotPosition.position + new Vector3(0, UnityEngine.Random.Range(-0.05f, 0.05f));
 		bullet.GetComponent<Rigidbody2D>().velocity = ShotDirection() * 1f;
 		shotCount--;
 		shotCooltime = 0.05f;
@@ -298,8 +339,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		graceTimer = gracePeriod;
 		Life--;
 		SoundManager.inst.PlaySFX(gameObject, hitSFX);
-		playerState.Transtion("hit");
-		gunState.Transtion("idle");
+		playerState.Transition("hit");
+		gunState.Transition("idle");
 		Explode();
 	}
 

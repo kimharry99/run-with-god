@@ -2,17 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrustSelector : MonoBehaviour
+public enum TrustType
 {
+	ATTACK,
+	MOVE,
+	ACTION
+}
+
+public class TrustSelector : MonoBehaviour
+{   
 	public static Trust SelectedTrust { get; private set; }
 
+	public TrustType type;
 	[SerializeField]
-	private Trust trust;
+	public Trust Trust { get; private set; }
 
 	[SerializeField]
 	private ParticleSystem spotlight;
+    public Light Light;
+    private float time;
 
-	private void OnTriggerEnter2D(Collider2D collision)
+    private void Start()
+    {
+		Trust = GameManager.inst.PickTrust(type);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
 	{
 		OnHighlighted();
 	}
@@ -30,22 +45,51 @@ public class TrustSelector : MonoBehaviour
 		OnUnhighlighted();
 	}
 
-	/// <summary>
-	/// Called when player is nearby
-	/// </summary>
-	private void OnHighlighted()
+	public void InitTrustSelector(Trust trust)
 	{
-		//get brighter & start spotlight effect
+		this.Trust = trust;
 	}
+    /// <summary>
+    /// Called when player is nearby
+    /// </summary>
+    private void OnHighlighted()
+    {
+        //get brighter & start spotlight effect
+        spotlight.Play();
+        StopCoroutine("FadeOut");
+        StartCoroutine("FadeIn");
+    }
 
-	private void OnSelected()
+    private void OnSelected()
 	{
-		//Update SelectedTrust
-		//Selection confirm UI Opened
+		SelectedTrust = Trust;
+		TrustSelectionUIManager.inst.OpenConfirmPanel();
 	}
 
 	private void OnUnhighlighted()
 	{
 		//get darker & stop spotlight effect
-	}
+		spotlight.Clear();
+        spotlight.Stop();
+        StopCoroutine("FadeIn");
+        StartCoroutine("FadeOut");
+    }
+
+    IEnumerator FadeIn()
+    {
+        while(Light.intensity < 30f)
+        {
+            Light.intensity += 2;
+            yield return new WaitForSeconds(0.02f);
+        }  
+    }
+
+    IEnumerator FadeOut()
+    {
+        while (Light.intensity > 0.0f)
+        {
+            Light.intensity -= 2.5f;
+            yield return new WaitForSeconds(0.02f);
+        }
+    }
 }

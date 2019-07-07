@@ -17,7 +17,7 @@ public class StateMachine
 		states.Add(newStateName, newState);
 	}
 
-	public void Transtion(string stateName)
+	public void Transition(string stateName)
 	{
 		CurState?.Exit?.Invoke();
 		CurState = states[stateName];

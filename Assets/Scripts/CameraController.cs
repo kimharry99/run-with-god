@@ -23,9 +23,9 @@ public class CameraController : MonoBehaviour
 		ChromaticAberration = ChromaticAberrationEffect;
 	}
 
-	private void Update()
+	private void LateUpdate()
 	{
-		transform.position = Vector3.Lerp(transform.position, target.position + new Vector3(0, offsetY, offsetZ), 0.2f);
+		transform.position = Vector3.Lerp(transform.position, target.position + new Vector3(0, offsetY, offsetZ), 0.5f);
 	}
 
 	private void CameraShake(float amount, float time)
@@ -55,7 +55,7 @@ public class CameraController : MonoBehaviour
 	{
 		for (float t = 0; t < 1; t += Time.deltaTime)
 		{
-			chromatic.SetFloat("_Bias", (1 - 4 * (t - 0.5f) * (t - 0.5f)) / 40);
+			chromatic.SetFloat("_Bias", (1 - 4 * (t - 0.5f) * (t - 0.5f)) / 200);
 			yield return null;
 		}
 		chromatic.SetFloat("_Bias", 0);

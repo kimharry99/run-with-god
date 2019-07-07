@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Shielder : NormalEnemy
 {
-    public Transform Shield;
+	public override EnemyType Type { get { return EnemyType.SHIELDER; } }
+
+	public Transform Shield;
 
     protected override void Start()
     {
@@ -22,15 +24,8 @@ public class Shielder : NormalEnemy
         stateMachine.AddNewState("idle", idle);
         stateMachine.AddNewState("move", move);
 
-        stateMachine.Transtion("idle");
+        stateMachine.Transition("idle");
 
-    }
-
-    protected override void OnDead()
-    {
-        GameManager.inst.KillCount++;
-        Destroy(gameObject);
-        Destroy(transform.Find("Shield"));
     }
 
     protected override void Flip()

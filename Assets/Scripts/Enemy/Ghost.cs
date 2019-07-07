@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Ghost : NormalEnemy
 {
+	public override EnemyType Type { get { return EnemyType.GHOST; } }
+
 	protected override void InitEnemy()
 	{
 		State idle = new State();
@@ -15,13 +17,6 @@ public class Ghost : NormalEnemy
 		stateMachine.AddNewState("idle", idle);
 		stateMachine.AddNewState("move", move);
 
-		stateMachine.Transtion("idle");
-	}
-
-	private void OnCollisionEnter2D(Collision2D collision)
-	{
-		PlayerController pc = collision.gameObject.GetComponent<PlayerController>();
-		if (pc != null && pc.IsDamagable)
-			pc?.GetDamaged();
+		stateMachine.Transition("idle");
 	}
 }

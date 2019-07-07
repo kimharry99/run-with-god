@@ -5,6 +5,8 @@ using UnityEngine.Events;
 
 public class DummyMonster : NormalEnemy
 {
+	public override EnemyType Type { get { return EnemyType.ZOMBIE; } }
+
 	public ParticleSystem dead;
 
 	protected override void InitEnemy()
@@ -29,15 +31,8 @@ public class DummyMonster : NormalEnemy
 
 	protected override void OnDead()
 	{
-		GameManager.inst.KillCount++;
+		base.OnDead();
 		dead.Play();
 		StartCoroutine(DissolveEffectRoutine(1));
-	}
-
-	private void OnCollisionEnter2D(Collision2D collision)
-	{
-		PlayerController pc = collision.gameObject.GetComponent<PlayerController>();
-		if (pc != null && pc.IsDamagable)
-			pc?.GetDamaged();
 	}
 }

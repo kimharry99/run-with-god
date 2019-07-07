@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class SkeletonArcher : NormalEnemy
 {
-    [SerializeField]
+	public override EnemyType Type { get { return EnemyType.SKELETONARCHER; } }
+
+	[SerializeField]
     float shotCooltime;
     float currentCooltime = 0;
 
@@ -32,6 +34,6 @@ public class SkeletonArcher : NormalEnemy
         stateMachine.AddNewState("idle", idle);
         stateMachine.AddNewState("attack", attack);
 
-        stateMachine.Transtion("idle");
+        stateMachine.Transition("idle");
     }
 }
