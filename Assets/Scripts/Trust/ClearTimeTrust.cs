@@ -4,11 +4,29 @@ using UnityEngine;
 
 public class ClearTimeTrust : Trust
 {
-    public const float needClearTime = 6 * 60f; // 6 min
+    public float needClearTime;
 
     public override bool IsDone { get { return GameManager.inst.Playtime <= needClearTime; } }
 
-	public override void Init()
+    public override string GetDescription()
+    {
+        string desc = "";
+        foreach (var substring in description.Split(' ', '\n'))
+        {
+            if (substring == "%need_minute")
+            {
+                desc += needClearTime;
+            }
+            else
+            {
+                desc += substring;
+            }
+            desc += " ";
+        }
+        return desc;
+    }
+
+    public override void Init()
     {
         GameManager.inst.OnPlayTimeChanged += delegate { InGameUIManager.inst.UpdateTrustUI(this); };
     }
