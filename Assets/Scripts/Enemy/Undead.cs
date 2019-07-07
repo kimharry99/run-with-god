@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Undead : NormalEnemy
 {
+    public override EnemyType Type { get { return EnemyType.UNDEAD; } }
 
     protected override void InitEnemy()
     {
@@ -19,7 +20,7 @@ public class Undead : NormalEnemy
         stateMachine.AddNewState("idle", idle);
         stateMachine.AddNewState("move", move);
 
-        stateMachine.Transtion("idle");
+        stateMachine.Transition("idle");
     }
 
     protected void CheckDurability()

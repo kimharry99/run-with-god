@@ -13,6 +13,7 @@ public enum EnemyType
 	SKELETONARCHER,
 	SLIME,
 	STABEAST,
+    UNDEAD,
 	ZOMBIE,
 	BOSS_CLOCK
 }
