@@ -104,7 +104,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		}
 		else
 		{
-			gameObject.SetActive(false);
+			//gameObject.SetActive(false);
 		}
 	}
 
@@ -235,12 +235,33 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		float oriGraceTimer = graceTimer;
 		Vector3 oriPosition = transform.position;
 		Vector3 destination = transform.position + (sr.flipX ? new Vector3(-3, 0) : new Vector3(3, 0));
+
+
+		float blockDistance = 3;
+		Vector2 hitPoint = Vector2.zero;
+		foreach (var hit in Physics2D.RaycastAll(oriPosition, sr.flipX ? Vector2.left : Vector2.right, 3, 1 << LayerMask.NameToLayer("Ground")))
+		{
+			if (blockDistance > hit.distance)
+			{
+				blockDistance = hit.distance;
+				hitPoint = hit.point;
+			}
+		}
+
+		float offsetX = (sr.flipX ? 1 : -1) * GetComponent<BoxCollider2D>().bounds.size.x / 2;
+		blockDistance += offsetX;
+		Debug.Log(blockDistance);
+
 		rb.simulated = false;
 		sr.color = sr.color - new Color(0, 0, 0, 0.5f);
 
 		while (graceTimer > 0)
 		{
-			transform.position = Vector3.Lerp(oriPosition, destination, 1 - Mathf.Pow(graceTimer / oriGraceTimer, 3));
+			Debug.Log((1 - Mathf.Pow(graceTimer / oriGraceTimer, 3)) + " " + (blockDistance / 3));
+			if (1 - Mathf.Pow(graceTimer / oriGraceTimer, 3) < blockDistance / 3)
+				transform.position = Vector3.Lerp(oriPosition, destination, 1 - Mathf.Pow(graceTimer / oriGraceTimer, 3));
+			else
+				transform.position = new Vector3(hitPoint.x + offsetX, hitPoint.y, transform.position.z);
 			yield return null;
 		}
 
