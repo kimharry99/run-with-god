@@ -58,6 +58,7 @@ public class TrustSelector : MonoBehaviour
         spotlight.Play();
         StopCoroutine("FadeOut");
         StartCoroutine("FadeIn");
+        TrustSelectionUIManager.inst.UpdateTrustInfoText(Trust);
     }
 
     private void OnSelected()
@@ -73,6 +74,7 @@ public class TrustSelector : MonoBehaviour
         spotlight.Stop();
         StopCoroutine("FadeIn");
         StartCoroutine("FadeOut");
+        TrustSelectionUIManager.inst.StopUpdateTrustInfoText();
     }
 
     IEnumerator FadeIn()
