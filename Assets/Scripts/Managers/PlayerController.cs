@@ -104,7 +104,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		}
 		else
 		{
-			gameObject.SetActive(false);
+			//gameObject.SetActive(false);
 		}
 	}
 
