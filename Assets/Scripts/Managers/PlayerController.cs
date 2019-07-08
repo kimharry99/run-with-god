@@ -104,7 +104,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		}
 		else
 		{
-			gameObject.SetActive(false);
+			//gameObject.SetActive(false);
 		}
 	}
 
@@ -181,7 +181,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		State dash = new State();
 		dash.Enter += delegate
 		{
-			graceTimer = 0.5f;
+			graceTimer = 0.3f;
 			gameObject.layer = LayerMask.NameToLayer("Player Grace");
 			StartCoroutine(DashRoutine())
 ;		};
