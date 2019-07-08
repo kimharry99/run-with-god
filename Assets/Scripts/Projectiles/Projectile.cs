@@ -54,7 +54,7 @@ public class Projectile : MonoBehaviour
 					StopAllCoroutines();
 					Destroy(gameObject);
 				}
-                if (collision.tag != "Enemy")
+                if (collision.tag == "Ground" || collision.tag == "Wall")
                 {
                     StopAllCoroutines();
                     Destroy(gameObject);
