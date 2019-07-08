@@ -334,6 +334,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		return direction;
 	}
 
+    public Boolean IsKill;
 	public void GetDamaged()
 	{
 		graceTimer = gracePeriod;
@@ -356,6 +357,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 		foreach (var enemy in Physics2D.OverlapCircleAll(transform.position,explodeRange,1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Enemy Ghost")))
 		{
+            if(IsKill)
 			enemy.GetComponent<NormalEnemy>()?.GetDamagedToDeath();
 		}
 	}
