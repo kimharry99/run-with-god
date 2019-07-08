@@ -39,9 +39,9 @@ public class Projectile : MonoBehaviour
 		switch (type)
 		{
 			case ProjectileType.PLAYER:
-				if (collision.tag == "Enemy")
+				if (collision.tag.Contains("Enemy"))
 					collision.GetComponent<NormalEnemy>()?.GetDamaged(attack);
-				if (collision.tag != "Player" && collision.tag != "Projectile")
+				if (collision.tag != "Player" && collision.tag != "Projectile" && !collision.isTrigger)
 				{
 					StopAllCoroutines();
 					Destroy(gameObject);

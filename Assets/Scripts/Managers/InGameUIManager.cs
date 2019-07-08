@@ -19,8 +19,9 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
-		bossHealthUI.gameObject.SetActive(scene.name == "Boss");
-		gameObject.SetActive(scene.name == "InGameScene" || scene.name == "Boss");
+		bossHealthUI.gameObject.SetActive(scene.name.Contains("Boss"));
+		gameObject.SetActive(scene.name != "TurstSelection");
+		//gameObject.SetActive(scene.name == "InGameScene" || scene.name == "Boss");
 		//Check Scene is ingame, boss scene
 		//If not, disable gameobect
 	}

@@ -214,7 +214,7 @@ public class ClockBoss : NormalEnemy
         float rand = Random.Range(0f, 100f);
         if (rand < 25)
         {
-            StartCoroutine(ChangeTimeSpeedRoutine(0));
+            StartCoroutine(ChangeTimeSpeedRoutine(-1f));
         }
         else if (rand < 50)
         {

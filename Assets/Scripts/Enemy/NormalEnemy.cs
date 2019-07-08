@@ -54,11 +54,11 @@ public abstract class NormalEnemy : MonoBehaviour
     [SerializeField]
     protected int maxHealth;
     [SerializeField]
-    protected int speed;           //'목표 속력' 입니다.
+    protected float speed;           //'목표 속력' 입니다.
     [SerializeField]
-    protected int acceleration;    //'가속도의 크기'입니다.
+    protected float acceleration;    //'가속도의 크기'입니다.
     [SerializeField]
-    protected int range;           //'시야 범위'입니다.
+    protected float range;           //'시야 범위'입니다.
     [SerializeField]
     protected int attack = 1;      //'공격력'입니다.
     //[SerializeField]
@@ -68,7 +68,7 @@ public abstract class NormalEnemy : MonoBehaviour
 	public Shader dissolve;
 	protected StateMachine stateMachine = new StateMachine();
     protected SpriteRenderer sr;
-    private Rigidbody2D rb;
+    protected Rigidbody2D rb;
 
     protected bool isTouched = false;   //플레이어와의 접촉 여부를 보여주는 변수입니다.
     private Transform landChecker;
@@ -265,7 +265,7 @@ public abstract class NormalEnemy : MonoBehaviour
 
     #region Usual Data Functions
     //자료 확인용 함수입니다.
-    protected bool DetectPlayer(int range)  //플레이어가 시야 범위 내에 있는지를 반환하는 함수입니다.
+    protected bool DetectPlayer(float range)  //플레이어가 시야 범위 내에 있는지를 반환하는 함수입니다.
     {
         bool ret = (DistanceWithPlayer() <= range * unit);
 
