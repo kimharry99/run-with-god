@@ -238,32 +238,28 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 
 		float blockDistance = 3;
-		Vector2 hitPoint = Vector2.zero;
 		foreach (var hit in Physics2D.BoxCastAll(oriPosition,GetComponent<BoxCollider2D>().bounds.size,0, sr.flipX ? Vector2.left : Vector2.right,3, 1 << LayerMask.NameToLayer("Ground")))
 		{
 			if (blockDistance > hit.distance)
 			{
 				blockDistance = hit.distance;
-				hitPoint = hit.point;
 			}
 		}
 
-		float offsetX = (sr.flipX ? 1 : -1) * GetComponent<BoxCollider2D>().bounds.size.x / 2;
+		float offsetX = GetComponent<BoxCollider2D>().bounds.size.x / 2;
+		
 
 		rb.simulated = false;
 		sr.color = sr.color - new Color(0, 0, 0, 0.5f);
 
 		while (graceTimer > 0)
 		{
-			if (1 - Mathf.Pow(graceTimer / oriGraceTimer, 3) < blockDistance / 3)
+			if (Vector3.Distance(oriPosition, transform.position) < blockDistance - offsetX)
 				transform.position = Vector3.Lerp(oriPosition, destination, 1 - Mathf.Pow(graceTimer / oriGraceTimer, 3));
-			else
-				transform.position = new Vector3(hitPoint.x + offsetX, hitPoint.y, transform.position.z);
 			yield return null;
 		}
 
 		rb.simulated = true;
-		//transform.position = destination;
 		playerState.Transition("idle");
 		sr.color = sr.color + new Color(0, 0, 0, 0.5f);
 	}
