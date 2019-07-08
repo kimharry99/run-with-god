@@ -239,7 +239,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 		float blockDistance = 3;
 		Vector2 hitPoint = Vector2.zero;
-		foreach (var hit in Physics2D.RaycastAll(oriPosition, sr.flipX ? Vector2.left : Vector2.right, 3, 1 << LayerMask.NameToLayer("Ground")))
+		foreach (var hit in Physics2D.BoxCastAll(oriPosition,GetComponent<BoxCollider2D>().bounds.size,0, sr.flipX ? Vector2.left : Vector2.right,3, 1 << LayerMask.NameToLayer("Ground")))
 		{
 			if (blockDistance > hit.distance)
 			{
