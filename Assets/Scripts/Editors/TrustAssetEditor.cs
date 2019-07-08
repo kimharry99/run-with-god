@@ -32,7 +32,7 @@ public class TrustAssetEditor : EditorWindow
 		GUILayout.Label("신탁 스크립트", EditorStyles.helpBox);
 		script = EditorGUILayout.ObjectField(script, typeof(MonoScript), false) as MonoScript;
 
-		if (!script.GetClass().IsSubclassOf(typeof(Trust)))
+		if (script != null && !script.GetClass().IsSubclassOf(typeof(Trust)))
 			return;
 		assetName = EditorGUILayout.TextField("어셋 이름", assetName);
 

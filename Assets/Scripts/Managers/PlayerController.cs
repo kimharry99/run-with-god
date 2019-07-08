@@ -249,15 +249,12 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		}
 
 		float offsetX = (sr.flipX ? 1 : -1) * GetComponent<BoxCollider2D>().bounds.size.x / 2;
-		blockDistance += offsetX;
-		Debug.Log(blockDistance);
 
 		rb.simulated = false;
 		sr.color = sr.color - new Color(0, 0, 0, 0.5f);
 
 		while (graceTimer > 0)
 		{
-			Debug.Log((1 - Mathf.Pow(graceTimer / oriGraceTimer, 3)) + " " + (blockDistance / 3));
 			if (1 - Mathf.Pow(graceTimer / oriGraceTimer, 3) < blockDistance / 3)
 				transform.position = Vector3.Lerp(oriPosition, destination, 1 - Mathf.Pow(graceTimer / oriGraceTimer, 3));
 			else
