@@ -48,6 +48,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
         }
 	}
 
+    private bool isFlipped = false;
+
 	public Vector3 PlayerPosition
 	{
 		get { return transform.position; }
@@ -118,6 +120,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
         playerAnimator.SetBool("isRunning", horizontal != 0);
         playerAnimator.SetBool("isGround", IsGround);
+        playerAnimator.SetFloat("ShootUp", vertical);
         transform.position += new Vector3(horizontal * maxSpeed * Time.deltaTime, 0, 0);
 
 		if (IsGround)
@@ -129,7 +132,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			jumpCount = 1;
 		}
 
-		if ((horizontal < 0 && !sr.flipX) || (horizontal > 0 && sr.flipX))
+		if ((horizontal < 0 && !isFlipped) || (horizontal > 0 && isFlipped))
 		{
 			Flip();
 		}
@@ -210,10 +213,26 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		gameObject.layer = LayerMask.NameToLayer("Player Grace");
 		while (graceTimer > 0)
 		{
+            foreach(Transform tf in transform)
+            {
+                SpriteRenderer renderer = tf.GetComponent<SpriteRenderer>();
+                if (renderer != null)
+                {
+                    renderer.color = new Color(renderer.color.r, renderer.color.g, renderer.color.b, Mathf.Round(5 * graceTimer - (int)(5 * graceTimer)));
+                }
+            }
 			sr.color = new Color(oriColor.r, oriColor.g, oriColor.b, Mathf.Round(5 * graceTimer - (int)(5 * graceTimer)));
 			yield return null;
 		}
-		sr.color = oriColor;
+        foreach (Transform tf in transform)
+        {
+            SpriteRenderer renderer = tf.GetComponent<SpriteRenderer>();
+            if (renderer != null)
+            {
+                renderer.color = new Color(renderer.color.r, renderer.color.g, renderer.color.b, 1);
+            }
+        }
+        sr.color = oriColor;
 		gameObject.layer = LayerMask.NameToLayer("Player");
 	}
 
@@ -223,7 +242,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		Color oriColor = sr.color;
 		for (float t = 0; t <= hitTimer; t += Time.deltaTime)
 		{
-			Vector2 force = new Vector2(hitTimer * (sr.flipX ? 1 : -1), 0);
+			Vector2 force = new Vector2(hitTimer * (isFlipped ? 1 : -1), 0);
 			rb.AddForce(force * 10);
 
 			yield return null;
@@ -231,15 +250,15 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	}
     */
 
-	private IEnumerator DashRoutine()
+    private IEnumerator DashRoutine()
 	{
 		float oriGraceTimer = graceTimer;
 		Vector3 oriPosition = transform.position;
-		Vector3 destination = transform.position + (sr.flipX ? new Vector3(-3, 0) : new Vector3(3, 0));
+		Vector3 destination = transform.position + (isFlipped ? new Vector3(-3, 0) : new Vector3(3, 0));
 
 
 		float blockDistance = 3;
-		foreach (var hit in Physics2D.BoxCastAll(oriPosition,GetComponent<BoxCollider2D>().bounds.size,0, sr.flipX ? Vector2.left : Vector2.right,3, 1 << LayerMask.NameToLayer("Ground")))
+		foreach (var hit in Physics2D.BoxCastAll(oriPosition,GetComponent<BoxCollider2D>().bounds.size,0, isFlipped ? Vector2.left : Vector2.right,3, 1 << LayerMask.NameToLayer("Ground")))
 		{
 			if (blockDistance > hit.distance)
 			{
@@ -252,8 +271,17 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 		rb.simulated = false;
 		sr.color = sr.color - new Color(0, 0, 0, 0.5f);
+        foreach (Transform tf in transform)
+        {
+            SpriteRenderer renderer = tf.GetComponent<SpriteRenderer>();
+            if (renderer != null)
+            {
+                renderer.color -= new Color(0, 0, 0, 0.5f);
+            }
+        }
 
-		while (graceTimer > 0)
+
+        while (graceTimer > 0)
 		{
 			if (Vector3.Distance(oriPosition, transform.position) < blockDistance - offsetX)
 				transform.position = Vector3.Lerp(oriPosition, destination, 1 - Mathf.Pow(graceTimer / oriGraceTimer, 3));
@@ -263,11 +291,24 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		rb.simulated = true;
 		playerState.Transition("idle");
 		sr.color = sr.color + new Color(0, 0, 0, 0.5f);
-	}
+        foreach (Transform tf in transform)
+        {
+            SpriteRenderer renderer = tf.GetComponent<SpriteRenderer>();
+            if (renderer != null)
+            {
+                renderer.color += new Color(0, 0, 0, 0.5f);
+            }
+        }
+    }
 
 	private void InitGunStateMachine()
 	{
 		State idle = new State();
+        idle.Enter += delegate
+        {
+            playerAnimator.SetBool("isShooting", false);
+        };
+
 		idle.StateUpdate += delegate
 		{
 
@@ -278,11 +319,12 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		{
 			shotCount = 3;
 			shotCooltime = 0;
-		};
+            playerAnimator.SetBool("isShooting", true);
+        };
 
 		fire.StateUpdate += delegate
 		{
-			shotCooltime -= Time.deltaTime;
+            shotCooltime -= Time.deltaTime;
 			if (shotCooltime <= 0)
 			{
 				ShotBullet();
@@ -303,15 +345,32 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 	private void Flip()
 	{
-		sr.flipX = !sr.flipX;
-		Vector3 pos = shotPosition.localPosition;
-		shotPosition.localPosition = new Vector3(-pos.x, pos.y, pos.z);
+        isFlipped = !isFlipped;
+        transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+        /*
+        foreach (Transform child in transform)
+        {
+            if (child == transform)
+            {
+                Debug.Log("B");
+                continue;
+            }
+                
+            Vector3 scale = child.transform.localScale;
+            child.transform.localScale = new Vector3(-scale.x,scale.y,scale.z);
+            SpriteRenderer childSr = GetComponent<SpriteRenderer>();
+            if (childSr != null)
+            {
+                childSr.flipX = !childSr.flipX;
+            }
+        }
+        */
 	}
 
 	private void ShotBullet()
 	{
 		GameObject bullet = Instantiate(bulletPrefab);
-		bullet.transform.position = shotPosition.position + new Vector3(0, UnityEngine.Random.Range(-0.05f, 0.05f));
+		bullet.transform.position = shotPosition.position + new Vector3(0, UnityEngine.Random.Range(-0.01f, 0.01f));
 		bullet.GetComponent<Rigidbody2D>().velocity = ShotDirection() * 1f;
 		shotCount--;
 		shotCooltime = 0.05f;
@@ -324,7 +383,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	{
 		Vector2 direction = Vector2.zero;
 		float vertical = Input.GetAxis("Vertical");
-
+        /*
 		if (!IsGround)
 		{
 			if (vertical != 0)
@@ -333,7 +392,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			}
 			else
 			{
-				direction = new Vector2(25 * (sr.flipX ? -1 : 1), 0);
+				direction = new Vector2(25 * (isFlipped ? -1 : 1), 0);
 			}
 		}
 		else
@@ -344,10 +403,19 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			}
 			else
 			{
-				direction = new Vector2(25 * (sr.flipX ? -1 : 1), 0);
+				direction = new Vector2(25 * (isFlipped ? -1 : 1), 0);
 			}
 		}
-		return direction;
+        */
+        if (vertical != 0)
+        {
+            direction = new Vector2(0, 25 * (vertical > 0 ? 1 : -1));
+        }
+        else
+        {
+            direction = new Vector2(25 * (isFlipped ? -1 : 1), 0);
+        }
+        return direction;
 	}
 
  
