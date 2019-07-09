@@ -286,6 +286,10 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		{
 			if (Vector3.Distance(oriPosition, transform.position) < blockDistance - offsetX)
 				transform.position = Vector3.Lerp(oriPosition, destination, 1 - Mathf.Pow(graceTimer / oriGraceTimer, 3));
+			else
+				transform.position = oriPosition + (isFlipped ? Vector3.left : Vector3.right) * (blockDistance - offsetX);
+			//Debug.Log("D:" + destination);
+			//Debug.Log("B:" + oriPosition + (isFlipped ? Vector2.left : Vector2.right) * (blockDistance - offsetX));
 			yield return null;
 		}
 
