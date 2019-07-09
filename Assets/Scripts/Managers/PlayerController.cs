@@ -61,6 +61,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
     private Animator playerAnimator;
 
     public Action OnJump;
+    public Action OnShotBullet;
 
 	private void Start()
 	{
@@ -316,6 +317,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		shotCooltime = 0.05f;
 		CameraController.Shake(0.02f,0.05f);
 		SoundManager.inst.PlaySFX(gameObject, shotSFX);
+        OnShotBullet?.Invoke();
 	}
 
 	private Vector2 ShotDirection()

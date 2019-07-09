@@ -18,8 +18,8 @@ public class JumpCountTrust : Trust
     public override void Init()
     {
 		jumpCount = 0;
-        PlayerController.inst.OnJump += delegate { InGameUIManager.inst.UpdateTrustUI(this); };
         PlayerController.inst.OnJump += UpJumpCount;
+        PlayerController.inst.OnJump += delegate { InGameUIManager.inst.UpdateTrustUI(this); };
     }
 
     public override string TrustToText()

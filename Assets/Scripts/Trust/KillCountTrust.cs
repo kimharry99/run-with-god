@@ -21,7 +21,7 @@ public class KillCountTrust : Trust
 			}
 			else if (substring == "%monster_killcount")
 			{
-				desc += killCount;
+				desc += needKillCount;
 			}
 			else
 			{
@@ -43,11 +43,11 @@ public class KillCountTrust : Trust
 	{
 		if (this.enemyType == EnemyType.ALL || this.enemyType == type)
 			++killCount;
-		Debug.Log(killCount);
+		Debug.Log("Kill Count : " + killCount);
 	}
 
 	public override string TrustToText()
 	{
-		return Mathf.Min(GameManager.inst.KillCount, needKillCount) + " / " + needKillCount;
+		return Mathf.Min(killCount, needKillCount) + " / " + needKillCount;
 	} 
 }

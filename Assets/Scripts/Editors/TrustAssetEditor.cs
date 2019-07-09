@@ -16,9 +16,15 @@ public class TrustAssetEditor : EditorWindow
 	#region KillCountTrust
 	EnemyType enemyType;
 	int killCount;
-	#endregion
+    #endregion
+    #region ClearTimeTrust
+    float needTime;
+    #endregion
+    #region UseBulletTrust
+    int needBullet;
+    #endregion
 
-	[MenuItem("Editors/신탁 어셋 만들기")]
+    [MenuItem("Editors/신탁 어셋 만들기")]
 	static void Init()
 	{
 		// Get existing open window or if none, make a new one:
@@ -51,6 +57,14 @@ public class TrustAssetEditor : EditorWindow
 			enemyType = (EnemyType)EditorGUILayout.EnumPopup("적 종류", enemyType);
 			killCount = EditorGUILayout.IntField("필요한 킬수", killCount);
 		}
+        else if (script.GetClass().Name == "ClearTimeTrust")
+        {
+            needTime = EditorGUILayout.FloatField("제한 시간(s)", needTime);
+        }
+        else if (script.GetClass().Name == "UseBulletTrust")
+        {
+            needBullet = EditorGUILayout.IntField("총알 수", needBullet);
+        }
 
 		if (GUILayout.Button("생성"))
 		{
@@ -62,14 +76,40 @@ public class TrustAssetEditor : EditorWindow
 				trust.description = trustDescription;
 				trust.trustType = trustType;
 				trust.tier = trustTier;
+
 				trust.enemyType = enemyType;
 				trust.needKillCount = killCount;
 
 				AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
 			}
+            else if(script.GetClass().Name == "ClearTimeTrust")
+            {
+                ClearTimeTrust trust = CreateInstance(script.GetClass()) as ClearTimeTrust;
+
+                trust.trustName = trustName;
+                trust.description = trustDescription;
+                trust.trustType = trustType;
+                trust.tier = trustTier;
+
+                trust.needClearTime = needTime;
+
+                AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
+            }
+            else if (script.GetClass().Name == "UseBulletTrust")
+            {
+                UseBulletTrust trust = CreateInstance(script.GetClass()) as UseBulletTrust;
+
+                trust.trustName = trustName;
+                trust.description = trustDescription;
+                trust.trustType = trustType;
+                trust.tier = trustTier;
+
+                trust.needUseBullet = needBullet;
+
+                AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
+            }
 			else
 			{
-
 				Trust trust = CreateInstance(script.GetClass()) as Trust;
 
 				trust.trustName = trustName;
