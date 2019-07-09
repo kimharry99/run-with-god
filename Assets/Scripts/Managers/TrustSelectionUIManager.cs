@@ -15,7 +15,7 @@ public class TrustSelectionUIManager : SingletonBehaviour<TrustSelectionUIManage
 	{
         //Start Cotroutine to update description, name text
         StopUpdateTrustInfoText();
-        StartCoroutine(UpdateTrustInfoTextRoutine(trust, 0.15f));
+        StartCoroutine(UpdateTrustInfoTextRoutine(trust, 0.05f));
 	}
 
     public void UpdateTrustInfoText(Trust trust, float interval)

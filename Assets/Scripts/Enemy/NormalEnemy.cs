@@ -131,6 +131,7 @@ public abstract class NormalEnemy : MonoBehaviour
         if (hitEffect != null)
             hitEffect.Play();
         Health -= damage;   //피해만큼 체력을 낮춥니다.
+		StartCoroutine(HitEffectRoutine());
 	}
 	public virtual void GetDamagedToDeath()
 	{
@@ -170,6 +171,13 @@ public abstract class NormalEnemy : MonoBehaviour
 			yield return null;
 		}
 		mat.SetFloat("_Threshold", 1);
+	}
+
+	protected IEnumerator HitEffectRoutine()
+	{
+		sr.color -= new Color(0f, 0.1f, 0.1f, 0.2f);
+		yield return null;
+		sr.color += new Color(0f, 0.1f, 0.1f, 0.2f);
 	}
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)//노말몹과 플레이어 충돌판정함수
