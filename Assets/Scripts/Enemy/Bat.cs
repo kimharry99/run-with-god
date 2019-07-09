@@ -1,43 +1,90 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public class Bat : NormalEnemy
 {
 	public override EnemyType Type { get { return EnemyType.BAT; } }
 
-	private double coordinate = 0;
+    private int cnt = 1;
+    private int direction;
+    private float coordinate;
     public ParticleSystem dead;
 
-    protected void Roam()
+
+    protected override void Start()
     {
-        
-        if (coordinate < 2 * Math.PI) {
-            transform.position = new Vector3(transform.position.x + 0.01f, transform.position.y + ((float)Math.Sin(coordinate + 0.05) - (float)Math.Sin(coordinate))/2, transform.position.z);
-            coordinate += 0.05;
-        }
-        else
-        {
-            transform.position = new Vector3(transform.position.x - 0.01f, transform.position.y + ((float)Math.Sin(coordinate + 0.05) - (float)Math.Sin(coordinate))/2, transform.position.z);
-            coordinate += 0.05;
-            if (coordinate > 4 * Math.PI)
-            {
-                coordinate -= 4 * Math.PI;
-            }
-        }
+        base.Start();
+        direction = Random.Range(0, 2);
+        coordinate = Random.value * Mathf.PI + Random.value*Mathf.PI;
     }
 
     protected override void InitEnemy()
 	{
-        State roam = new State();
+        State roamc = new State();
+        State roamcc = new State();
 
-        roam.StateUpdate += Roam;
+        roamc.StateUpdate += RoamC;
+        roamcc.StateUpdate += RoamCC;
 
-        stateMachine.AddNewState("roam", roam);
+        stateMachine.AddNewState("roamc",roamc);
+        stateMachine.AddNewState("roamcc", roamcc);
 
-        stateMachine.Transition("roam");
+        if (direction == 1)
+        {
+            stateMachine.Transition("roamcc");
+            Flip();
+        }
+        else stateMachine.Transition("roamc");
+       
     }
-
+    protected void RoamC()
+    {
+        if (coordinate < 2 * Mathf.PI)
+        {
+            
+            transform.position = new Vector2(transform.position.x + 0.01f, transform.position.y + (Mathf.Sin(coordinate + 0.05f) - Mathf.Sin(coordinate)) / 2);
+            coordinate += 0.05f;
+        }
+        else
+        {
+            if (cnt == 1)
+            {
+                Flip();
+                cnt--;
+            }
+            transform.position = new Vector2(transform.position.x - 0.01f, transform.position.y + (Mathf.Sin(coordinate + 0.05f) - Mathf.Sin(coordinate)) / 2);
+            coordinate += 0.05f;
+            if (coordinate > 4 * Mathf.PI)
+            {
+                Flip();
+                coordinate -= 4 * Mathf.PI;
+                cnt++;
+            }
+        }
+    }
+    protected void RoamCC()
+    {
+        if (coordinate > -2 * Mathf.PI)
+        {
+            transform.position = new Vector3(transform.position.x + 0.01f, transform.position.y + (Mathf.Sin(coordinate + 0.05f) - Mathf.Sin(coordinate)) / 2, transform.position.z);
+            coordinate -= 0.05f;
+        }
+        else
+        {
+            if(cnt == 1)
+            {
+                Flip();
+                cnt--;
+            }
+            transform.position = new Vector3(transform.position.x - 0.01f, transform.position.y + (Mathf.Sin(coordinate + 0.05f) - Mathf.Sin(coordinate)) / 2, transform.position.z);
+            coordinate -= 0.05f;
+            if (coordinate < -4 * Mathf.PI)
+            {
+                Flip();
+                cnt++;
+                coordinate += 4 * Mathf.PI;
+            }
+        }
+    }
 }
-
