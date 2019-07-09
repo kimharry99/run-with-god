@@ -90,7 +90,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			dashTimer -= Time.deltaTime;
 	}
 
-	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
 		if (scene.name == "InGameScene" || scene.name == "Boss")
 		{
@@ -102,13 +102,13 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			gameObject.SetActive(true);
 			playerState.Transition("trustSelect");
 		}
-		else
-		{
+        else
+        {
 			//gameObject.SetActive(false);
 		}
-	}
+    }
 
-	private void PlayerMovementControl()
+    private void PlayerMovementControl()
 	{
 		float vertical = Input.GetAxis("Vertical"); //left, right input
 		float horizontal = Input.GetAxis("Horizontal"); //up, down input

@@ -13,12 +13,24 @@ public class TrustSelectionUIManager : SingletonBehaviour<TrustSelectionUIManage
 
     public void UpdateTrustInfoText(Trust trust)
 	{
-		//Start Cotroutine to update description, name text
+        //Start Cotroutine to update description, name text
+        StopUpdateTrustInfoText();
+        StartCoroutine(UpdateTrustInfoTextRoutine(trust, 0.15f));
 	}
 
-	public void StopUpdateTrustInfoText()
+    public void UpdateTrustInfoText(Trust trust, float interval)
+    {
+        //Start Cotroutine to update description, name text
+        StopUpdateTrustInfoText();
+        StartCoroutine(UpdateTrustInfoTextRoutine(trust, interval));
+    }
+
+    public void StopUpdateTrustInfoText()
 	{
-		//Stop Coroutine and Empty the text
+        //Stop Coroutine and Empty the text
+        StopAllCoroutines();
+        trustNameText.text = "";
+        trustDescriptionText.text = "";
 	}
 
 	public void OpenConfirmPanel()
@@ -46,16 +58,19 @@ public class TrustSelectionUIManager : SingletonBehaviour<TrustSelectionUIManage
 		CloseConfirmPanel();
 	}
 
-    IEnumerator UpdateTrustInfoTextRoutine(Trust trust)
+    IEnumerator UpdateTrustInfoTextRoutine(Trust trust, float interval)
 	{
-        trustNameText.text = trust.trustName.ToString();
-        string descript = trust.description.ToString();
-        yield return new WaitForSeconds(0.05f);
-        for(int i =0;i<=descript.Length;i++)
+        if (trust != null)
         {
-            trustDescriptionText.text = descript.Substring(0, i);
+            trustNameText.text = trust.trustName;
+            string descript = trust.GetDescription();
+            yield return new WaitForSeconds(0.05f);
+            for (int i = 0; i <= descript.Length; i++)
+            {
+                trustDescriptionText.text = descript.Substring(0, i);
 
-            yield return new WaitForSeconds(0.15f);
+                yield return new WaitForSeconds(interval);
+            }
         }
     }
 }
