@@ -6,8 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : SingletonBehaviour<PlayerController>
 {
-	private const float maxSpeed = 6;
-	private const float jumpSpeed = 5;
+	private const float maxSpeed = 5;
+	private const float jumpSpeed = 4.2f;
 	private const float explodeRange = 5;
 	private const int maxLife = 10;
 
@@ -181,7 +181,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		State dash = new State();
 		dash.Enter += delegate
 		{
-			graceTimer = 0.5f;
+			graceTimer = 0.3f;
 			gameObject.layer = LayerMask.NameToLayer("Player Grace");
 			StartCoroutine(DashRoutine())
 ;		};
@@ -189,7 +189,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		dash.Exit += delegate
 		{
 			gameObject.layer = LayerMask.NameToLayer("Player");
-			dashTimer = 0.5f;
+			dashTimer = 0.3f;
 		};
 
 		State trustSelect = new State();
@@ -348,6 +348,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		return direction;
 	}
 
+ 
 	public void GetDamaged()
 	{
 		graceTimer = gracePeriod;
@@ -358,6 +359,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		Explode();
 	}
 
+    public Boolean IsKill;
 	private void Explode()
 	{
 		CameraController.Shake(0.1f, 0.5f);
@@ -370,6 +372,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 		foreach (var enemy in Physics2D.OverlapCircleAll(transform.position,explodeRange,1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Enemy Ghost")))
 		{
+            if(IsKill)
 			enemy.GetComponent<NormalEnemy>()?.GetDamagedToDeath();
 		}
 	}
