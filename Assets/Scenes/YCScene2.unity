@@ -5197,7 +5197,7 @@ PrefabInstance:
     - target: {fileID: 8712844456109335656, guid: 1bc28e1d49a0fae40a089b5120ab0f5a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8712844456109335656, guid: 1bc28e1d49a0fae40a089b5120ab0f5a,
         type: 3}
@@ -5288,6 +5288,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5749235159915978362, guid: ce230221d010e3b488b0a1569815aa1c,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ce230221d010e3b488b0a1569815aa1c, type: 3}
 --- !u!1001 &487169313
@@ -5345,7 +5350,7 @@ PrefabInstance:
     - target: {fileID: 2727016596485071676, guid: 9e0dbe417f2ea954bbe3e6ac98638b02,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2727016596485071676, guid: 9e0dbe417f2ea954bbe3e6ac98638b02,
         type: 3}
@@ -5371,16 +5376,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1128465054}
     m_Modifications:
-    - target: {fileID: 7510235709339390430, guid: cf5b43d29a393fa4cb369c6042b07403,
-        type: 3}
-      propertyPath: m_Name
-      value: BloodEffect
-      objectReference: {fileID: 0}
-    - target: {fileID: 7510235709339390430, guid: cf5b43d29a393fa4cb369c6042b07403,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
     - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
       propertyPath: playOnAwake
@@ -5440,6 +5435,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7510235709339390430, guid: cf5b43d29a393fa4cb369c6042b07403,
+        type: 3}
+      propertyPath: m_Name
+      value: BloodEffect
+      objectReference: {fileID: 0}
+    - target: {fileID: 7510235709339390430, guid: cf5b43d29a393fa4cb369c6042b07403,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4138772146777199517, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
@@ -6046,6 +6051,7 @@ MonoBehaviour:
   boomSFX: {fileID: 8300000, guid: 3e1d461e96213c2489c07411cfab4e0e, type: 3}
   bulletPrefab: {fileID: 8255848804799629962, guid: cfcc9bb1b8f3f32419905ed6de00e418,
     type: 3}
+  IsKill: 0
 --- !u!212 &1042563959
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -6536,7 +6542,7 @@ PrefabInstance:
     - target: {fileID: 4787688834574713995, guid: 7006b3974ef5dc4448834a8ad625c117,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4787688834574713995, guid: 7006b3974ef5dc4448834a8ad625c117,
         type: 3}
@@ -6716,7 +6722,7 @@ PrefabInstance:
     - target: {fileID: 6890017396426130026, guid: 39d7e3f43cb83e24b8fbdda7af11e060,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6890017396426130026, guid: 39d7e3f43cb83e24b8fbdda7af11e060,
         type: 3}
@@ -7039,7 +7045,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1769545886
 MonoBehaviour:
