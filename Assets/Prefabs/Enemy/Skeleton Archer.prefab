@@ -127,7 +127,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.018831491, y: -0.09415436}
+  m_Offset: {x: 0.1021111, y: -0.108667135}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -138,7 +138,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.8452325, y: 5.0795727}
+  m_Size: {x: 2.6033473, y: 4.760286}
   m_EdgeRadius: 0
 --- !u!50 &6594468089958104950
 Rigidbody2D:
@@ -170,22 +170,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 6594468089958104957}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9894aec7ca0d8584d8ee1f44a3917868, type: 3}
+  m_Script: {fileID: 11500000, guid: b0e04ce95f8079e4c8c0e77b6a8b238b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 3
-  speed: 2
+  maxHealth: 2
+  speed: 0
   acceleration: 0
-  range: 10
+  range: 8
   attack: 1
   hitEffect: {fileID: 1307629399865030041}
   dissolve: {fileID: 4800000, guid: 588349a7a5b2c584f8732a9b5c4ba62c, type: 3}
   shotPosition: {fileID: 193140714903805474}
   shotSpeed: 3
-  bulletPrefab: {fileID: 29125380165018255, guid: 70baa18822fff2148858a940929b08f0,
+  bulletPrefab: {fileID: 29125380165018255, guid: 3f6e32549f5e46347ababdbe87254dc2,
     type: 3}
   shotSFX: {fileID: 0}
-  shotCooltime: 3
+  shotCooltime: 5
 --- !u!1001 &6594468088764436633
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -202,11 +202,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
-        type: 3}
-      propertyPath: playOnAwake
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1205422381347208394, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
@@ -261,6 +256,11 @@ PrefabInstance:
     - target: {fileID: 1205422381347208394, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
+        type: 3}
+      propertyPath: playOnAwake
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4138772146777199517, guid: cf5b43d29a393fa4cb369c6042b07403,
