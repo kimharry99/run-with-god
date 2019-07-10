@@ -65,6 +65,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
     public Action OnJump;
     public Action OnShotBullet;
+    public Action OnDash;
 
 	private void Start()
 	{
@@ -188,7 +189,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		{
 			graceTimer = 0.3f;
 			gameObject.layer = LayerMask.NameToLayer("Player Grace");
-			StartCoroutine(DashRoutine())
+            StartCoroutine(DashRoutine());
+            OnDash?.Invoke();
 ;		};
 
 		dash.Exit += delegate

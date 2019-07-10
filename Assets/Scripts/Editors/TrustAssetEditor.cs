@@ -23,6 +23,12 @@ public class TrustAssetEditor : EditorWindow
     #region UseBulletTrust
     int needBullet;
     #endregion
+    #region JumpCountTrust
+    int needJump;
+    #endregion
+    #region DashCountTrust
+    int needDash;
+    #endregion
 
     [MenuItem("Editors/신탁 어셋 만들기")]
 	static void Init()
@@ -65,6 +71,14 @@ public class TrustAssetEditor : EditorWindow
         {
             needBullet = EditorGUILayout.IntField("총알 수", needBullet);
         }
+        else if (script.GetClass().Name == "JumpCountTrust")
+        {
+            needJump = EditorGUILayout.IntField("점프 수", needJump);
+        }
+        else if (script.GetClass().Name == "DashCountTrust")
+        {
+            needDash = EditorGUILayout.IntField("대쉬 수", needDash);
+        }
 
 		if (GUILayout.Button("생성"))
 		{
@@ -105,6 +119,32 @@ public class TrustAssetEditor : EditorWindow
                 trust.tier = trustTier;
 
                 trust.needUseBullet = needBullet;
+
+                AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
+            }
+            else if(script.GetClass().Name == "JumpCountTrust")
+            {
+                JumpCountTrust trust = CreateInstance(script.GetClass()) as JumpCountTrust;
+
+                trust.trustName = trustName;
+                trust.description = trustDescription;
+                trust.trustType = trustType;
+                trust.tier = trustTier;
+
+                trust.needJumpCount = needJump;
+
+                AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
+            }
+            else if(script.GetClass().Name == "DashCountTrust")
+            {
+                DashCountTrust trust = CreateInstance(script.GetClass()) as DashCountTrust;
+
+                trust.trustName = trustName;
+                trust.description = trustDescription;
+                trust.trustType = trustType;
+                trust.tier = trustTier;
+
+                trust.needDashCount = needDash;
 
                 AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
             }
