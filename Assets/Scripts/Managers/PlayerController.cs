@@ -49,7 +49,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
         }
 	}
 
-    private bool isFlipped = false;
+    public bool IsFlipped { get; private set; }
 
 	public Vector3 PlayerPosition
 	{
@@ -133,7 +133,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			jumpCount = 1;
 		}
 
-		if ((horizontal < 0 && !isFlipped) || (horizontal > 0 && isFlipped))
+		if ((horizontal < 0 && !IsFlipped) || (horizontal > 0 && IsFlipped))
 		{
 			Flip();
 		}
@@ -255,11 +255,11 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	{
 		float oriGraceTimer = graceTimer;
 		Vector3 oriPosition = transform.position;
-		Vector3 destination = transform.position + (isFlipped ? new Vector3(-3, 0) : new Vector3(3, 0));
+		Vector3 destination = transform.position + (IsFlipped ? new Vector3(-3, 0) : new Vector3(3, 0));
 
 
 		float blockDistance = 3;
-		foreach (var hit in Physics2D.BoxCastAll(oriPosition,GetComponent<BoxCollider2D>().bounds.size,0, isFlipped ? Vector2.left : Vector2.right,3, 1 << LayerMask.NameToLayer("Ground")))
+		foreach (var hit in Physics2D.BoxCastAll(oriPosition,GetComponent<BoxCollider2D>().bounds.size,0, IsFlipped ? Vector2.left : Vector2.right,3, 1 << LayerMask.NameToLayer("Ground")))
 		{
 			if (blockDistance > hit.distance)
 			{
@@ -287,7 +287,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			if (Vector3.Distance(oriPosition, transform.position) < blockDistance - offsetX)
 				transform.position = Vector3.Lerp(oriPosition, destination, 1 - Mathf.Pow(graceTimer / oriGraceTimer, 3));
 			else
-				transform.position = oriPosition + (isFlipped ? Vector3.left : Vector3.right) * (blockDistance - offsetX);
+				transform.position = oriPosition + (IsFlipped ? Vector3.left : Vector3.right) * (blockDistance - offsetX);
 			//Debug.Log("D:" + destination);
 			//Debug.Log("B:" + oriPosition + (isFlipped ? Vector2.left : Vector2.right) * (blockDistance - offsetX));
 			yield return null;
@@ -350,7 +350,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 	private void Flip()
 	{
-        isFlipped = !isFlipped;
+        IsFlipped = !IsFlipped;
         transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
         /*
         foreach (Transform child in transform)
@@ -418,7 +418,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
         }
         else
         {
-            direction = new Vector2(25 * (isFlipped ? -1 : 1), 0);
+            direction = new Vector2(25 * (IsFlipped ? -1 : 1), 0);
         }
         return direction;
 	}

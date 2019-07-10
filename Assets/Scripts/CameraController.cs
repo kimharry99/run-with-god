@@ -12,12 +12,14 @@ public class CameraController : MonoBehaviour
 
 
 	private Transform target;
-	private const float offsetY = 0.5f, offsetZ = -9;
+    private Rigidbody2D targetRb;
+	private float offsetX = 0.5f, offsetY = 0f, offsetZ = -9;
 
 	public Material shockwave, chromatic;
 	private void Start()
 	{
 		target = PlayerController.inst.transform;
+        targetRb = target.GetComponent<Rigidbody2D>();
 		Shake = CameraShake;
 		ShockWave = ShockwaveEffect;
 		ChromaticAberration = ChromaticAberrationEffect;
@@ -25,7 +27,9 @@ public class CameraController : MonoBehaviour
 
 	private void LateUpdate()
 	{
-		transform.position = Vector3.Lerp(transform.position, target.position + new Vector3(0, offsetY, offsetZ), 0.5f);
+        offsetY = Input.GetAxis("Vertical") * 0.5f;
+        offsetX = Input.GetAxis("Horizontal") * 1f;
+        transform.position = Vector3.Lerp(transform.position, target.position + new Vector3(offsetX, offsetY, offsetZ), 0.1f);
 	}
 
 	private void CameraShake(float amount, float time)
