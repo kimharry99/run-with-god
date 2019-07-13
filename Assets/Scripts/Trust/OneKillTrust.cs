@@ -7,11 +7,7 @@ public class OneKillTrust : Trust
     public int needKillCount;
     private int killCount;
     private Coroutine reset = null;
-
-    public void OnEnable()
-    {
-        GameManager.inst.StartCoroutine("ResetKillCount");
-    }
+    private bool isDone;
 
     public IEnumerator ResetKillCount()
     {
@@ -22,9 +18,13 @@ public class OneKillTrust : Trust
             reset = null;
             InGameUIManager.inst.UpdateTrustUI(this);
         }
+        else
+        {
+            isDone = true;
+        }
     }
 
-    public override bool IsDone { get { return killCount >= needKillCount; } }
+    public override bool IsDone { get { return isDone; } }
 
     public override string GetDescription()
     {
@@ -47,11 +47,11 @@ public class OneKillTrust : Trust
     public override void Init()
     {
         killCount = 0;
-
+        isDone = false;
 
         GameManager.inst.OnEnemyKilled += delegate
         {
-            if(reset == null)
+            if (reset == null)
                 reset = GameManager.inst.StartCoroutine(ResetKillCount());
         };
         GameManager.inst.OnEnemyKilled += KillCheck;

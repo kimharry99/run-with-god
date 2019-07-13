@@ -17,7 +17,7 @@ public class TrustAssetEditor : EditorWindow
 	EnemyType enemyType;
 	int killCount;
     #endregion
-    #region ClearTimeTrust
+    #region ClearTimeTrust & OnGroundTrust
     float needTime;
     #endregion
     #region UseBulletTrust
@@ -86,6 +86,10 @@ public class TrustAssetEditor : EditorWindow
         else if (script.GetClass().Name == "OneKillTrust")
         {
             killCount = EditorGUILayout.IntField("필요한 킬수", killCount);
+        }
+        else if (script.GetClass().Name == "OnGroundTrust")
+        {
+            needTime = EditorGUILayout.FloatField("제한 시간(s)", needTime);
         }
 
 		if (GUILayout.Button("생성"))
@@ -179,6 +183,19 @@ public class TrustAssetEditor : EditorWindow
                 trust.tier = trustTier;
 
                 trust.needKillCount = killCount;
+
+                AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
+            }
+            else if (script.GetClass().Name == "OnGroundTrust")
+            {
+                OnGroundTrust trust = CreateInstance(script.GetClass()) as OnGroundTrust;
+
+                trust.trustName = trustName;
+                trust.description = trustDescription;
+                trust.trustType = trustType;
+                trust.tier = trustTier;
+
+                trust.limitTime = needTime;
 
                 AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
             }
