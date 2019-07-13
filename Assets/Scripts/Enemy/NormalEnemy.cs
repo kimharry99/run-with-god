@@ -283,7 +283,7 @@ public abstract class NormalEnemy : MonoBehaviour
 
     protected float DistanceWithPlayer()    //플레이어와의 거리를 반환합니다.
     {
-        return Vector3.Distance(PlayerController.inst.PlayerPosition, transform.position);
+        return Vector2.Distance(PlayerController.inst.PlayerPosition, transform.position);
     }
 
     protected Vector3 DirectionToPlayer()   //플레이어를 바라보는 방향의 표준 벡터를 반환하는 함수입니다.(x축 한정으로만 작동)
