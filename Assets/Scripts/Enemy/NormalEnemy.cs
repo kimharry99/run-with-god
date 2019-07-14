@@ -15,7 +15,8 @@ public enum EnemyType
 	STABEAST,
     UNDEAD,
 	ZOMBIE,
-	BOSS_CLOCK
+	BOSS_CLOCK,
+    BOSS_SPIDER
 }
 
 public abstract class NormalEnemy : MonoBehaviour
