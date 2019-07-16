@@ -79,7 +79,8 @@ public abstract class NormalEnemy : MonoBehaviour
     [SerializeField]
     protected int shotSpeed;
     public GameObject bulletPrefab;
-    public AudioClip shotSFX;
+    [SerializeField]
+    private AudioClip shotSFX, deathSFX, hitSFX;
 
     /*private bool IsGround
     {
@@ -128,11 +129,25 @@ public abstract class NormalEnemy : MonoBehaviour
     protected abstract void InitEnemy();
 	public virtual void GetDamaged(int damage)
 	{
-        if (hitEffect != null)
-            hitEffect.Play();
+        if (hitSFX != null)
+            SoundManager.inst.PlaySFX(gameObject, hitSFX, 1);
         Health -= damage;   //피해만큼 체력을 낮춥니다.
 		StartCoroutine(HitEffectRoutine());
 	}
+    public virtual void GetDamaged(int damage, Vector3 hitPos, Vector2 velocity)
+    {
+        if (hitEffect != null)
+        {
+            hitEffect.transform.position = hitPos;
+            
+            var main = hitEffect.main;
+            main.startSpeedMultiplier = velocity.x > 0 ? -1 : 1;
+            
+            hitEffect.Play();
+        }
+        GetDamaged(damage);
+    }
+
 	public virtual void GetDamagedToDeath()
 	{
         if (hitEffect != null)
@@ -142,8 +157,13 @@ public abstract class NormalEnemy : MonoBehaviour
 
 	protected virtual void OnDead()
 	{
+        if (rb != null)
+            rb.simulated = false;
 		GameManager.inst.OnEnemyKill(Type);
-        Destroy(gameObject);            //이 오브젝트를 파괴합니다.
+        if (deathSFX != null)
+            SoundManager.inst.PlaySFX(gameObject, deathSFX, 0.5f);
+        StartCoroutine(DissolveEffectRoutine(1));
+        //Destroy(gameObject);            //이 오브젝트를 파괴합니다.
 	}
 
 	protected IEnumerator DissolveEffectRoutine(float time)
@@ -171,20 +191,23 @@ public abstract class NormalEnemy : MonoBehaviour
 			yield return null;
 		}
 		mat.SetFloat("_Threshold", 1);
+        Destroy(gameObject);
 	}
 
 	protected IEnumerator HitEffectRoutine()
 	{
-		sr.color -= new Color(0f, 0.1f, 0.1f, 0.2f);
+        sr.color = new Color(1, 0.75f, 0);
 		yield return null;
-		sr.color += new Color(0f, 0.1f, 0.1f, 0.2f);
+        sr.color = Color.white;
 	}
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)//노말몹과 플레이어 충돌판정함수
     {
         PlayerController pc = collision.gameObject.GetComponent<PlayerController>();
-		if (pc != null && pc.IsDamagable)
+        if (pc != null && pc.IsDamagable)
+        {
             pc?.GetDamaged();
+        }
     }
 
     #endregion

@@ -40,6 +40,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 	[SerializeField]
 	private AudioClip shotSFX = null, hitSFX = null, boomSFX = null;
+    [SerializeField]
+    private Light gunFireLight;
 
 	private bool IsGround
 	{
@@ -91,9 +93,11 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			graceTimer -= Time.deltaTime;
 		if (hitTimer > 0)
 			hitTimer -= Time.deltaTime;
-		if (dashTimer > 0)
-			dashTimer -= Time.deltaTime;
-	}
+        if (dashTimer > 0)
+            dashTimer -= Time.deltaTime;
+        gunFireLight.intensity -= 100 * Time.deltaTime;
+        gunFireLight.enabled = gunFireLight.intensity >= 0;
+    }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
@@ -376,6 +380,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 	private void ShotBullet()
 	{
+        gunFireLight.intensity = 10;
+
 		GameObject bullet = Instantiate(bulletPrefab);
 		bullet.transform.position = shotPosition.position + new Vector3(0, UnityEngine.Random.Range(-0.01f, 0.01f));
 		bullet.GetComponent<Rigidbody2D>().velocity = ShotDirection() * 1f;
