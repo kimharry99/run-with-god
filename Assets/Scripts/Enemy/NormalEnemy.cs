@@ -159,6 +159,8 @@ public abstract class NormalEnemy : MonoBehaviour
 	{
         if (rb != null)
             rb.simulated = false;
+        if (GetComponent<Collider2D>() != null)
+            GetComponent<Collider2D>().enabled = false;
 		GameManager.inst.OnEnemyKill(Type);
         if (deathSFX != null)
             SoundManager.inst.PlaySFX(gameObject, deathSFX, 0.5f);
@@ -363,4 +365,12 @@ public abstract class NormalEnemy : MonoBehaviour
 	}
 
     #endregion
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, range);
+    }
+#endif
+
 }
