@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 6890017396426130022}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 1}
+  m_LocalScale: {x: 0.13721421, y: 0.13718346, z: 1}
   m_Children:
   - {fileID: 5702901923436384584}
   m_Father: {fileID: 0}
@@ -52,7 +52,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 26e945b099014ed48a1be3407f6e20e2, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -96,7 +96,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.037661195, y: -0.69673824}
+  m_Offset: {x: -0.20440173, y: -0.6997528}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -107,7 +107,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 5.075322, y: 3.9623394}
+  m_Size: {x: 5.23811, y: 3.295374}
   m_EdgeRadius: 0
 --- !u!50 &6890017396426130029
 Rigidbody2D:
@@ -142,10 +142,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ceb7063679aac6140946aeb920fbc925, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 2
-  speed: 7.5
-  acceleration: 40
-  range: 4
+  maxHealth: 3
+  speed: 7
+  acceleration: 45
+  range: 5
   attack: 1
   hitEffect: {fileID: 1603177675540383874}
   dissolve: {fileID: 4800000, guid: 588349a7a5b2c584f8732a9b5c4ba62c, type: 3}
@@ -153,8 +153,6 @@ MonoBehaviour:
   shotSpeed: 0
   bulletPrefab: {fileID: 0}
   shotSFX: {fileID: 0}
-  deathSFX: {fileID: 8300000, guid: 7603fb5ae6f8cb042b9b11012c522c63, type: 3}
-  hitSFX: {fileID: 8300000, guid: 4d16530799fbeb44d97d2563a1890eb5, type: 3}
 --- !u!1001 &6890017397392027010
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -162,11 +160,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6890017396426130026}
     m_Modifications:
-    - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
-        type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1205422381347208394, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -231,6 +224,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4138772146777199517, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}

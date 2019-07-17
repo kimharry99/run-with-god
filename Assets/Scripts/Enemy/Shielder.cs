@@ -7,11 +7,12 @@ public class Shielder : NormalEnemy
 	public override EnemyType Type { get { return EnemyType.SHIELDER; } }
 
 	public Transform Shield;
-
+    private SpriteRenderer Child;
     protected override void Start()
     {
         base.Start();
         Shield = transform.Find("Shield");
+        Child = Shield.GetComponent<SpriteRenderer>();
     }
     protected override void InitEnemy()
     {
@@ -34,5 +35,7 @@ public class Shielder : NormalEnemy
         Vector3 pos = Shield.transform.localPosition;
         pos.x = -pos.x;
         Shield.transform.localPosition = pos;
+        Child.flipX = !Child.flipX;
+        
     }
 }

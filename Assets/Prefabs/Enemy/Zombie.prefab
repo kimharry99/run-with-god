@@ -31,7 +31,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 1}
   m_Children:
-  - {fileID: 5672041697325308133}
+  - {fileID: 7516710751648463729}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -52,7 +52,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 26e945b099014ed48a1be3407f6e20e2, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -142,41 +142,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58e3a47bb179f014fabe73eaee152fab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 1
-  speed: 0.5
+  maxHealth: 15
+  speed: 0.7
   acceleration: 0
   range: 20
   attack: 1
-  hitEffect: {fileID: 1705814571609866543}
+  hitEffect: {fileID: 3552176916752966331}
   dissolve: {fileID: 4800000, guid: 588349a7a5b2c584f8732a9b5c4ba62c, type: 3}
   shotPosition: {fileID: 0}
   shotSpeed: 0
   bulletPrefab: {fileID: 0}
   shotSFX: {fileID: 0}
-  deathSFX: {fileID: 8300000, guid: 3154c90fac2a5da46a5703060f69149c, type: 3}
-  hitSFX: {fileID: 8300000, guid: 4d16530799fbeb44d97d2563a1890eb5, type: 3}
---- !u!1001 &6777256202482361391
+--- !u!1001 &8712844455408617403
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 8712844456109335656}
     m_Modifications:
-    - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
-        type: 3}
-      propertyPath: VelocityModule.enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
-        type: 3}
-      propertyPath: InitialModule.startLifetime.scalar
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
-        type: 3}
-      propertyPath: lengthInSec
-      value: 0.2
-      objectReference: {fileID: 0}
     - target: {fileID: 1205422381347208394, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -237,17 +220,32 @@ PrefabInstance:
       propertyPath: m_Name
       value: BloodEffect
       objectReference: {fileID: 0}
+    - target: {fileID: 7510235709339390430, guid: cf5b43d29a393fa4cb369c6042b07403,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4138772146777199517, guid: cf5b43d29a393fa4cb369c6042b07403,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf5b43d29a393fa4cb369c6042b07403, type: 3}
---- !u!4 &5672041697325308133 stripped
+--- !u!4 &7516710751648463729 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1205422381347208394, guid: cf5b43d29a393fa4cb369c6042b07403,
     type: 3}
-  m_PrefabInstance: {fileID: 6777256202482361391}
+  m_PrefabInstance: {fileID: 8712844455408617403}
   m_PrefabAsset: {fileID: 0}
---- !u!198 &1705814571609866543 stripped
+--- !u!198 &3552176916752966331 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
     type: 3}
-  m_PrefabInstance: {fileID: 6777256202482361391}
+  m_PrefabInstance: {fileID: 8712844455408617403}
   m_PrefabAsset: {fileID: 0}

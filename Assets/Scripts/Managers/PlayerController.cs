@@ -303,6 +303,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
         while (graceTimer > 0)
 		{
+			Debug.Log(Vector3.Distance(oriPosition, transform.position) + " " + (blockDistance - offsetX));
 			if (Vector3.Distance(oriPosition, transform.position) < blockDistance - offsetX)
 				transform.position = Vector3.Lerp(oriPosition, destination, 1 - Mathf.Pow(graceTimer / oriGraceTimer, 3));
 			else

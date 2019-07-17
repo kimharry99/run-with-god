@@ -5,6 +5,8 @@ using UnityEngine;
 public class Undead : NormalEnemy
 {
     public override EnemyType Type { get { return EnemyType.UNDEAD; } }
+    public Sprite UndeadSecond;
+    public Sprite UndeadThird;
 
     protected override void InitEnemy()
     {
@@ -27,11 +29,12 @@ public class Undead : NormalEnemy
     {
         if(Health < 2 * maxHealth / 3)
         {
-            //상체 파괴
+            sr.sprite = UndeadSecond;//상체 파괴
         }
         if (Health < maxHealth / 3)
         {
-            speed = 3;//하체 파괴
+            sr.sprite = UndeadThird;
+            speed = 0.4f;//하체 파괴
         }
     }
 }
