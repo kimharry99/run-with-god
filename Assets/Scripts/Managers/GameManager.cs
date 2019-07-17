@@ -84,8 +84,11 @@ public class GameManager : SingletonBehaviour<GameManager>
 	}
 
 #if UNITY_EDITOR
+
+	private TrustSelector[] selectors;
 	private void OnGUI()
 	{
+		
 		if (SceneManager.GetActiveScene().name != "TrustSelection")
 			return;
 		GUI.Label(new Rect(10, 10, 100, 20), "ATTACK : " + trustTier[TrustType.ATTACK]);
@@ -96,17 +99,17 @@ public class GameManager : SingletonBehaviour<GameManager>
 		trustTier[TrustType.ACTION] = Mathf.RoundToInt(GUI.HorizontalSlider(new Rect(120, 50, 50, 20), trustTier[TrustType.ACTION], -5, 5));
 		if(GUI.Button(new Rect(10, 70, 200, 20), "Update Trustselector"))
 		{
-			foreach(var ts in FindObjectsOfType<TrustSelector>())
+			foreach(var ts in selectors)
 			{
 				ts.InitTrustSelector(PickTrust(ts.type));
 			}
 		}
 		int i = 0;
-		foreach (var ts in FindObjectsOfType<TrustSelector>())
+		foreach (var ts in selectors)
 		{
 			GUI.Label(new Rect(10, 90 + 20 * i++, 500, 20), ts.type + " : " + (ts.Trust != null ? ts.Trust.trustName : "Null"));
 		}
-
+		
 	}
 #endif
 	private void Update()
@@ -129,6 +132,12 @@ public class GameManager : SingletonBehaviour<GameManager>
 		{
 			gameState.Transition("pause");
 		}
+#if UNITY_EDITOR
+		if (scene.name == "TrustSelection")
+		{
+			selectors = FindObjectsOfType<TrustSelector>();
+		}
+#endif
 	}
 
 	private void InitGameState()
