@@ -42,6 +42,10 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	private AudioClip shotSFX = null, hitSFX = null, boomSFX = null;
     [SerializeField]
     private Light gunFireLight;
+	[SerializeField]
+	private AudioSource move;
+	[SerializeField]
+	private AudioClip walkSFX, jumpSFX;
 
 	private bool IsGround
 	{
@@ -148,12 +152,21 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			rb.velocity += new Vector2(0, jumpSpeed - rb.velocity.y);
 			//rb.velocity +=  rb.velocity.y < 0 ? new Vector2(0, jumpSpeed - rb.velocity.y) : new Vector2(0, jumpSpeed);
 			jumpCount--;
+			move.Stop();
+			move.clip = jumpSFX;
+			move.Play();
             OnJump?.Invoke();
 		}
 
 		if (Input.GetButtonDown("Dash") && dashTimer <= 0)
 		{
 			playerState.Transition("dash");
+		}
+
+		if (horizontal != 0 && IsGround && !move.isPlaying)
+		{
+			move.clip = walkSFX;
+			move.Play();
 		}
 	}
 
