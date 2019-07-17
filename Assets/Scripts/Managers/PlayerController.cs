@@ -47,7 +47,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	[SerializeField]
 	private AudioClip walkSFX, jumpSFX;
 
-	private bool IsGround
+	public bool IsGround
 	{
 		get {
             //Debug.Log((Physics2D.Linecast(landChecker.position + new Vector3(-col.bounds.size.x / 2 - 0.01f, 0), landChecker.position + new Vector3(col.bounds.size.x / 2 + 0.01f, 0), 1 << LayerMask.NameToLayer("Ground")).transform != null)+"\nx:"+PlayerPosition.x+" y: "+PlayerPosition.y);

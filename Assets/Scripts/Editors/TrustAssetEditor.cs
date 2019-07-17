@@ -13,11 +13,11 @@ public class TrustAssetEditor : EditorWindow
 	string trustDescription;
 	int trustTier;
 
-	#region KillCountTrust
+	#region KillCountTrust & KillInJumpTrust & OneKillTrust
 	EnemyType enemyType;
 	int killCount;
     #endregion
-    #region ClearTimeTrust
+    #region ClearTimeTrust & OnGroundTrust
     float needTime;
     #endregion
     #region UseBulletTrust
@@ -58,11 +58,11 @@ public class TrustAssetEditor : EditorWindow
 		GUILayout.Label("신탁 티어", EditorStyles.helpBox);
 		trustTier = EditorGUILayout.IntSlider(trustTier, -5, 5);
 
-		if (script.GetClass().Name == "KillCountTrust")
-		{
-			enemyType = (EnemyType)EditorGUILayout.EnumPopup("적 종류", enemyType);
-			killCount = EditorGUILayout.IntField("필요한 킬수", killCount);
-		}
+        if (script.GetClass().Name == "KillCountTrust")
+        {
+            enemyType = (EnemyType)EditorGUILayout.EnumPopup("적 종류", enemyType);
+            killCount = EditorGUILayout.IntField("필요한 킬수", killCount);
+        }
         else if (script.GetClass().Name == "ClearTimeTrust")
         {
             needTime = EditorGUILayout.FloatField("제한 시간(s)", needTime);
@@ -79,24 +79,36 @@ public class TrustAssetEditor : EditorWindow
         {
             needDash = EditorGUILayout.IntField("대쉬 수", needDash);
         }
+        else if (script.GetClass().Name == "KillInJumpTrust")
+        {
+            killCount = EditorGUILayout.IntField("필요한 킬수", killCount);
+        }
+        else if (script.GetClass().Name == "OneKillTrust")
+        {
+            killCount = EditorGUILayout.IntField("필요한 킬수", killCount);
+        }
+        else if (script.GetClass().Name == "OnGroundTrust")
+        {
+            needTime = EditorGUILayout.FloatField("제한 시간(s)", needTime);
+        }
 
 		if (GUILayout.Button("생성"))
 		{
-			if (script.GetClass().Name == "KillCountTrust")
-			{
-				KillCountTrust trust = CreateInstance(script.GetClass()) as KillCountTrust;
+            if (script.GetClass().Name == "KillCountTrust")
+            {
+                KillCountTrust trust = CreateInstance(script.GetClass()) as KillCountTrust;
 
-				trust.trustName = trustName;
-				trust.description = trustDescription;
-				trust.trustType = trustType;
-				trust.tier = trustTier;
+                trust.trustName = trustName;
+                trust.description = trustDescription;
+                trust.trustType = trustType;
+                trust.tier = trustTier;
 
-				trust.enemyType = enemyType;
-				trust.needKillCount = killCount;
+                trust.enemyType = enemyType;
+                trust.needKillCount = killCount;
 
-				AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
-			}
-            else if(script.GetClass().Name == "ClearTimeTrust")
+                AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
+            }
+            else if (script.GetClass().Name == "ClearTimeTrust")
             {
                 ClearTimeTrust trust = CreateInstance(script.GetClass()) as ClearTimeTrust;
 
@@ -122,7 +134,7 @@ public class TrustAssetEditor : EditorWindow
 
                 AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
             }
-            else if(script.GetClass().Name == "JumpCountTrust")
+            else if (script.GetClass().Name == "JumpCountTrust")
             {
                 JumpCountTrust trust = CreateInstance(script.GetClass()) as JumpCountTrust;
 
@@ -135,7 +147,7 @@ public class TrustAssetEditor : EditorWindow
 
                 AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
             }
-            else if(script.GetClass().Name == "DashCountTrust")
+            else if (script.GetClass().Name == "DashCountTrust")
             {
                 DashCountTrust trust = CreateInstance(script.GetClass()) as DashCountTrust;
 
@@ -148,17 +160,56 @@ public class TrustAssetEditor : EditorWindow
 
                 AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
             }
-			else
-			{
-				Trust trust = CreateInstance(script.GetClass()) as Trust;
+            else if (script.GetClass().Name == "KillInJumpTrust")
+            {
+                KillInJumpTrust trust = CreateInstance(script.GetClass()) as KillInJumpTrust;
 
-				trust.trustName = trustName;
-				trust.description = trustDescription;
-				trust.trustType = trustType;
-				trust.tier = trustTier;
+                trust.trustName = trustName;
+                trust.description = trustDescription;
+                trust.trustType = trustType;
+                trust.tier = trustTier;
 
-				AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
-			}
+                trust.needKillCount = killCount;
+
+                AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
+            }
+            else if (script.GetClass().Name == "KillInJumpTrust")
+            {
+                OneKillTrust trust = CreateInstance(script.GetClass()) as OneKillTrust;
+
+                trust.trustName = trustName;
+                trust.description = trustDescription;
+                trust.trustType = trustType;
+                trust.tier = trustTier;
+
+                trust.needKillCount = killCount;
+
+                AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
+            }
+            else if (script.GetClass().Name == "OnGroundTrust")
+            {
+                OnGroundTrust trust = CreateInstance(script.GetClass()) as OnGroundTrust;
+
+                trust.trustName = trustName;
+                trust.description = trustDescription;
+                trust.trustType = trustType;
+                trust.tier = trustTier;
+
+                trust.limitTime = needTime;
+
+                AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
+            }
+            else
+            {
+                Trust trust = CreateInstance(script.GetClass()) as Trust;
+
+                trust.trustName = trustName;
+                trust.description = trustDescription;
+                trust.trustType = trustType;
+                trust.tier = trustTier;
+
+                AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
+            }
 			AssetDatabase.Refresh();
 		}
 	}

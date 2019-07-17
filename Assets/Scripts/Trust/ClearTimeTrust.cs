@@ -15,7 +15,7 @@ public class ClearTimeTrust : Trust
         {
             if (substring == "%need_minute")
             {
-                desc += needClearTime;
+                desc += needClearTime / 60;
             }
             else
             {
