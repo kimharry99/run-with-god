@@ -50,7 +50,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	public bool IsGround
 	{
 		get {
-            //Debug.Log((Physics2D.Linecast(landChecker.position + new Vector3(-col.bounds.size.x / 2 - 0.01f, 0), landChecker.position + new Vector3(col.bounds.size.x / 2 + 0.01f, 0), 1 << LayerMask.NameToLayer("Ground")).transform != null)+"\nx:"+PlayerPosition.x+" y: "+PlayerPosition.y);
+            //Debug.Log(landChecker);
             return Physics2D.Linecast(landChecker.position + new Vector3(-col.bounds.size.x / 2 - 0.01f, 0), landChecker.position + new Vector3(col.bounds.size.x / 2 + 0.01f, 0), 1 << LayerMask.NameToLayer("Ground")).transform != null;
         }
 	}
@@ -73,7 +73,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
     public Action OnShotBullet;
     public Action OnDash;
 
-	private void Start()
+	private void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
