@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3591363262880941502}
   - component: {fileID: 3591363262880941497}
   - component: {fileID: 3591363262880941496}
+  - component: {fileID: 1648409335258264443}
   m_Layer: 10
   m_Name: Ghost
   m_TagString: Enemy
@@ -154,6 +155,26 @@ MonoBehaviour:
   bulletPrefab: {fileID: 0}
   shotSFX: {fileID: 0}
   deathSFX: {fileID: 0}
+  hitSFX: {fileID: 0}
+--- !u!95 &1648409335258264443
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3591363262880941499}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 53790cd4d94d4cd4daa2da160d1011ff, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &3591363262718781397
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -161,6 +182,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3591363262880941500}
     m_Modifications:
+    - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1205422381347208394, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -235,11 +261,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
-        type: 3}
-      propertyPath: playOnAwake
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4138772146777199517, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
