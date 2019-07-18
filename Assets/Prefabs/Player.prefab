@@ -100,6 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6259123a6fef9f344a21e658fca95a3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jumpSpeed: 5
   shotSFX: {fileID: 8300000, guid: cc200904bd8c11b45b2832d12634c141, type: 3}
   hitSFX: {fileID: 8300000, guid: 5a4d25eec482dc148a5bdd7592ffdc37, type: 3}
   boomSFX: {fileID: 8300000, guid: 3e1d461e96213c2489c07411cfab4e0e, type: 3}
@@ -126,7 +127,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 5764d79af5127894c98e37dc4fe7564c, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1

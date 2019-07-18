@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class PlayerController : SingletonBehaviour<PlayerController>
 {
 	private const float maxSpeed = 5;
-	private const float jumpSpeed = 4.2f;
+	public float jumpSpeed = 4.2f;
 	private const float explodeRange = 5;
 	private const int maxLife = 10;
 
@@ -125,14 +125,20 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	{
 		float vertical = Input.GetAxis("Vertical"); //left, right input
 		float horizontal = Input.GetAxis("Horizontal"); //up, down input
+		float horizontalJump = Input.GetAxis("Horizontal_Jump");
+
 		float jump = Input.GetAxis("Jump"); //jump input
 		float fire = Input.GetAxis("Fire"); //attack input
 
-        playerAnimator.SetBool("isRunning", horizontal != 0);
+		playerAnimator.SetBool("isRunning", horizontal != 0);
         playerAnimator.SetBool("isGround", IsGround);
         playerAnimator.SetFloat("ShootUp", vertical);
-        transform.position += new Vector3(horizontal * maxSpeed * Time.deltaTime, 0, 0);
-
+		//transform.position += new Vector3(horizontal * maxSpeed * Time.deltaTime, 0, 0);
+		if (IsGround)
+			rb.velocity = new Vector2(horizontal * maxSpeed, rb.velocity.y);
+		else
+			rb.velocity = new Vector2(horizontalJump * maxSpeed, rb.velocity.y);
+		Debug.Log(horizontal);
 		if (IsGround)
 		{
 			jumpCount = 2;
@@ -410,7 +416,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	{
 		Vector2 direction = Vector2.zero;
 		float vertical = Input.GetAxis("Vertical");
-        /*
+		/*
 		if (!IsGround)
 		{
 			if (vertical != 0)
@@ -434,7 +440,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			}
 		}
         */
-        if (vertical != 0)
+		if (vertical != 0)
         {
             direction = new Vector2(0, 25 * (vertical > 0 ? 1 : -1));
         }
