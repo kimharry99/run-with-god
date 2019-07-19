@@ -6,6 +6,9 @@ using System;
 //bullet이 일직선으로 발사하는 거미줄
 public class Spider : NormalEnemy
 {
+    public GameObject webTrap;
+    public GameObject baby;
+
     public override EnemyType Type { get { return EnemyType.BOSS_SPIDER; } }
 
     State patternCycle = new State();
@@ -19,6 +22,7 @@ public class Spider : NormalEnemy
 
     protected void NextPattern()
     {
+        isInvincibe = false;
         Action[] patterns;
         //if (Trust.isDone)// check Trust is completed
         if (true)
@@ -44,8 +48,13 @@ public class Spider : NormalEnemy
         int choice = UnityEngine.Random.Range(0, patterns.Length);
 
         patterns[choice]();
-        //waitSomeSeconds;
+        WaitSeconds(3f);
         stateMachine.Transition("patternCycle");
+    }
+
+    protected IEnumerator WaitSeconds(float length)
+    {
+        yield return new WaitForSeconds(length);
     }
 
     protected void GetDownWithLeg()
@@ -56,44 +65,49 @@ public class Spider : NormalEnemy
     #region Trust Win Spider Function
     protected void ShotWeb()
     {
-
+        AttackProjectile();
     }
 
     protected void SetTrap()
     {
+        GameObject trap = Instantiate(webTrap) as GameObject;
 
+        StartCoroutine(WaitSeconds(1f));
     }
 
     protected void SprayWeb()
     {
 
+
+        StartCoroutine(WaitSeconds(1f));
     }
 
     protected void HealFromCocoon()
     {
-
+        isInvincibe = true;
+        Health += 20;   //치유량
     }
     #endregion
 
     #region Trust Lose Spider Function
     protected void SummonBaby()
     {
-
+        StartCoroutine(WaitSeconds(1f));
     }
 
     protected void BreakBaby()
     {
-
+        StartCoroutine(WaitSeconds(1f));
     }
 
     protected void AttackRange()
     {
-
+        StartCoroutine(WaitSeconds(1f));
     }
 
     protected void MovingAttack()
     {
-
+        StartCoroutine(WaitSeconds(1f));
     }
 
     #endregion

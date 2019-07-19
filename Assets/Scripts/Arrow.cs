@@ -12,6 +12,7 @@ public class Arrow : Projectile
 
     private void Start()
     {
+        base.Start();
         startPoint = transform.position;
     }
 

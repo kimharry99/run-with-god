@@ -50,6 +50,10 @@ public abstract class NormalEnemy : MonoBehaviour
             {
                 OnDead();
             }
+            if(_health > maxHealth)
+            {
+                _health = maxHealth;
+            }
         }
     }
 
@@ -73,7 +77,7 @@ public abstract class NormalEnemy : MonoBehaviour
     protected Rigidbody2D rb;
 
     protected bool isTouched = false;   //플레이어와의 접촉 여부를 보여주는 변수입니다.
-    private Transform landChecker;
+    protected bool isInvincibe = false;
 
     [SerializeField]
     protected Transform shotPosition;
@@ -129,6 +133,9 @@ public abstract class NormalEnemy : MonoBehaviour
     protected abstract void InitEnemy();
 	public virtual void GetDamaged(int damage)
 	{
+        if (isInvincibe)
+            return;
+
         if (hitEffect != null)
             hitEffect.Play();
         Health -= damage;   //피해만큼 체력을 낮춥니다.
@@ -239,12 +246,12 @@ public abstract class NormalEnemy : MonoBehaviour
         }
     }
 
-    protected void AttackMelee()    //근거리 공격
+    protected void AttackMelee(float range)    //근거리 공격
 	{
-        //if (DistanceWithPlayer() <= rangeAttack && PlayerController.inst.IsDamagable)
-        //{
-        //    PlayerController.inst.GetDamaged();
-        //}
+        if (DistanceWithPlayer() <= range && PlayerController.inst.IsDamagable)
+        {
+            PlayerController.inst.GetDamaged();
+        }
     }
 
 	protected void AttackProjectile()   //원거리 공격.
