@@ -20,5 +20,13 @@ public class Zombie : NormalEnemy
 
 		stateMachine.Transition("idle");
 	}
- 
+
+    protected override void MonitorAndTransition(string nextState = "move")
+    {
+        SeePlayer();
+        if (DetectPlayer(range))
+        {
+            stateMachine.Transition(nextState);
+        }
+    }
 }

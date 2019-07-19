@@ -255,7 +255,7 @@ public abstract class NormalEnemy : MonoBehaviour
     {
         MonitorAndTransition("move");
     }
-    protected void MonitorAndTransition(string nextState = "move")
+    protected virtual void MonitorAndTransition(string nextState = "move")
     {
         if(DetectPlayer(range))
         {
