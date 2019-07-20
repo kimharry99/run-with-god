@@ -6,8 +6,26 @@ using UnityEngine.Events;
 public class Dingo : NormalEnemy
 {
 	public override EnemyType Type { get { return EnemyType.DINGO; } }
-
-	protected override void InitEnemy()
+    private Transform landChecker;
+    private Collider2D col;
+    public bool IsGround
+    {
+        get
+        {
+            //Debug.Log((Physics2D.Linecast(landChecker.position + new Vector3(-col.bounds.size.x / 2 - 0.01f, 0), landChecker.position + new Vector3(col.bounds.size.x / 2 + 0.01f, 0), 1 << LayerMask.NameToLayer("Ground")).transform != null)+"\nx:"+PlayerPosition.x+" y: "+PlayerPosition.y);
+            return Physics2D.Linecast(landChecker.position + new Vector3(-col.bounds.size.x / 2 - 0.01f, 0), landChecker.position + new Vector3(col.bounds.size.x / 2 + 0.01f, 0), 1 << LayerMask.NameToLayer("Ground")).transform != null;
+        }
+    }
+    protected override void Start()
+    {
+        Health = maxHealth;
+        rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
+        col = GetComponent<Collider2D>();
+        landChecker = transform.Find("LandChecker");
+        InitEnemy();
+    }
+    protected override void InitEnemy()
     {
         State idle = new State();
         State move = new State();
@@ -21,5 +39,16 @@ public class Dingo : NormalEnemy
 
         stateMachine.Transition("idle");
     }
- 
+
+    protected override void Moving()
+    {
+        if (acceleration == 0)      //가속이 없으면,
+            rb.velocity = speed * Direction + new Vector2(0, rb.velocity.y); //지정 속력 대로만 움직입니다.
+        else
+        {
+            if ((rb.velocity.magnitude < speed || rb.velocity.normalized != Direction) && IsGround) //목표 속력보다 현재 속력이 작을때 또는 현재 속도의 방향과 자신의 방향이 다를때
+                    rb.AddForce(acceleration * Direction); //가속도만큼 속도에 더합니다.
+        }
+    }
+
 }

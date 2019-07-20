@@ -72,7 +72,6 @@ public abstract class NormalEnemy : MonoBehaviour
     protected Rigidbody2D rb;
 
     protected bool isTouched = false;   //플레이어와의 접촉 여부를 보여주는 변수입니다.
-    private Transform landChecker;
 
     [SerializeField]
     protected Transform shotPosition;
@@ -82,10 +81,7 @@ public abstract class NormalEnemy : MonoBehaviour
     [SerializeField]
     private AudioClip shotSFX, deathSFX, hitSFX;
 
-    /*private bool IsGround
-    {
-        get { return Physics2D.OverlapPoint(landChecker.position, 1 << LayerMask.NameToLayer("Ground")) != null; }
-    }*/
+    
 
     #endregion
 
@@ -94,7 +90,7 @@ public abstract class NormalEnemy : MonoBehaviour
         Health = maxHealth;
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
-		InitEnemy();
+        InitEnemy();
     }
 
     protected virtual void Update()
@@ -230,7 +226,7 @@ public abstract class NormalEnemy : MonoBehaviour
         }
 	}
 
-    protected void Moving()         //몹이 자신이 보는 방향으로 움직이는 함수
+    protected virtual void Moving()         //몹이 자신이 보는 방향으로 움직이는 함수
     {
 		if (acceleration == 0)      //가속이 없으면,
 			rb.velocity = speed * Direction + new Vector2(0, rb.velocity.y); //지정 속력 대로만 움직입니다.
