@@ -274,7 +274,7 @@ public abstract class NormalEnemy : MonoBehaviour
         GameObject bullet = Instantiate(bulletPrefab) as GameObject;
         bullet.transform.position = shotPosition.position + new Vector3(0, Random.Range(-0.05f, 0.05f));
         bullet.GetComponent<Rigidbody2D>().velocity = ShotDirection * shotSpeed;
-        bullet.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 180 + Mathf.Acos(ShotDirection.x) * 180 / Mathf.PI));
+        bullet.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 180 + Mathf.Acos(-ShotDirection.x) * 180 / Mathf.PI));
 
         //SoundManager.inst.PlaySFX(gameObject, shotSFX);
     }

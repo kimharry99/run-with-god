@@ -68,5 +68,4 @@ public class Projectile : MonoBehaviour
 		yield return new WaitForSeconds(time);
 		Destroy(gameObject);
 	}
-
 }
