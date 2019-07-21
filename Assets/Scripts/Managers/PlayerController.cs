@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class PlayerController : SingletonBehaviour<PlayerController>
 {
 	private const float maxSpeed = 5;
-	public float jumpSpeed = 4.2f;
+	private const float jumpSpeed = 4.2f;
 	private const float explodeRange = 5;
 	private const int maxLife = 10;
 
@@ -29,6 +29,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
     private Collider2D col;
 	private Rigidbody2D rb;
 	private SpriteRenderer sr;
+    private Transform arm;
 	private Transform landChecker;
 	private Transform shotPosition;
 
@@ -50,7 +51,6 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	public bool IsGround
 	{
 		get {
-            //Debug.Log((Physics2D.Linecast(landChecker.position + new Vector3(-col.bounds.size.x / 2 - 0.01f, 0), landChecker.position + new Vector3(col.bounds.size.x / 2 + 0.01f, 0), 1 << LayerMask.NameToLayer("Ground")).transform != null)+"\nx:"+PlayerPosition.x+" y: "+PlayerPosition.y);
             return Physics2D.Linecast(landChecker.position + new Vector3(-col.bounds.size.x / 2 - 0.01f, 0), landChecker.position + new Vector3(col.bounds.size.x / 2 + 0.01f, 0), 1 << LayerMask.NameToLayer("Ground")).transform != null;
         }
 	}
@@ -73,12 +73,13 @@ public class PlayerController : SingletonBehaviour<PlayerController>
     public Action OnShotBullet;
     public Action OnDash;
 
-	private void Start()
+	private void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
 		landChecker = transform.Find("LandChecker");
-		shotPosition = transform.Find("ShotPosition");
+        arm = transform.Find("Arm");
+		shotPosition = arm.Find("ShotPosition");
 		sr = GetComponent<SpriteRenderer>();
         playerAnimator = GetComponent<Animator>();
 		InitGunStateMachine();
@@ -125,20 +126,14 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	{
 		float vertical = Input.GetAxis("Vertical"); //left, right input
 		float horizontal = Input.GetAxis("Horizontal"); //up, down input
-		float horizontalJump = Input.GetAxis("Horizontal_Jump");
-
 		float jump = Input.GetAxis("Jump"); //jump input
 		float fire = Input.GetAxis("Fire"); //attack input
 
-		playerAnimator.SetBool("isRunning", horizontal != 0);
+        playerAnimator.SetBool("isRunning", horizontal != 0);
         playerAnimator.SetBool("isGround", IsGround);
         playerAnimator.SetFloat("ShootUp", vertical);
-		//transform.position += new Vector3(horizontal * maxSpeed * Time.deltaTime, 0, 0);
-		if (IsGround)
-			rb.velocity = new Vector2(horizontal * maxSpeed, rb.velocity.y);
-		else
-			rb.velocity = new Vector2(horizontalJump * maxSpeed, rb.velocity.y);
-		Debug.Log(horizontal);
+        transform.position += new Vector3(horizontal * maxSpeed * Time.deltaTime, 0, 0);
+
 		if (IsGround)
 		{
 			jumpCount = 2;
@@ -404,7 +399,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 		GameObject bullet = Instantiate(bulletPrefab);
 		bullet.transform.position = shotPosition.position + new Vector3(0, UnityEngine.Random.Range(-0.01f, 0.01f));
-		bullet.GetComponent<Rigidbody2D>().velocity = ShotDirection() * 1f;
+		bullet.GetComponent<Rigidbody2D>().velocity = ShotDirection() * 25f;
 		shotCount--;
 		shotCooltime = 0.05f;
 		CameraController.Shake(0.02f,0.05f);
@@ -414,33 +409,11 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 	private Vector2 ShotDirection()
 	{
+        return (IsFlipped ? -1 : 1) * (arm.rotation * Vector2.right).normalized;
+        /*
 		Vector2 direction = Vector2.zero;
 		float vertical = Input.GetAxis("Vertical");
-		/*
-		if (!IsGround)
-		{
-			if (vertical != 0)
-			{
-				direction = new Vector2(0, 25 * (vertical > 0 ? 1 : -1));
-			}
-			else
-			{
-				direction = new Vector2(25 * (isFlipped ? -1 : 1), 0);
-			}
-		}
-		else
-		{
-			if (vertical > 0)
-			{
-				direction = new Vector2(0, 25 * (vertical > 0 ? 1 : -1));
-			}
-			else
-			{
-				direction = new Vector2(25 * (isFlipped ? -1 : 1), 0);
-			}
-		}
-        */
-		if (vertical != 0)
+        if (vertical != 0)
         {
             direction = new Vector2(0, 25 * (vertical > 0 ? 1 : -1));
         }
@@ -448,8 +421,11 @@ public class PlayerController : SingletonBehaviour<PlayerController>
         {
             direction = new Vector2(25 * (IsFlipped ? -1 : 1), 0);
         }
+        
         return direction;
-	}
+        */
+        
+    }
 
  
 	public void GetDamaged()
@@ -477,17 +453,6 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		{
             if(IsKill)
 			enemy.GetComponent<NormalEnemy>()?.GetDamagedToDeath();
-		}
-
-		foreach (var projectile in Physics2D.OverlapCircleAll(transform.position, explodeRange))
-		{
-			if (projectile.tag == "Projectile")
-			{
-				if (projectile.GetComponent<Projectile>()?.type == ProjectileType.ENEMY)
-				{
-					Destroy(projectile.gameObject);
-				}
-			}
 		}
 	}
 
