@@ -42,12 +42,10 @@ public class Dingo : NormalEnemy
 
     protected override void Moving()
     {
-        if (acceleration == 0)      //가속이 없으면,
-            rb.velocity = speed * Direction + new Vector2(0, rb.velocity.y); //지정 속력 대로만 움직입니다.
-        else
+        if (    (rb.velocity.x < speed || rb.velocity.normalized != Direction) && IsGround  ) //목표 속력보다 현재 속력이 작을때 또는 현재 속도의 방향과 자신의 방향이 다를때
         {
-            if ((rb.velocity.magnitude < speed || rb.velocity.normalized != Direction) && IsGround) //목표 속력보다 현재 속력이 작을때 또는 현재 속도의 방향과 자신의 방향이 다를때
-                    rb.AddForce(acceleration * Direction); //가속도만큼 속도에 더합니다.
+            Debug.Log("ASFDSAFSD");
+            rb.AddForce(acceleration * Direction); //가속도만큼 속도에 더합니다.
         }
     }
 

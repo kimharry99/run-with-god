@@ -300,7 +300,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
             }
         }
 
-
+            
         while (graceTimer > 0)
 		{
 			Debug.Log(Vector3.Distance(oriPosition, transform.position) + " " + (blockDistance - offsetX));

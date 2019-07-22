@@ -24,7 +24,7 @@ public class Zombie : NormalEnemy
     protected override void MonitorAndTransition(string nextState = "move")
     {
         SeePlayer();
-        if (DetectPlayer(range))
+        if (DetectPlayer(size))
         {
             stateMachine.Transition(nextState);
         }
