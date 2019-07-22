@@ -87,20 +87,26 @@ public class MapRandomEditor : MonoBehaviour
 
         for(int i = 0; i < mapLength; i++)
         {
-            GameObject instance = Instantiate(ground, transform.position+new Vector3(playerCoordinate[i].x, 0.8f*playerCoordinate[i].y, 0f),transform.rotation,transform) as GameObject;
+            GameObject instance = Instantiate(ground, transform.position+
+                new Vector3(playerCoordinate[i].x, 0.8f*playerCoordinate[i].y, 0f),transform.rotation,transform.Find("Map")) as GameObject;
             if (!playerCoordinate[i].direction)
             {
-                GameObject reverseMark = Instantiate(blue, transform.position+new Vector3(playerCoordinate[i].x-0.05f, 0.8f * playerCoordinate[i].y+0.5f, 0f), transform.rotation,transform) as GameObject;
+                GameObject reverseMark = Instantiate(blue, transform.position+
+                    new Vector3(playerCoordinate[i].x-0.05f, 0.8f * playerCoordinate[i].y+0.5f, 0f), transform.rotation,transform.Find("Map")) as GameObject;
             }
             if (playerCoordinate[i].isJump)
             {
-                GameObject jumpMark = Instantiate(red, transform.position+new Vector3(playerCoordinate[i].x + 0.05f, 0.8f * playerCoordinate[i].y + 0.5f, 0f), transform.rotation,transform) as GameObject;
+                GameObject jumpMark = Instantiate(red, transform.position+
+                    new Vector3(playerCoordinate[i].x + 0.05f, 0.8f * playerCoordinate[i].y + 0.5f, 0f), transform.rotation,transform.Find("Map")) as GameObject;
             }
             if (playerCoordinate[i].isAttack)
             {
-                GameObject instanEnemy = Instantiate(enemy[(int)Random.Range(0,enemy.GetLength(0)-0.1f)], transform.position+new Vector3(playerCoordinate[i].x, 0.8f * playerCoordinate[i].y + 0.5f, 0f), transform.rotation,transform) as GameObject;
+                GameObject instanEnemy = Instantiate(enemy[(int)Random.Range(0,enemy.GetLength(0)-0.1f)], transform.position+
+                    new Vector3(playerCoordinate[i].x, 0.8f * playerCoordinate[i].y + 0.5f, 0f), transform.rotation,transform.Find("Map")) as GameObject;
             }
         }
+
+        GameObject temp = Instantiate(transform.Find("Map").gameObject,transform.position+new Vector3(0,1000,0),transform.rotation, transform);
     }
     // Update is called once per frame
     void Update()
