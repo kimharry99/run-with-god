@@ -458,7 +458,18 @@ public class PlayerController : SingletonBehaviour<PlayerController>
             if(IsKill)
 			enemy.GetComponent<NormalEnemy>()?.GetDamagedToDeath();
 		}
-	}
+
+        foreach (var projectile in Physics2D.OverlapCircleAll(transform.position, explodeRange))
+        {
+            if (projectile.tag == "Projectile")
+            {
+                if (projectile.GetComponent<Projectile>()?.type == ProjectileType.ENEMY)
+                {
+                    Destroy(projectile.gameObject);
+                }
+            }
+        }
+    }
 
 	private void OnDead()
 	{
