@@ -139,7 +139,6 @@ public class PlayerController : SingletonBehaviour<PlayerController>
             rb.velocity = new Vector2(horizontal * maxSpeed, rb.velocity.y);
         else
             rb.velocity = new Vector2(horizontalJump * maxSpeed, rb.velocity.y);
-        Debug.Log(horizontal);
         if (IsGround)
         {
             jumpCount = 2;

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Butcher : NormalEnemy
 {
     public override EnemyType Type { get { return EnemyType.ALL; } }
-    public Transform sickle;
+    public Transform anchor;
 
     public Collider2D hitRange;
 	private Collider2D player;
@@ -14,6 +14,9 @@ public class Butcher : NormalEnemy
 	private DistanceJoint2D distanceJoint;
 
 	private float nextPatternTimer;
+
+    [SerializeField]
+    private GameObject anchorPrefab;
 
 	protected override void Update()
 	{
@@ -46,13 +49,15 @@ public class Butcher : NormalEnemy
 			}
 			else if (nextPatternTimer <= 0)
 			{
-				stateMachine.Transition("pattern1");
+				stateMachine.Transition("pattern3");
 			}
 		};
 
 		attack.Enter += delegate { StartCoroutine(AttackRoutine()); };
 
-		pattern1.Enter += delegate { StartCoroutine(ThrowSickleRoutine()); };
+		pattern1.Enter += delegate { StartCoroutine(ThrowAnchorRoutine()); };
+
+        pattern3.Enter += delegate { StartCoroutine(AnchorAttackRoutine()); Debug.Log("p3"); };
 
 		stateMachine.AddNewState("move", move);
 		stateMachine.AddNewState("attack", attack);
@@ -105,31 +110,22 @@ public class Butcher : NormalEnemy
 		
 	}
 
-    private IEnumerator ThrowSickleRoutine()
+    private IEnumerator ThrowAnchorRoutine()
     {
 		Vector3 playerPos = PlayerController.inst.transform.position;
-		Vector3 oriLocalPos = sickle.localPosition;
-		Vector3 oriPos = sickle.position;
+		Vector3 oriLocalPos = anchor.localPosition;
+		Vector3 oriPos = anchor.position;
 
 		Vector2 direction = (playerPos - oriPos).normalized;
 
-		sickle.rotation = Quaternion.Euler(0,0,-Vector2.Angle(Vector2.up, direction));
-		Collider2D col = sickle.GetComponent<Collider2D>();
+		anchor.rotation = Quaternion.Euler(0,0,-Vector2.Angle(Vector2.up, direction));
+		Collider2D col = anchor.GetComponent<Collider2D>();
 
-		sickle.gameObject.SetActive(true);
+		anchor.gameObject.SetActive(true);
 
-		/*
-		Rigidbody2D sickleRb = sickle.GetComponent<Rigidbody2D>();
-		sickleRb.velocity = direction * 2;
 		while (!col.IsTouchingLayers(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Ground")))
 		{
-			yield return null;
-		}
-		sickleRb.velocity = Vector2.zero;
-		*/
-		while (!col.IsTouchingLayers(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Ground")))
-		{
-			sickle.position += new Vector3(direction.x, direction.y, 0) * 20 * Time.deltaTime;
+			anchor.position += new Vector3(direction.x, direction.y, 0) * 20 * Time.deltaTime;
 			yield return null;
 		}
 
@@ -141,16 +137,16 @@ public class Butcher : NormalEnemy
 			while (distanceJoint.distance > 0.01f)
 			{
 				distanceJoint.distance -= Time.deltaTime * 10;
-				sickle.transform.position = PlayerController.inst.transform.position;
+				anchor.transform.position = PlayerController.inst.transform.position;
 				yield return null;
 			}
 			Debug.Log("Player Hit");
 		}
 		else
 		{
-			distanceJoint.connectedAnchor = new Vector2(sickle.position.x, transform.position.y + 0.01f);
+			distanceJoint.connectedAnchor = new Vector2(anchor.position.x, transform.position.y + 0.01f);
 			distanceJoint.enabled = true;
-			float oriDistance = distanceJoint.distance = Vector2.Distance(transform.position, sickle.position);
+			float oriDistance = distanceJoint.distance = Vector2.Distance(transform.position, anchor.position);
 
 
 			/*
@@ -166,22 +162,32 @@ public class Butcher : NormalEnemy
 				distanceJoint.distance -= Time.deltaTime * 10;
 				yield return null;
 			}
-
-			/*
-			Vector3 sicklePos = sickle.position;
-			while (!GetComponent<Collider2D>().OverlapPoint(sickle.position))
-			{
-				sickle.position = sicklePos;
-				rb.AddForce((sickle.position - transform.position) * 30);
-				yield return null;
-			}
-			*/
 		}
 		distanceJoint.connectedBody = null;
 		distanceJoint.enabled = false;
-		sickle.gameObject.SetActive(false);
-		sickle.localPosition = oriLocalPos;
+		anchor.gameObject.SetActive(false);
+		anchor.localPosition = oriLocalPos;
 		stateMachine.Transition("move");
 		nextPatternTimer = Random.Range(5f,10f);
 	}
+
+    private IEnumerator AnchorAttackRoutine()
+    {
+        Vector3 playerPos = PlayerController.inst.transform.position;
+        Vector3 oriLocalPos = anchor.localPosition;
+        Vector3 oriPos = anchor.position;
+
+        Vector2 direction = (playerPos - oriPos).normalized;
+        float angle = -Vector2.Angle(Vector2.up, direction);
+
+        GameObject tmp = Instantiate(anchorPrefab, transform.position, Quaternion.Euler(0,0,angle));
+        tmp.GetComponent<Rigidbody2D>().velocity = direction * 5;
+        tmp = Instantiate(anchorPrefab, transform.position, Quaternion.Euler(0, 0, angle + 15));
+        tmp.GetComponent<Rigidbody2D>().velocity = Quaternion.Euler(0, 0, 15) * direction * 5;
+        tmp = Instantiate(anchorPrefab, transform.position, Quaternion.Euler(0, 0, angle - 15));
+        tmp.GetComponent<Rigidbody2D>().velocity = Quaternion.Euler(0, 0, -15) * direction * 5;
+        stateMachine.Transition("move");
+        nextPatternTimer = Random.Range(5f, 10f);
+        yield return null;
+    }
 }
