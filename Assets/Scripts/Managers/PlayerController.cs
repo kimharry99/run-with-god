@@ -123,55 +123,61 @@ public class PlayerController : SingletonBehaviour<PlayerController>
     }
 
     private void PlayerMovementControl()
-	{
-		float vertical = Input.GetAxis("Vertical"); //left, right input
-		float horizontal = Input.GetAxis("Horizontal"); //up, down input
-		float jump = Input.GetAxis("Jump"); //jump input
-		float fire = Input.GetAxis("Fire"); //attack input
+    {
+        float vertical = Input.GetAxis("Vertical"); //left, right input
+        float horizontal = Input.GetAxis("Horizontal"); //up, down input
+        float horizontalJump = Input.GetAxis("Horizontal_Jump");
+
+        float jump = Input.GetAxis("Jump"); //jump input
+        float fire = Input.GetAxis("Fire"); //attack input
 
         playerAnimator.SetBool("isRunning", horizontal != 0);
         playerAnimator.SetBool("isGround", IsGround);
         playerAnimator.SetFloat("ShootUp", vertical);
-        transform.position += new Vector3(horizontal * maxSpeed * Time.deltaTime, 0, 0);
+        //transform.position += new Vector3(horizontal * maxSpeed * Time.deltaTime, 0, 0);
+        if (IsGround)
+            rb.velocity = new Vector2(horizontal * maxSpeed, rb.velocity.y);
+        else
+            rb.velocity = new Vector2(horizontalJump * maxSpeed, rb.velocity.y);
+        Debug.Log(horizontal);
+        if (IsGround)
+        {
+            jumpCount = 2;
+        }
+        else if (jumpCount > 1)
+        {
+            jumpCount = 1;
+        }
 
-		if (IsGround)
-		{
-			jumpCount = 2;
-		}
-		else if (jumpCount > 1)
-		{
-			jumpCount = 1;
-		}
+        if ((horizontal < 0 && !IsFlipped) || (horizontal > 0 && IsFlipped))
+        {
+            Flip();
+        }
 
-		if ((horizontal < 0 && !IsFlipped) || (horizontal > 0 && IsFlipped))
-		{
-			Flip();
-		}
-
-		if (Input.GetButtonDown("Jump") && jumpCount > 0)
-		{
-			rb.velocity += new Vector2(0, jumpSpeed - rb.velocity.y);
-			//rb.velocity +=  rb.velocity.y < 0 ? new Vector2(0, jumpSpeed - rb.velocity.y) : new Vector2(0, jumpSpeed);
-			jumpCount--;
-			move.Stop();
-			move.clip = jumpSFX;
-			move.Play();
+        if (Input.GetButtonDown("Jump") && jumpCount > 0)
+        {
+            rb.velocity += new Vector2(0, jumpSpeed - rb.velocity.y);
+            //rb.velocity +=  rb.velocity.y < 0 ? new Vector2(0, jumpSpeed - rb.velocity.y) : new Vector2(0, jumpSpeed);
+            jumpCount--;
+            move.Stop();
+            move.clip = jumpSFX;
+            move.Play();
             OnJump?.Invoke();
-		}
+        }
 
-		if (Input.GetButtonDown("Dash") && dashTimer <= 0)
-		{
-			playerState.Transition("dash");
-		}
+        if (Input.GetButtonDown("Dash") && dashTimer <= 0)
+        {
+            playerState.Transition("dash");
+        }
 
-		if (horizontal != 0 && IsGround && !move.isPlaying)
-		{
-			move.clip = walkSFX;
-			move.Play();
-		}
-	}
+        if (horizontal != 0 && IsGround && !move.isPlaying)
+        {
+            move.clip = walkSFX;
+            move.Play();
+        }
+    }
 
-	private void PlayerAttackControl()
+    private void PlayerAttackControl()
 	{
 		if (Input.GetButtonDown("Fire"))
 		{
