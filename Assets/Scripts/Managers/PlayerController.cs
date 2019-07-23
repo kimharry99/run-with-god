@@ -277,8 +277,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		Vector3 oriPosition = transform.position;
 		Vector3 destination = transform.position + (IsFlipped ? new Vector3(-3, 0) : new Vector3(3, 0));
 
-
-		float blockDistance = 3;
+        float offsetX = GetComponent<BoxCollider2D>().bounds.size.x / 2;
+        float blockDistance = 3 + offsetX;
 		foreach (var hit in Physics2D.BoxCastAll(oriPosition,GetComponent<BoxCollider2D>().bounds.size,0, IsFlipped ? Vector2.left : Vector2.right,3, 1 << LayerMask.NameToLayer("Ground")))
 		{
 			if (blockDistance > hit.distance)
@@ -286,8 +286,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 				blockDistance = hit.distance;
 			}
 		}
-
-		float offsetX = GetComponent<BoxCollider2D>().bounds.size.x / 2;
+        blockDistance -= offsetX;
 		
 
 		rb.simulated = false;
@@ -303,12 +302,12 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
         while (graceTimer > 0)
 		{
-            if (Vector3.Distance(oriPosition, transform.position) <= (blockDistance - offsetX) + 0.001f)
-				transform.position = Vector3.Lerp(oriPosition, destination, 1 - Mathf.Pow(graceTimer / oriGraceTimer, 3));
-			else
-				transform.position = oriPosition + (IsFlipped ? Vector3.left : Vector3.right) * (blockDistance - offsetX);
-			//Debug.Log("D:" + destination);
-			//Debug.Log("B:" + oriPosition + (isFlipped ? Vector2.left : Vector2.right) * (blockDistance - offsetX));
+            Vector3 lerped = Vector3.Lerp(oriPosition, destination, 1 - Mathf.Pow(graceTimer / oriGraceTimer, 3));
+
+            if (Vector3.Distance(lerped, oriPosition) <= blockDistance)
+                transform.position = lerped;
+            else
+                transform.position = oriPosition + (IsFlipped ? Vector3.left : Vector3.right) * blockDistance;
 			yield return null;
 		}
 
