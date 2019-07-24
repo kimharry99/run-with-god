@@ -217,7 +217,7 @@ public abstract class NormalEnemy : MonoBehaviour
 
     #region Monster AI Functions
 
-    protected void FollowPlayer()   //플레이어를 따라 움직이는 함수
+    protected virtual void FollowPlayer()   //플레이어를 따라 움직이는 함수
 	{
         if (DetectPlayer(range))
         {
@@ -230,7 +230,7 @@ public abstract class NormalEnemy : MonoBehaviour
         }
 	}
 
-    protected void Moving()         //몹이 자신이 보는 방향으로 움직이는 함수
+    protected virtual void Moving()         //몹이 자신이 보는 방향으로 움직이는 함수
     {
 		if (acceleration == 0)      //가속이 없으면,
 			rb.velocity = speed * Direction + new Vector2(0, rb.velocity.y); //지정 속력 대로만 움직입니다.

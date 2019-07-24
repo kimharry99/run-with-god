@@ -7,13 +7,29 @@ public class Dingo : NormalEnemy
 {
 	public override EnemyType Type { get { return EnemyType.DINGO; } }
 
-	protected override void InitEnemy()
+    private Animator dingoAnimator;
+
+    protected override void Start()
+    {
+        base.Start();
+        dingoAnimator = GetComponent<Animator>();
+    }
+
+    protected override void InitEnemy()
     {
         State idle = new State();
         State move = new State();
 
+        idle.Enter += delegate
+        {
+            dingoAnimator.SetBool("isRunning", false);
+        };
         idle.StateUpdate += MonitorAndTransition;
-
+        
+        move.Enter += delegate
+        {
+            dingoAnimator.SetBool("isRunning", true);
+        };
         move.StateUpdate += FollowPlayer;
 
         stateMachine.AddNewState("idle", idle);
@@ -21,5 +37,4 @@ public class Dingo : NormalEnemy
 
         stateMachine.Transition("idle");
     }
- 
 }
