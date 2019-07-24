@@ -131,8 +131,8 @@ public abstract class NormalEnemy : MonoBehaviour
 	{
         if (hitSFX != null)
             SoundManager.inst.PlaySFX(gameObject, hitSFX, 1);
-        Health -= damage;   //피해만큼 체력을 낮춥니다.
 		StartCoroutine(HitEffectRoutine());
+		Health -= damage;   //피해만큼 체력을 낮춥니다.
 	}
     public virtual void GetDamaged(int damage, Vector3 hitPos, Vector2 velocity)
     {
@@ -153,6 +153,11 @@ public abstract class NormalEnemy : MonoBehaviour
         if (hitEffect != null)
 		    hitEffect.Play();
 		Health = 0;
+	}
+
+	public virtual void GetHealed(int amount)
+	{
+		Health = Mathf.Min(maxHealth, Health + amount);
 	}
 
 	protected virtual void OnDead()

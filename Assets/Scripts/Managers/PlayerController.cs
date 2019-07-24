@@ -11,7 +11,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	private const float explodeRange = 5;
 	private const int maxLife = 10;
 
-	//private float speed = 0;
+	public float speedScale = 1;
 	private int jumpCount = 2;
 	private int shotCount;
 	private float shotCooltime;
@@ -136,9 +136,9 @@ public class PlayerController : SingletonBehaviour<PlayerController>
         playerAnimator.SetFloat("ShootUp", vertical);
         //transform.position += new Vector3(horizontal * maxSpeed * Time.deltaTime, 0, 0);
         if (IsGround)
-            rb.velocity = new Vector2(horizontal * maxSpeed, rb.velocity.y);
+            rb.velocity = new Vector2(horizontal * maxSpeed * speedScale, rb.velocity.y);
         else
-            rb.velocity = new Vector2(horizontalJump * maxSpeed, rb.velocity.y);
+            rb.velocity = new Vector2(horizontalJump * maxSpeed * speedScale, rb.velocity.y);
         if (IsGround)
         {
             jumpCount = 2;
