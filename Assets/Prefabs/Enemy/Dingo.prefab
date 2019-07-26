@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6890017396426130024}
   - component: {fileID: 6890017396426130029}
   - component: {fileID: 6890017396426130025}
+  - component: {fileID: 1931012027194132564}
   m_Layer: 9
   m_Name: Dingo
   m_TagString: Enemy
@@ -52,7 +53,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 26e945b099014ed48a1be3407f6e20e2, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -72,7 +73,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 993fba79521ba11478387f2b047a3632, type: 3}
+  m_Sprite: {fileID: 3006305343474882411, guid: b95fc5a2b6b3ca74181755e65c88135a,
+    type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -100,7 +102,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 7, y: 5}
+    oldSize: {x: 7.004104, y: 5}
     newSize: {x: 0.16, y: 0.16}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -153,8 +155,27 @@ MonoBehaviour:
   shotSpeed: 0
   bulletPrefab: {fileID: 0}
   shotSFX: {fileID: 0}
-  deathSFX: {fileID: 8300000, guid: 7603fb5ae6f8cb042b9b11012c522c63, type: 3}
-  hitSFX: {fileID: 8300000, guid: 4d16530799fbeb44d97d2563a1890eb5, type: 3}
+  deathSFX: {fileID: 0}
+  hitSFX: {fileID: 0}
+--- !u!95 &1931012027194132564
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6890017396426130022}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d563e6d931ae33645baf9441d1e8c0e7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &6890017397392027010
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -162,15 +183,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6890017396426130026}
     m_Modifications:
-    - target: {fileID: 7510235709339390430, guid: cf5b43d29a393fa4cb369c6042b07403,
+    - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
-      propertyPath: m_Name
-      value: BloodEffect
-      objectReference: {fileID: 0}
-    - target: {fileID: 7510235709339390430, guid: cf5b43d29a393fa4cb369c6042b07403,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1205422381347208394, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
@@ -227,10 +243,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
+    - target: {fileID: 7510235709339390430, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
-      propertyPath: playOnAwake
-      value: 0
+      propertyPath: m_Name
+      value: BloodEffect
+      objectReference: {fileID: 0}
+    - target: {fileID: 7510235709339390430, guid: cf5b43d29a393fa4cb369c6042b07403,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4138772146777199517, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}

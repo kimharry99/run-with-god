@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2727016596485071678}
   - component: {fileID: 2933774359829501112}
   - component: {fileID: 3060139372067523293}
+  - component: {fileID: 8563694601960836753}
   m_Layer: 9
   m_Name: Skeleton
   m_TagString: Enemy
@@ -52,7 +53,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 26e945b099014ed48a1be3407f6e20e2, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -72,12 +73,13 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b1b19579ad25f824c9a24e1c94d60250, type: 3}
+  m_Sprite: {fileID: -8021109167705974710, guid: 2c4a30686703792428c4f6bce862196b,
+    type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.16, y: 0.16}
+  m_Size: {x: 5, y: 5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -101,7 +103,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 5, y: 5}
-    newSize: {x: 0.16, y: 0.16}
+    newSize: {x: 5, y: 5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -155,6 +157,25 @@ MonoBehaviour:
   shotSFX: {fileID: 0}
   deathSFX: {fileID: 0}
   hitSFX: {fileID: 0}
+--- !u!95 &8563694601960836753
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2727016596485071672}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e7dfa315344e8384fa5d122cc56cb87e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &2727016595584598255
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -171,6 +192,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1205422381347208394, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
@@ -225,11 +251,6 @@ PrefabInstance:
     - target: {fileID: 1205422381347208394, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
-        type: 3}
-      propertyPath: playOnAwake
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4138772146777199517, guid: cf5b43d29a393fa4cb369c6042b07403,
