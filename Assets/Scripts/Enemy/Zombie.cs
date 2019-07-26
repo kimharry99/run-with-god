@@ -7,13 +7,8 @@ public class Zombie : NormalEnemy
 {
 	public override EnemyType Type { get { return EnemyType.ZOMBIE; } }
 
+	[SerializeField]
     private Animator zombieAnimator;
-
-    protected override void Start()
-    {
-        base.Start();
-        zombieAnimator = GetComponent<Animator>();
-    }
 
     protected override void InitEnemy()
 	{
@@ -38,5 +33,13 @@ public class Zombie : NormalEnemy
 
 		stateMachine.Transition("idle");
 	}
- 
+
+    protected override void MonitorAndTransition(string nextState = "move")
+    {
+        SeePlayer();
+        if (DetectPlayer(size))
+        {
+            stateMachine.Transition(nextState);
+        }
+    }
 }

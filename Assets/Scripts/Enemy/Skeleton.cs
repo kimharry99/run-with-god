@@ -7,13 +7,9 @@ public class Skeleton : NormalEnemy
 {
 	public override EnemyType Type { get { return EnemyType.SKELETON; } }
 
+	[SerializeField]
     private Animator skeletonAnimator;
 
-    protected override void Start()
-    {
-        base.Start();
-        skeletonAnimator = GetComponent<Animator>();
-    }
     protected override void InitEnemy()
     {
         State idle = new State();

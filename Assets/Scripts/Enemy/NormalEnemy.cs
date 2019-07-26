@@ -64,7 +64,7 @@ public abstract class NormalEnemy : MonoBehaviour
     [SerializeField]
     protected float acceleration;    //'가속도의 크기'입니다.
     [SerializeField]
-    protected float range;           //'시야 범위'입니다.
+    public Vector2 size;           //'시야 범위'입니다.
     [SerializeField]
     protected int attack = 1;      //'공격력'입니다.
     //[SerializeField]
@@ -87,10 +87,7 @@ public abstract class NormalEnemy : MonoBehaviour
     [SerializeField]
     private AudioClip shotSFX, deathSFX, hitSFX;
 
-    /*private bool IsGround
-    {
-        get { return Physics2D.OverlapPoint(landChecker.position, 1 << LayerMask.NameToLayer("Ground")) != null; }
-    }*/
+    
 
     #endregion
 
@@ -99,7 +96,7 @@ public abstract class NormalEnemy : MonoBehaviour
         Health = maxHealth;
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
-		InitEnemy();
+        InitEnemy();
     }
 
     protected virtual void Update()
@@ -234,16 +231,16 @@ public abstract class NormalEnemy : MonoBehaviour
 
     protected virtual void FollowPlayer()   //플레이어를 따라 움직이는 함수
 	{
-        if (DetectPlayer(range))
+        if (DetectPlayer(size))
         {
             SeePlayer();    //플레이어가 시야 내에 있다면 플레이어를 보도록 합니다.
             Moving();       //움직입니다.
-            if (!DetectPlayer(range))//플레이어가 시야를 벗어난다면
-            {
-                stateMachine.Transition("idle");//보통 상태로 전환합니다
-            }
         }
-	}
+        else//플레이어가 시야를 벗어난다면
+        {
+            stateMachine.Transition("idle");//보통 상태로 전환합니다
+        }
+    }
 
     protected virtual void Moving()         //몹이 자신이 보는 방향으로 움직이는 함수
     {
@@ -256,6 +253,7 @@ public abstract class NormalEnemy : MonoBehaviour
 		}
 
         //transform.position += rb.velocity * unit * Time.deltaTime;
+        
     }
 
 	protected void Flying()
@@ -270,9 +268,9 @@ public abstract class NormalEnemy : MonoBehaviour
     {
         MonitorAndTransition("move");
     }
-    protected void MonitorAndTransition(string nextState = "move")
+    protected virtual void MonitorAndTransition(string nextState = "move")
     {
-        if(DetectPlayer(range))
+        if(DetectPlayer(size))
         {
             stateMachine.Transition(nextState);
         }
@@ -293,7 +291,7 @@ public abstract class NormalEnemy : MonoBehaviour
         GameObject bullet = Instantiate(bulletPrefab) as GameObject;
         bullet.transform.position = shotPosition.position + new Vector3(0, Random.Range(-0.05f, 0.05f));
         bullet.GetComponent<Rigidbody2D>().velocity = ShotDirection * shotSpeed;
-        bullet.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 180 + Mathf.Acos(ShotDirection.x) * 180 / Mathf.PI));
+        bullet.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 180 + Mathf.Acos(-ShotDirection.x) * 180 / Mathf.PI));
 
         //SoundManager.inst.PlaySFX(gameObject, shotSFX);
     }
@@ -314,9 +312,13 @@ public abstract class NormalEnemy : MonoBehaviour
 
     #region Usual Data Functions
     //자료 확인용 함수입니다.
-    protected bool DetectPlayer(float range)  //플레이어가 시야 범위 내에 있는지를 반환하는 함수입니다.
+    protected bool DetectPlayer(Vector2 size)  //플레이어가 시야 범위 내에 있는지를 반환하는 함수입니다.
     {
-        bool ret = (DistanceWithPlayer() <= range * unit);
+        bool ret = false;
+        Collider2D find = Physics2D.OverlapBox(transform.position, size, 0, 1 << LayerMask.NameToLayer("Player"));
+        //(DistanceWithPlayer() <= range * unit);
+        if (find != null)
+                ret = true;
 
         return ret;
     }
@@ -384,7 +386,7 @@ public abstract class NormalEnemy : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.position, range);
+        Gizmos.DrawWireCube(transform.position, size);
     }
 #endif
 
