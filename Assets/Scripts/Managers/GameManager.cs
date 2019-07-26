@@ -66,7 +66,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 
 		foreach (var trust in Resources.LoadAll<Trust>("Trusts"))
 		{
-			Debug.Log(trust.name + " loaded");
+			//Debug.Log(trust.name + " loaded");
 			Tuple<TrustType, int> tuple = new Tuple<TrustType, int>(trust.trustType, trust.tier);
 			if (!unplayedTrusts.ContainsKey(tuple))
 			{

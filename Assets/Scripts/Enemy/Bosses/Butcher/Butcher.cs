@@ -7,8 +7,7 @@ public class Butcher : NormalEnemy
     public override EnemyType Type { get { return EnemyType.ALL; } }
     public Transform anchor;
 
-    public Collider2D hitRange;
-	private Collider2D player;
+    public HitRange attackRange, shockwaveRange;
 
 	[SerializeField]
 	private DistanceJoint2D distanceJoint;
@@ -17,6 +16,9 @@ public class Butcher : NormalEnemy
 
     [SerializeField]
     private GameObject anchorPrefab;
+
+	[SerializeField]
+	private Tombstone[] tombstones = new Tombstone[2];
 
 	protected override void Update()
 	{
@@ -27,17 +29,16 @@ public class Butcher : NormalEnemy
 
 	protected override void InitEnemy()
     {
-		player = PlayerController.inst.GetComponent<Collider2D>();
 
         State move = new State();
-        State attack = new State();
         State pattern1 = new State();
         State pattern2 = new State();
         State pattern3 = new State();
         State pattern4 = new State();
         State pattern5 = new State();
 
-        //move.StateUpdate += FollowPlayer;
+		move.Enter += delegate { nextPatternTimer = Random.Range(3f, 5f); };
+
 		move.StateUpdate += delegate
 		{
 			FollowPlayer();
@@ -45,48 +46,32 @@ public class Butcher : NormalEnemy
 			BoxCollider2D col = GetComponent<BoxCollider2D>();
 			if (Physics2D.OverlapBox(col.bounds.center, col.bounds.size, 0, 1 << LayerMask.NameToLayer("Player")) != null)
 			{
-				stateMachine.Transition("attack");
+				stateMachine.Transition("pattern1");
 			}
 			else if (nextPatternTimer <= 0)
 			{
-				stateMachine.Transition("pattern3");
+				int rand = Random.Range(2, 6);
+				stateMachine.Transition("pattern" + rand.ToString());
 			}
 		};
 
-		attack.Enter += delegate { StartCoroutine(AttackRoutine()); };
+		move.Exit += delegate { rb.velocity = Vector2.zero; };
+
+		pattern1.Enter += delegate { StartCoroutine(AttackRoutine()); };
 
 		pattern1.Enter += delegate { StartCoroutine(ThrowAnchorRoutine()); };
-
-        pattern3.Enter += delegate { StartCoroutine(AnchorAttackRoutine()); Debug.Log("p3"); };
+		pattern2.Enter += delegate { stateMachine.Transition("move"); };
+        pattern3.Enter += delegate { StartCoroutine(AnchorAttackRoutine()); };
+		pattern4.Enter += delegate { StartCoroutine(RushRoutine()); };
+		pattern5.Enter += delegate { StartCoroutine(SummonTombstonesRoutine()); };
 
 		stateMachine.AddNewState("move", move);
-		stateMachine.AddNewState("attack", attack);
 		stateMachine.AddNewState("pattern1", pattern1);
 		stateMachine.AddNewState("pattern2", pattern2);
 		stateMachine.AddNewState("pattern3", pattern3);
 		stateMachine.AddNewState("pattern4", pattern4);
 		stateMachine.AddNewState("pattern5", pattern5);
 
-		stateMachine.Transition("move");
-
-		nextPatternTimer = Random.Range(5f, 10f);
-	}
-
-	private IEnumerator AttackRoutine()
-    {
-		SpriteRenderer sr = hitRange.gameObject.GetComponent<SpriteRenderer>();
-
-		for (int i = 0; i < 20; i++)
-		{
-			sr.enabled = !sr.enabled;
-			yield return new WaitForSeconds(0.025f);
-		}
-		
-        if (hitRange.IsTouchingLayers(1 << LayerMask.NameToLayer("Player")))
-        {
-            PlayerController.inst.GetDamaged();
-        }
-		yield return new WaitForSeconds(0.2f);
 		stateMachine.Transition("move");
 	}
 
@@ -110,7 +95,20 @@ public class Butcher : NormalEnemy
 		
 	}
 
-    private IEnumerator ThrowAnchorRoutine()
+	public override void GetHealed(int amount)
+	{
+		base.GetHealed(amount);
+		InGameUIManager.inst.UpdateBossHelthUI((float)Health / maxHealth);
+	}
+
+	private IEnumerator AttackRoutine()
+	{
+		yield return attackRange.Activate(0.3f);
+		yield return new WaitForSeconds(0.2f);
+		stateMachine.Transition("move");
+	}
+
+	private IEnumerator ThrowAnchorRoutine()
     {
 		Vector3 playerPos = PlayerController.inst.transform.position;
 		Vector3 oriLocalPos = anchor.localPosition;
@@ -148,15 +146,6 @@ public class Butcher : NormalEnemy
 			distanceJoint.enabled = true;
 			float oriDistance = distanceJoint.distance = Vector2.Distance(transform.position, anchor.position);
 
-
-			/*
-			for (float t = 0; t < oridi; t += Time.deltaTime)
-			{
-				distanceJoint.distance = Mathf.Lerp(oriDistance, 0, t);
-				yield return null;
-			}
-			*/	
-
 			while (distanceJoint.distance > 0.01f)
 			{
 				distanceJoint.distance -= Time.deltaTime * 10;
@@ -168,7 +157,6 @@ public class Butcher : NormalEnemy
 		anchor.gameObject.SetActive(false);
 		anchor.localPosition = oriLocalPos;
 		stateMachine.Transition("move");
-		nextPatternTimer = Random.Range(5f,10f);
 	}
 
     private IEnumerator AnchorAttackRoutine()
@@ -186,8 +174,34 @@ public class Butcher : NormalEnemy
         tmp.GetComponent<Rigidbody2D>().velocity = Quaternion.Euler(0, 0, 15) * direction * 5;
         tmp = Instantiate(anchorPrefab, transform.position, Quaternion.Euler(0, 0, angle - 15));
         tmp.GetComponent<Rigidbody2D>().velocity = Quaternion.Euler(0, 0, -15) * direction * 5;
-        stateMachine.Transition("move");
-        nextPatternTimer = Random.Range(5f, 10f);
-        yield return null;
+
+		yield return new WaitForSeconds(1);
+		stateMachine.Transition("move");
     }
+
+	private IEnumerator RushRoutine()
+	{
+		yield return new WaitForSeconds(2f);
+		gameObject.layer = LayerMask.NameToLayer("Enemy");
+		BoxCollider2D col = GetComponent<BoxCollider2D>();
+		while (!col.IsTouchingLayers(1 << LayerMask.NameToLayer("Wall")))
+		{
+			rb.AddForce(40 * (sr.flipX ? Vector2.left : Vector2.right));
+			yield return null;
+		}
+		gameObject.layer = LayerMask.NameToLayer("Enemy Passable");
+		CameraController.Shake(0.1f, 0.5f);
+		yield return new WaitForSeconds(2f);
+		stateMachine.Transition("move");
+	}
+
+	private IEnumerator SummonTombstonesRoutine()
+	{
+		yield return shockwaveRange.Activate(1f);
+		CameraController.Shake(0.2f, 0.5f);
+		yield return new WaitForSeconds(2f);
+		tombstones[0].Summon();
+		tombstones[1].Summon();
+		stateMachine.Transition("move");
+	}
 }

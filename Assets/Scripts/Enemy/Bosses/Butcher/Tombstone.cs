@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Tombstone : NormalEnemy
 {
+	private Vector3 oriPos;
+
 	[SerializeField]
 	private bool isHeal;
 	private const int healAmount = 5;
@@ -13,6 +15,23 @@ public class Tombstone : NormalEnemy
 	private Butcher butcher;
 
 	public override EnemyType Type { get { return EnemyType.ALL; } }
+
+	protected override void Start()
+	{
+		base.Start();
+		oriPos = transform.position;
+		gameObject.SetActive(false);
+	}
+
+	public void Summon()
+	{
+		if (gameObject.activeSelf)
+			return;
+		sr.color = Color.white;
+		transform.position = oriPos;
+		gameObject.SetActive(true);
+		Health = maxHealth;
+	}
 
 	protected override void InitEnemy()
 	{
@@ -25,7 +44,7 @@ public class Tombstone : NormalEnemy
 			{
 				if(healTimer <= 0)
 				{
-					butcher.GetHealed(10);
+					butcher.GetHealed(50);
 					healTimer = 5;
 				}
 			}
