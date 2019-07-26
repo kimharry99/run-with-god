@@ -5,24 +5,36 @@ using UnityEngine;
 public class OnGroundTrust : Trust
 {
     public float limitTime;
-    private float notGroundTime;
+    private float inAirTime;
     private bool isDone;
-    private Coroutine reset = null;
+    private Coroutine reset;
 
     public IEnumerator ResetTime()
     {
-        notGroundTime += Time.deltaTime;
-
-        if (PlayerController.inst.IsGround && notGroundTime < limitTime)
+        while (true)
         {
-            notGroundTime = 0f;
-            reset = null;
-            InGameUIManager.inst.UpdateTrustUI(this);
-        }
-        else if(notGroundTime >= limitTime)
-            isDone = false;
+            Debug.Log("reset Time");
 
-        yield return null;
+            if (!PlayerController.inst.IsGround)
+            {
+                inAirTime += Time.deltaTime;
+                InGameUIManager.inst.UpdateTrustUI(this);
+
+                if (inAirTime >= limitTime)
+                {
+                    isDone = false;
+                    Debug.Log("IsDone : " + isDone);
+                    GameManager.inst.StopCoroutine(reset);
+                }
+            }
+            else
+            {
+                inAirTime = 0.0f;
+                InGameUIManager.inst.UpdateTrustUI(this);
+            }
+
+            yield return new WaitForSeconds(.01f);
+        }
     }
 
     public override string GetDescription()
@@ -47,19 +59,13 @@ public class OnGroundTrust : Trust
 
     public override void Init()
     {
-        notGroundTime = 0f;
+        inAirTime = 0.0f;
         isDone = true;
-
-        PlayerController.inst.OnJump += delegate
-        {
-            if (reset == null)
-                reset = GameManager.inst.StartCoroutine(ResetTime());
-        };
-        PlayerController.inst.OnJump += delegate { InGameUIManager.inst.UpdateTrustUI(this); };
+        reset = GameManager.inst.StartCoroutine(ResetTime());
     }
 
     public override string TrustToText()
     {
-        return Mathf.Min(notGroundTime, limitTime) + " / " + limitTime;
+        return Mathf.Min(inAirTime , limitTime) + " / " + limitTime ;
     }
 }

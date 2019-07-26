@@ -7,12 +7,25 @@ public class Zombie : NormalEnemy
 {
 	public override EnemyType Type { get { return EnemyType.ZOMBIE; } }
 
-	protected override void InitEnemy()
+	[SerializeField]
+    private Animator zombieAnimator;
+
+    protected override void InitEnemy()
 	{
         State idle = new State();
         State move = new State();
 
+        idle.Enter += delegate
+        {
+            zombieAnimator.SetBool("isRunning", false);
+        };
         idle.StateUpdate += MonitorAndTransition;
+
+        move.Enter += delegate
+        {
+            zombieAnimator.SetBool("isRunning", true);
+        };
+
         move.StateUpdate += Moving;
 
         stateMachine.AddNewState("idle", idle);
@@ -20,5 +33,13 @@ public class Zombie : NormalEnemy
 
 		stateMachine.Transition("idle");
 	}
- 
+
+    protected override void MonitorAndTransition(string nextState = "move")
+    {
+        SeePlayer();
+        if (DetectPlayer(size))
+        {
+            stateMachine.Transition(nextState);
+        }
+    }
 }

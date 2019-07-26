@@ -64,7 +64,7 @@ public abstract class NormalEnemy : MonoBehaviour
     [SerializeField]
     protected float acceleration;    //'가속도의 크기'입니다.
     [SerializeField]
-    protected float range;           //'시야 범위'입니다.
+    public Vector2 size;           //'시야 범위'입니다.
     [SerializeField]
     protected int attack = 1;      //'공격력'입니다.
     //[SerializeField]
@@ -84,12 +84,10 @@ public abstract class NormalEnemy : MonoBehaviour
     [SerializeField]
     protected int shotSpeed;
     public GameObject bulletPrefab;
-    public AudioClip shotSFX;
+    [SerializeField]
+    private AudioClip shotSFX, deathSFX, hitSFX;
 
-    /*private bool IsGround
-    {
-        get { return Physics2D.OverlapPoint(landChecker.position, 1 << LayerMask.NameToLayer("Ground")) != null; }
-    }*/
+    
 
     #endregion
 
@@ -98,7 +96,7 @@ public abstract class NormalEnemy : MonoBehaviour
         Health = maxHealth;
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
-		InitEnemy();
+        InitEnemy();
     }
 
     protected virtual void Update()
@@ -133,14 +131,30 @@ public abstract class NormalEnemy : MonoBehaviour
     protected abstract void InitEnemy();
 	public virtual void GetDamaged(int damage)
 	{
+        if (hitSFX != null)
+            SoundManager.inst.PlaySFX(gameObject, hitSFX, 1);
         if (isInvincibe)
             return;
 
         if (hitEffect != null)
             hitEffect.Play();
-        Health -= damage;   //피해만큼 체력을 낮춥니다.
 		StartCoroutine(HitEffectRoutine());
+		Health -= damage;   //피해만큼 체력을 낮춥니다.
 	}
+    public virtual void GetDamaged(int damage, Vector3 hitPos, Vector2 velocity)
+    {
+        if (hitEffect != null)
+        {
+            hitEffect.transform.position = hitPos;
+            
+            var main = hitEffect.main;
+            main.startSpeedMultiplier = velocity.x > 0 ? -1 : 1;
+            
+            hitEffect.Play();
+        }
+        GetDamaged(damage);
+    }
+
 	public virtual void GetDamagedToDeath()
 	{
         if (hitEffect != null)
@@ -148,10 +162,22 @@ public abstract class NormalEnemy : MonoBehaviour
 		Health = 0;
 	}
 
+	public virtual void GetHealed(int amount)
+	{
+		Health = Mathf.Min(maxHealth, Health + amount);
+	}
+
 	protected virtual void OnDead()
 	{
+        if (rb != null)
+            rb.simulated = false;
+        if (GetComponent<Collider2D>() != null)
+            GetComponent<Collider2D>().enabled = false;
 		GameManager.inst.OnEnemyKill(Type);
-        Destroy(gameObject);            //이 오브젝트를 파괴합니다.
+        if (deathSFX != null)
+            SoundManager.inst.PlaySFX(gameObject, deathSFX, 0.5f);
+        StartCoroutine(DissolveEffectRoutine(1));
+        //Destroy(gameObject);            //이 오브젝트를 파괴합니다.
 	}
 
 	protected IEnumerator DissolveEffectRoutine(float time)
@@ -179,20 +205,23 @@ public abstract class NormalEnemy : MonoBehaviour
 			yield return null;
 		}
 		mat.SetFloat("_Threshold", 1);
+        Destroy(gameObject);
 	}
 
 	protected IEnumerator HitEffectRoutine()
 	{
-		sr.color -= new Color(0f, 0.1f, 0.1f, 0.2f);
+        sr.color = new Color(1, 0.75f, 0);
 		yield return null;
-		sr.color += new Color(0f, 0.1f, 0.1f, 0.2f);
+        sr.color = Color.white;
 	}
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)//노말몹과 플레이어 충돌판정함수
     {
         PlayerController pc = collision.gameObject.GetComponent<PlayerController>();
-		if (pc != null && pc.IsDamagable)
+        if (pc != null && pc.IsDamagable)
+        {
             pc?.GetDamaged();
+        }
     }
 
     #endregion
@@ -200,20 +229,20 @@ public abstract class NormalEnemy : MonoBehaviour
 
     #region Monster AI Functions
 
-    protected void FollowPlayer()   //플레이어를 따라 움직이는 함수
+    protected virtual void FollowPlayer()   //플레이어를 따라 움직이는 함수
 	{
-        if (DetectPlayer(range))
+        if (DetectPlayer(size))
         {
             SeePlayer();    //플레이어가 시야 내에 있다면 플레이어를 보도록 합니다.
             Moving();       //움직입니다.
-            if (!DetectPlayer(range))//플레이어가 시야를 벗어난다면
-            {
-                stateMachine.Transition("idle");//보통 상태로 전환합니다
-            }
         }
-	}
+        else//플레이어가 시야를 벗어난다면
+        {
+            stateMachine.Transition("idle");//보통 상태로 전환합니다
+        }
+    }
 
-    protected void Moving()         //몹이 자신이 보는 방향으로 움직이는 함수
+    protected virtual void Moving()         //몹이 자신이 보는 방향으로 움직이는 함수
     {
 		if (acceleration == 0)      //가속이 없으면,
 			rb.velocity = speed * Direction + new Vector2(0, rb.velocity.y); //지정 속력 대로만 움직입니다.
@@ -224,6 +253,7 @@ public abstract class NormalEnemy : MonoBehaviour
 		}
 
         //transform.position += rb.velocity * unit * Time.deltaTime;
+        
     }
 
 	protected void Flying()
@@ -238,9 +268,9 @@ public abstract class NormalEnemy : MonoBehaviour
     {
         MonitorAndTransition("move");
     }
-    protected void MonitorAndTransition(string nextState = "move")
+    protected virtual void MonitorAndTransition(string nextState = "move")
     {
-        if(DetectPlayer(range))
+        if(DetectPlayer(size))
         {
             stateMachine.Transition(nextState);
         }
@@ -261,7 +291,7 @@ public abstract class NormalEnemy : MonoBehaviour
         GameObject bullet = Instantiate(bulletPrefab) as GameObject;
         bullet.transform.position = shotPosition.position + new Vector3(0, Random.Range(-0.05f, 0.05f));
         bullet.GetComponent<Rigidbody2D>().velocity = ShotDirection * shotSpeed;
-        bullet.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 180 + Mathf.Acos(ShotDirection.x) * 180 / Mathf.PI));
+        bullet.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 180 + Mathf.Acos(-ShotDirection.x) * 180 / Mathf.PI));
 
         //SoundManager.inst.PlaySFX(gameObject, shotSFX);
     }
@@ -282,16 +312,20 @@ public abstract class NormalEnemy : MonoBehaviour
 
     #region Usual Data Functions
     //자료 확인용 함수입니다.
-    protected bool DetectPlayer(float range)  //플레이어가 시야 범위 내에 있는지를 반환하는 함수입니다.
+    protected bool DetectPlayer(Vector2 size)  //플레이어가 시야 범위 내에 있는지를 반환하는 함수입니다.
     {
-        bool ret = (DistanceWithPlayer() <= range * unit);
+        bool ret = false;
+        Collider2D find = Physics2D.OverlapBox(transform.position, size, 0, 1 << LayerMask.NameToLayer("Player"));
+        //(DistanceWithPlayer() <= range * unit);
+        if (find != null)
+                ret = true;
 
         return ret;
     }
 
     protected float DistanceWithPlayer()    //플레이어와의 거리를 반환합니다.
     {
-        return Vector3.Distance(PlayerController.inst.PlayerPosition, transform.position);
+        return Vector2.Distance(PlayerController.inst.PlayerPosition, transform.position);
     }
 
     protected Vector3 DirectionToPlayer()   //플레이어를 바라보는 방향의 표준 벡터를 반환하는 함수입니다.(x축 한정으로만 작동)
@@ -348,4 +382,12 @@ public abstract class NormalEnemy : MonoBehaviour
 	}
 
     #endregion
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireCube(transform.position, size);
+    }
+#endif
+
 }

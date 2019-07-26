@@ -31,6 +31,8 @@
 
 		void surf (Input IN, inout SurfaceOutput o) {
 			fixed4 col = tex2D(_MainTex, IN.uv_MainTex);
+			if (col.a < 0.01f)
+				discard;
 			if (tex2D(_NoiseTex, IN.uv_MainTex).r < _Threshold)
 				discard;
 			else if (tex2D(_NoiseTex, IN.uv_MainTex).r < _Threshold + 0.1f)

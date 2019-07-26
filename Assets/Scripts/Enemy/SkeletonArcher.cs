@@ -23,6 +23,7 @@ public class SkeletonArcher : NormalEnemy
 
         attack.StateUpdate += delegate
         {
+            SeePlayer();
             currentCooltime -= Time.deltaTime;
             if (currentCooltime <= 0)
             {
@@ -35,5 +36,13 @@ public class SkeletonArcher : NormalEnemy
         stateMachine.AddNewState("attack", attack);
 
         stateMachine.Transition("idle");
+    }
+
+    protected override void Flip()
+    {
+        base.Flip();
+        Vector3 pos = shotPosition.localPosition;
+        pos.x = -pos.x;
+        shotPosition.localPosition = pos;
     }
 }

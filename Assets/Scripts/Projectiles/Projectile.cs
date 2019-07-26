@@ -11,7 +11,7 @@ public enum ProjectileType
 public class Projectile : MonoBehaviour
 {
 	[SerializeField]
-	private int attack;
+	protected int attack;
 	[SerializeField]
 	private float reach;
 	[SerializeField]
@@ -34,13 +34,13 @@ public class Projectile : MonoBehaviour
 		this.type = type;
 	}
 
-	private void OnTriggerEnter2D(Collider2D collision)
+	protected virtual void OnTriggerEnter2D(Collider2D collision)
 	{
 		switch (type)
 		{
 			case ProjectileType.PLAYER:
 				if (collision.tag.Contains("Enemy"))
-					collision.GetComponent<NormalEnemy>()?.GetDamaged(attack);
+					collision.GetComponent<NormalEnemy>()?.GetDamaged(attack, transform.position, GetComponent<Rigidbody2D>().velocity);
 				if (collision.tag != "Player" && collision.tag != "Projectile" && !collision.isTrigger)
 				{
 					StopAllCoroutines();
@@ -68,5 +68,4 @@ public class Projectile : MonoBehaviour
 		yield return new WaitForSeconds(time);
 		Destroy(gameObject);
 	}
-
 }

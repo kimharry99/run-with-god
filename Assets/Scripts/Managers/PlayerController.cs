@@ -11,7 +11,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	private const float explodeRange = 5;
 	private const int maxLife = 10;
 
-	//private float speed = 0;
+	public float speedScale = 1;
 	private int jumpCount = 2;
 	private int shotCount;
 	private float shotCooltime;
@@ -29,6 +29,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
     private Collider2D col;
 	private Rigidbody2D rb;
 	private SpriteRenderer sr;
+    private Transform arm;
 	private Transform landChecker;
 	private Transform shotPosition;
 
@@ -40,11 +41,16 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 	[SerializeField]
 	private AudioClip shotSFX = null, hitSFX = null, boomSFX = null;
+    [SerializeField]
+    private Light gunFireLight;
+	[SerializeField]
+	private AudioSource move;
+	[SerializeField]
+	private AudioClip walkSFX, jumpSFX;
 
 	public bool IsGround
 	{
 		get {
-            //Debug.Log((Physics2D.Linecast(landChecker.position + new Vector3(-col.bounds.size.x / 2 - 0.01f, 0), landChecker.position + new Vector3(col.bounds.size.x / 2 + 0.01f, 0), 1 << LayerMask.NameToLayer("Ground")).transform != null)+"\nx:"+PlayerPosition.x+" y: "+PlayerPosition.y);
             return Physics2D.Linecast(landChecker.position + new Vector3(-col.bounds.size.x / 2 - 0.01f, 0), landChecker.position + new Vector3(col.bounds.size.x / 2 + 0.01f, 0), 1 << LayerMask.NameToLayer("Ground")).transform != null;
         }
 	}
@@ -67,12 +73,13 @@ public class PlayerController : SingletonBehaviour<PlayerController>
     public Action OnShotBullet;
     public Action OnDash;
 
-	private void Start()
+	private void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
 		landChecker = transform.Find("LandChecker");
-		shotPosition = transform.Find("ShotPosition");
+        arm = transform.Find("Arm");
+		shotPosition = arm.Find("ShotPosition");
 		sr = GetComponent<SpriteRenderer>();
         playerAnimator = GetComponent<Animator>();
 		InitGunStateMachine();
@@ -91,9 +98,11 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			graceTimer -= Time.deltaTime;
 		if (hitTimer > 0)
 			hitTimer -= Time.deltaTime;
-		if (dashTimer > 0)
-			dashTimer -= Time.deltaTime;
-	}
+        if (dashTimer > 0)
+            dashTimer -= Time.deltaTime;
+        gunFireLight.intensity -= 100 * Time.deltaTime;
+        gunFireLight.enabled = gunFireLight.intensity >= 0;
+    }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
@@ -114,46 +123,60 @@ public class PlayerController : SingletonBehaviour<PlayerController>
     }
 
     private void PlayerMovementControl()
-	{
-		float vertical = Input.GetAxis("Vertical"); //left, right input
-		float horizontal = Input.GetAxis("Horizontal"); //up, down input
-		float jump = Input.GetAxis("Jump"); //jump input
-		float fire = Input.GetAxis("Fire"); //attack input
+    {
+        float vertical = Input.GetAxis("Vertical"); //left, right input
+        float horizontal = Input.GetAxis("Horizontal"); //up, down input
+        float horizontalJump = Input.GetAxis("Horizontal_Jump");
+
+        float jump = Input.GetAxis("Jump"); //jump input
+        float fire = Input.GetAxis("Fire"); //attack input
 
         playerAnimator.SetBool("isRunning", horizontal != 0);
         playerAnimator.SetBool("isGround", IsGround);
         playerAnimator.SetFloat("ShootUp", vertical);
-        transform.position += new Vector3(horizontal * maxSpeed * Time.deltaTime, 0, 0);
+        //transform.position += new Vector3(horizontal * maxSpeed * Time.deltaTime, 0, 0);
+        if (IsGround)
+            rb.velocity = new Vector2(horizontal * maxSpeed * speedScale, rb.velocity.y);
+        else
+            rb.velocity = new Vector2(horizontalJump * maxSpeed * speedScale, rb.velocity.y);
+        if (IsGround)
+        {
+            jumpCount = 2;
+        }
+        else if (jumpCount > 1)
+        {
+            jumpCount = 1;
+        }
 
-		if (IsGround)
-		{
-			jumpCount = 2;
-		}
-		else if (jumpCount > 1)
-		{
-			jumpCount = 1;
-		}
+        if ((horizontal < 0 && !IsFlipped) || (horizontal > 0 && IsFlipped))
+        {
+            Flip();
+        }
 
-		if ((horizontal < 0 && !IsFlipped) || (horizontal > 0 && IsFlipped))
-		{
-			Flip();
-		}
-
-		if (Input.GetButtonDown("Jump") && jumpCount > 0)
-		{
-			rb.velocity += new Vector2(0, jumpSpeed - rb.velocity.y);
-			//rb.velocity +=  rb.velocity.y < 0 ? new Vector2(0, jumpSpeed - rb.velocity.y) : new Vector2(0, jumpSpeed);
-			jumpCount--;
+        if (Input.GetButtonDown("Jump") && jumpCount > 0)
+        {
+            rb.velocity += new Vector2(0, jumpSpeed - rb.velocity.y);
+            //rb.velocity +=  rb.velocity.y < 0 ? new Vector2(0, jumpSpeed - rb.velocity.y) : new Vector2(0, jumpSpeed);
+            jumpCount--;
+            move.Stop();
+            move.clip = jumpSFX;
+            move.Play();
             OnJump?.Invoke();
-		}
+        }
 
-		if (Input.GetButtonDown("Dash") && dashTimer <= 0)
-		{
-			playerState.Transition("dash");
-		}
-	}
+        if (Input.GetButtonDown("Dash") && dashTimer <= 0)
+        {
+            playerState.Transition("dash");
+        }
 
-	private void PlayerAttackControl()
+        if (horizontal != 0 && IsGround && !move.isPlaying)
+        {
+            move.clip = walkSFX;
+            move.Play();
+        }
+    }
+
+    private void PlayerAttackControl()
 	{
 		if (Input.GetButtonDown("Fire"))
 		{
@@ -259,17 +282,16 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		Vector3 oriPosition = transform.position;
 		Vector3 destination = transform.position + (IsFlipped ? new Vector3(-3, 0) : new Vector3(3, 0));
 
-
-		float blockDistance = 3;
-		foreach (var hit in Physics2D.BoxCastAll(oriPosition,GetComponent<BoxCollider2D>().bounds.size,0, IsFlipped ? Vector2.left : Vector2.right,3, 1 << LayerMask.NameToLayer("Ground")))
+        float offsetX = GetComponent<BoxCollider2D>().bounds.size.x / 2;
+        float blockDistance = 3 + offsetX;
+		foreach (var hit in Physics2D.BoxCastAll(oriPosition,GetComponent<BoxCollider2D>().bounds.size,0, IsFlipped ? Vector2.left : Vector2.right,3, 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Wall")))
 		{
 			if (blockDistance > hit.distance)
 			{
 				blockDistance = hit.distance;
 			}
 		}
-
-		float offsetX = GetComponent<BoxCollider2D>().bounds.size.x / 2;
+        blockDistance -= offsetX;
 		
 
 		rb.simulated = false;
@@ -283,19 +305,19 @@ public class PlayerController : SingletonBehaviour<PlayerController>
             }
         }
 
-
         while (graceTimer > 0)
 		{
-			if (Vector3.Distance(oriPosition, transform.position) < blockDistance - offsetX)
-				transform.position = Vector3.Lerp(oriPosition, destination, 1 - Mathf.Pow(graceTimer / oriGraceTimer, 3));
-			else
-				transform.position = oriPosition + (IsFlipped ? Vector3.left : Vector3.right) * (blockDistance - offsetX);
-			//Debug.Log("D:" + destination);
-			//Debug.Log("B:" + oriPosition + (isFlipped ? Vector2.left : Vector2.right) * (blockDistance - offsetX));
+            Vector3 lerped = Vector3.Lerp(oriPosition, destination, 1 - Mathf.Pow(graceTimer / oriGraceTimer, 3));
+
+            if (Vector3.Distance(lerped, oriPosition) <= blockDistance)
+                transform.position = lerped;
+            else
+                transform.position = oriPosition + (IsFlipped ? Vector3.left : Vector3.right) * blockDistance;
 			yield return null;
 		}
 
 		rb.simulated = true;
+        rb.velocity = new Vector2(rb.velocity.x, 0);
 		playerState.Transition("idle");
 		sr.color = sr.color + new Color(0, 0, 0, 0.5f);
         foreach (Transform tf in transform)
@@ -376,9 +398,11 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 	private void ShotBullet()
 	{
+        gunFireLight.intensity = 10;
+
 		GameObject bullet = Instantiate(bulletPrefab);
 		bullet.transform.position = shotPosition.position + new Vector3(0, UnityEngine.Random.Range(-0.01f, 0.01f));
-		bullet.GetComponent<Rigidbody2D>().velocity = ShotDirection() * 1f;
+		bullet.GetComponent<Rigidbody2D>().velocity = ShotDirection() * 25f;
 		shotCount--;
 		shotCooltime = 0.05f;
 		CameraController.Shake(0.02f,0.05f);
@@ -388,32 +412,10 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 	private Vector2 ShotDirection()
 	{
+        return (IsFlipped ? -1 : 1) * (arm.rotation * Vector2.right).normalized;
+        /*
 		Vector2 direction = Vector2.zero;
 		float vertical = Input.GetAxis("Vertical");
-        /*
-		if (!IsGround)
-		{
-			if (vertical != 0)
-			{
-				direction = new Vector2(0, 25 * (vertical > 0 ? 1 : -1));
-			}
-			else
-			{
-				direction = new Vector2(25 * (isFlipped ? -1 : 1), 0);
-			}
-		}
-		else
-		{
-			if (vertical > 0)
-			{
-				direction = new Vector2(0, 25 * (vertical > 0 ? 1 : -1));
-			}
-			else
-			{
-				direction = new Vector2(25 * (isFlipped ? -1 : 1), 0);
-			}
-		}
-        */
         if (vertical != 0)
         {
             direction = new Vector2(0, 25 * (vertical > 0 ? 1 : -1));
@@ -422,8 +424,11 @@ public class PlayerController : SingletonBehaviour<PlayerController>
         {
             direction = new Vector2(25 * (IsFlipped ? -1 : 1), 0);
         }
+        
         return direction;
-	}
+        */
+        
+    }
 
  
 	public void GetDamaged()
@@ -452,7 +457,18 @@ public class PlayerController : SingletonBehaviour<PlayerController>
             if(IsKill)
 			enemy.GetComponent<NormalEnemy>()?.GetDamagedToDeath();
 		}
-	}
+
+        foreach (var projectile in Physics2D.OverlapCircleAll(transform.position, explodeRange))
+        {
+            if (projectile.tag == "Projectile")
+            {
+                if (projectile.GetComponent<Projectile>()?.type == ProjectileType.ENEMY)
+                {
+                    Destroy(projectile.gameObject);
+                }
+            }
+        }
+    }
 
 	private void OnDead()
 	{

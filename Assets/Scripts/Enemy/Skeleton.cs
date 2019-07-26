@@ -7,13 +7,24 @@ public class Skeleton : NormalEnemy
 {
 	public override EnemyType Type { get { return EnemyType.SKELETON; } }
 
-	protected override void InitEnemy()
+	[SerializeField]
+    private Animator skeletonAnimator;
+
+    protected override void InitEnemy()
     {
         State idle = new State();
         State move = new State();
 
+        idle.Enter += delegate
+        {
+            skeletonAnimator.SetBool("isRunning", false);
+        };
         idle.StateUpdate += MonitorAndTransition;
 
+        move.Enter += delegate
+        {
+            skeletonAnimator.SetBool("isRunning", true);
+        }; 
         move.StateUpdate += FollowPlayer;
 
         stateMachine.AddNewState("idle", idle);
