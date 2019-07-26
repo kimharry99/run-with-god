@@ -41,7 +41,8 @@ public class Butcher : NormalEnemy
 
 		move.StateUpdate += delegate
 		{
-			FollowPlayer();
+			SeePlayer();
+			Moving();
 
 			BoxCollider2D col = GetComponent<BoxCollider2D>();
 			if (Physics2D.OverlapBox(col.bounds.center, col.bounds.size, 0, 1 << LayerMask.NameToLayer("Player")) != null)

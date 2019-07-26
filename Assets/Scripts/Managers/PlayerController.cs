@@ -284,7 +284,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
         float offsetX = GetComponent<BoxCollider2D>().bounds.size.x / 2;
         float blockDistance = 3 + offsetX;
-		foreach (var hit in Physics2D.BoxCastAll(oriPosition,GetComponent<BoxCollider2D>().bounds.size,0, IsFlipped ? Vector2.left : Vector2.right,3, 1 << LayerMask.NameToLayer("Ground")))
+		foreach (var hit in Physics2D.BoxCastAll(oriPosition,GetComponent<BoxCollider2D>().bounds.size,0, IsFlipped ? Vector2.left : Vector2.right,3, 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Wall")))
 		{
 			if (blockDistance > hit.distance)
 			{
