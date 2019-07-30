@@ -95,8 +95,15 @@ public class MapRandomEditor : MonoBehaviour
 
         for (int i = 0; i < mapLength; i++)
         {
+            if (i > 0)
+            {
+                if (playerPos[i].x == playerPos[i - 1].x)
+                {
+                    continue;
+                }
+            }
             GameObject instance = Instantiate(ground, transform.position +
-                new Vector3(playerPos[i].x, playerPos[i].y, 0f), transform.rotation, transform.Find("Map")) as GameObject;
+               new Vector3(playerPos[i].x, playerPos[i].y, 0f), transform.rotation, transform.Find("Map")) as GameObject;
         }
 
         /*
@@ -116,15 +123,24 @@ public class MapRandomEditor : MonoBehaviour
         }
         */
 
-        for(int i = 0; i < mapLength; i++) { 
+        for(int i = 0; i < mapLength; i++) {
+            if (i > 0)
+            {
+                if (playerPos[i].x == playerPos[i - 1].x)
+                {
+                    continue;
+                }
+            }
             if (playerAction[i].isAttack)
             {
                 GameObject instanEnemy = Instantiate(enemyArray[(int)Random.Range(0, enemyArray.GetLength(0) - 0.1f)], transform.position +
-                    new Vector3(playerPos[i].x, playerPos[i].y + heightUpper/2, 0f), transform.rotation, transform.Find("Map")) as GameObject;
+                    new Vector3(playerPos[i].x, playerPos[i].y + heightUpper/2, 0f), transform.rotation, transform.Find("Monsters")) as GameObject;
             }
         }
-
-        GameObject temp = Instantiate(transform.Find("Map").gameObject,transform.position+new Vector3(0,1000,0),transform.rotation, transform);
+        /*
+        GameObject tempMap = Instantiate(transform.Find("Map").gameObject,transform.position+new Vector3(0,1000,0),transform.rotation, transform);
+        GameObject tempMonsters = Instantiate(transform.Find("Monsters").gameObject,transform.position+new Vector3(0,1000,0),transform.rotation, transform);
+        */
     }
 
     private StructPos MakeNextPos(int i, StructPos tempPos)
@@ -197,7 +213,27 @@ public class MapRandomEditor : MonoBehaviour
         }
         else
         {
-            tempState.isJump = false;
+            bool tooFlat=true;
+            if (i > notJumpLimit)
+            {
+                for(int j = i - notJumpLimit; j < i; j++)
+                {
+                    tooFlat = !playerAction[j].isJump && tooFlat;
+                }
+            }
+
+            if (tooFlat)
+            {
+                if (Random.Range(0, jumpRate) < jumpRate * rateUpperPerJump)
+                    randomPlayerActionParameter[i] = 0;
+                else
+                    randomPlayerActionParameter[i] = jumpRate - 1;
+                tempState.isJump = true;
+            }
+            else
+            {
+                tempState.isJump = false;
+            }
         }
 
         if (randomPlayerActionParameter[i] < attackRate)
