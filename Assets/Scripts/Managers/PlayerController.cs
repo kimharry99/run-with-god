@@ -72,6 +72,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
     public Action OnJump;
     public Action OnShotBullet;
     public Action OnDash;
+    public Action GetHit;
 
 	private void Awake()
 	{
@@ -439,6 +440,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		playerState.Transition("hit");
 		gunState.Transition("idle");
 		Explode();
+        GetHit?.Invoke();
 	}
 
     public Boolean IsKill;

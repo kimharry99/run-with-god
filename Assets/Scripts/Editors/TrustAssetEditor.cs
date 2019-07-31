@@ -33,6 +33,9 @@ public class TrustAssetEditor : EditorWindow
     float limitTime;
     int limitEnemycount;
     #endregion
+    #region HitCountTrust
+    int needHit;
+    #endregion
 
     [MenuItem("Editors/신탁 어셋 만들기")]
 	static void Init()
@@ -99,6 +102,10 @@ public class TrustAssetEditor : EditorWindow
         {
             limitTime = EditorGUILayout.FloatField("제한 시간(s)", limitTime);
             limitEnemycount = EditorGUILayout.IntField("몬스터 수", limitEnemycount);
+        }
+        else if (script.GetClass().Name == "HitCountTrust")
+        {
+            needHit = EditorGUILayout.IntField("맞는 횟수", needHit);
         }
 
 		if (GUILayout.Button("생성"))
@@ -208,7 +215,7 @@ public class TrustAssetEditor : EditorWindow
 
                 AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
             }
-            else if(script.GetClass().Name == "EnemyInViewTrust")
+            else if (script.GetClass().Name == "EnemyInViewTrust")
             {
                 EnemyInViewTrust trust = CreateInstance(script.GetClass()) as EnemyInViewTrust;
 
@@ -219,6 +226,19 @@ public class TrustAssetEditor : EditorWindow
 
                 trust.limitTime = limitTime;
                 trust.limitEnemycount = limitEnemycount;
+
+                AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
+            }
+            else if (script.GetClass().Name == "HitCountTrust")
+            {
+                HitCountTrust trust = CreateInstance(script.GetClass()) as HitCountTrust;
+
+                trust.trustName = trustName;
+                trust.description = trustDescription;
+                trust.trustType = trustType;
+                trust.tier = trustTier;
+
+                trust.needHitCount = needHit;
 
                 AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
             }
