@@ -18,6 +18,8 @@ public class GameManager : SingletonBehaviour<GameManager>
 		}
 	}
     public Action<float> OnPlayTimeChanged;
+    public Action EnemyInCamera;
+    public Action EnemyOutCamera;
 
 	//private int _killCount;
 	public int KillCount
@@ -199,4 +201,5 @@ public class GameManager : SingletonBehaviour<GameManager>
 		enemyKillCounts[type]++;
 		OnEnemyKilled?.Invoke(type);
 	}
+
 }
