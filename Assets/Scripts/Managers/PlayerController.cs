@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class PlayerController : SingletonBehaviour<PlayerController>
 {
 	private const float maxSpeed = 5;
-	private const float jumpSpeed = 4.2f;
+	private const float jumpSpeed = 4.7f;
 	private const float explodeRange = 5;
 	private const int maxLife = 10;
 
