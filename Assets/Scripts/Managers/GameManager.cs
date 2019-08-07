@@ -84,7 +84,6 @@ public class GameManager : SingletonBehaviour<GameManager>
 		}
 
 		SceneManager.sceneLoaded += OnSceneLoaded;
-		OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
 	}
 
 #if UNITY_EDITOR

@@ -15,9 +15,12 @@ public class MapBlock : MonoBehaviour
 #if UNITY_EDITOR
 	private void OnDrawGizmos()
 	{
-		Gizmos.DrawWireSphere(leftJoint.position, 1);
-		Gizmos.DrawWireSphere(rightJoint.position, 1);
-		Gizmos.DrawWireSphere(startPoint.position, 1);
+		if (leftJoint != null)
+			Gizmos.DrawWireSphere(leftJoint.position, 1);
+		if (rightJoint != null)
+			Gizmos.DrawWireSphere(rightJoint.position, 1);
+		if (startPoint != null)
+			Gizmos.DrawWireSphere(startPoint.position, 1);
 	}
 #endif
 }
