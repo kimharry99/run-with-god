@@ -139,7 +139,7 @@ Transform:
   m_GameObject: {fileID: 6890017396426130022}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.13721421, y: 0.13718346, z: 1}
+  m_LocalScale: {x: 0.14, y: 0.14, z: 1}
   m_Children:
   - {fileID: 5702901923436384584}
   - {fileID: 6894592966831008416}
@@ -164,7 +164,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 26e945b099014ed48a1be3407f6e20e2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -295,6 +295,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6890017396426130026}
     m_Modifications:
+    - target: {fileID: 7510235709339390430, guid: cf5b43d29a393fa4cb369c6042b07403,
+        type: 3}
+      propertyPath: m_Name
+      value: BloodEffect
+      objectReference: {fileID: 0}
+    - target: {fileID: 7510235709339390430, guid: cf5b43d29a393fa4cb369c6042b07403,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
       propertyPath: playOnAwake
@@ -354,16 +364,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7510235709339390430, guid: cf5b43d29a393fa4cb369c6042b07403,
-        type: 3}
-      propertyPath: m_Name
-      value: BloodEffect
-      objectReference: {fileID: 0}
-    - target: {fileID: 7510235709339390430, guid: cf5b43d29a393fa4cb369c6042b07403,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4138772146777199517, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}

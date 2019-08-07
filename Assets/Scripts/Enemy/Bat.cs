@@ -49,7 +49,7 @@ public class Bat : NormalEnemy
         if (coordinate < 2 * Mathf.PI)
         {
 
-            transform.position = new Vector2(transform.position.x + 0.01f, transform.position.y + (0.6f * Mathf.Sin(coordinate + 0.05f) - 0.6f * Mathf.Sin(coordinate)) / 2);
+            transform.position = new Vector2(transform.position.x + 0.01f, transform.position.y + (0.4f * Mathf.Sin(coordinate + 0.05f) - 0.4f * Mathf.Sin(coordinate)) / 2);
             coordinate += 0.05f;
         }
         else
@@ -59,7 +59,7 @@ public class Bat : NormalEnemy
                 Flip();
                 cnt--;
             }
-            transform.position = new Vector2(transform.position.x - 0.01f, transform.position.y + (0.6f * Mathf.Sin(coordinate + 0.05f) - 0.6f * Mathf.Sin(coordinate)) / 2);
+            transform.position = new Vector2(transform.position.x - 0.01f, transform.position.y + (0.4f * Mathf.Sin(coordinate + 0.05f) - 0.4f * Mathf.Sin(coordinate)) / 2);
             coordinate += 0.05f;
             if (coordinate > 4 * Mathf.PI)
             {
@@ -76,7 +76,7 @@ public class Bat : NormalEnemy
 
         if (coordinate > -2 * Mathf.PI)
         {
-            transform.position = new Vector3(transform.position.x + 0.01f, transform.position.y + (0.6f*Mathf.Sin(coordinate + 0.05f) - 0.6f*Mathf.Sin(coordinate)) / 2, transform.position.z);
+            transform.position = new Vector3(transform.position.x + 0.01f, transform.position.y + (0.4f*Mathf.Sin(coordinate + 0.05f) - 0.4f*Mathf.Sin(coordinate)) / 2, transform.position.z);
             coordinate -= 0.05f;
         }
         else
@@ -86,7 +86,7 @@ public class Bat : NormalEnemy
                 Flip();
                 cnt--;
             }
-            transform.position = new Vector3(transform.position.x - 0.01f, transform.position.y + (0.6f*Mathf.Sin(coordinate + 0.05f) - 0.6f*   (coordinate)) / 2, transform.position.z);
+            transform.position = new Vector3(transform.position.x - 0.01f, transform.position.y + (0.4f*Mathf.Sin(coordinate + 0.05f) - 0.4f*   (coordinate)) / 2, transform.position.z);
             coordinate -= 0.05f;
             if (coordinate < -4 * Mathf.PI)
             {
