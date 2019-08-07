@@ -75,6 +75,14 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 	private void Awake()
 	{
+		if (inst != this)
+		{
+			Destroy(gameObject);
+			return;
+		}
+		else
+			SetStatic();
+
 		rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
 		landChecker = transform.Find("LandChecker");
@@ -84,7 +92,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
         playerAnimator = GetComponent<Animator>();
 		InitGunStateMachine();
 		InitPlayerStateMachine();
-		Life = 3;
+		ResetPlayer();
 
 		OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
 	}
@@ -103,6 +111,11 @@ public class PlayerController : SingletonBehaviour<PlayerController>
         gunFireLight.intensity -= 100 * Time.deltaTime;
         gunFireLight.enabled = gunFireLight.intensity >= 0;
     }
+
+	public void ResetPlayer()
+	{
+		Life = 3;
+	}
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
@@ -439,6 +452,10 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		playerState.Transition("hit");
 		gunState.Transition("idle");
 		Explode();
+		if (Life <= 0)
+		{
+			OnDead();
+		}
 	}
 
     public Boolean IsKill;
@@ -472,6 +489,12 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 	private void OnDead()
 	{
-		
+		StartCoroutine(DeadRoutine());
+	}
+
+	private IEnumerator DeadRoutine()
+	{
+		yield return new WaitForSeconds(1f);
+		GameManager.inst.GameOver();
 	}
 }
