@@ -32,8 +32,8 @@ public class MapRandomEditor : MonoBehaviour
     [Header("Prefab and MapLength")]
     public GameObject ground;
     public GameObject[] enemyArray = new GameObject[3];
-    public GameObject blue;
-    public GameObject red;
+    //public GameObject blue;
+    //public GameObject red;
     public int mapLength;
 
     [Header("Baic Parameters")]
