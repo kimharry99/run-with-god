@@ -140,7 +140,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
     {
         float vertical = Input.GetAxis("Vertical"); //left, right input
         float horizontal = Input.GetAxis("Horizontal"); //up, down input
-        float horizontalJump = Input.GetAxis("Horizontal_Jump");
+        //float horizontalJump = Input.GetAxis("Horizontal_Jump");
 
         float jump = Input.GetAxis("Jump"); //jump input
         float fire = Input.GetAxis("Fire"); //attack input
@@ -148,12 +148,16 @@ public class PlayerController : SingletonBehaviour<PlayerController>
         playerAnimator.SetBool("isRunning", horizontal != 0);
         playerAnimator.SetBool("isGround", IsGround);
         playerAnimator.SetFloat("ShootUp", vertical);
-        //transform.position += new Vector3(horizontal * maxSpeed * Time.deltaTime, 0, 0);
-        if (IsGround)
+		//transform.position += new Vector3(horizontal * maxSpeed * Time.deltaTime, 0, 0);
+		/*
+		if (IsGround)
             rb.velocity = new Vector2(horizontal * maxSpeed * speedScale, rb.velocity.y);
         else
             rb.velocity = new Vector2(horizontalJump * maxSpeed * speedScale, rb.velocity.y);
-        if (IsGround)
+		*/
+		rb.velocity = new Vector2(horizontal * maxSpeed * speedScale, rb.velocity.y);
+
+		if (IsGround)
         {
             jumpCount = 2;
         }

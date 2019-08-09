@@ -299,9 +299,9 @@ public abstract class NormalEnemy : MonoBehaviour
         bulletPrefab.GetComponent<Projectile>().type = ProjectileType.ENEMY;
 
         GameObject bullet = Instantiate(bulletPrefab) as GameObject;
-        bullet.transform.position = shotPosition.position + new Vector3(0, Random.Range(-0.05f, 0.05f));
+        bullet.transform.position = shotPosition.position;
         bullet.GetComponent<Rigidbody2D>().velocity = ShotDirection * shotSpeed;
-        bullet.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 180 + Mathf.Acos(-ShotDirection.x) * 180 / Mathf.PI));
+        bullet.transform.rotation = Quaternion.Euler(0,0, Vector2.SignedAngle(Vector2.right, ShotDirection));
 
         //SoundManager.inst.PlaySFX(gameObject, shotSFX);
     }
