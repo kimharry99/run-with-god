@@ -9,7 +9,7 @@ public class MapBlock : MonoBehaviour
 	PlayerPrefs prefs;
 	public void ConnectNextTo(MapBlock block)
 	{
-		transform.position = block.transform.position + rightJoint.localPosition - leftJoint.localPosition;
+		transform.position = block.transform.position + block.rightJoint.localPosition - block.leftJoint.localPosition;
 	}
 
 #if UNITY_EDITOR
