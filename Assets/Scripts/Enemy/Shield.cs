@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Shield : Shielder
+public class Shield : NormalEnemy
 {
+    public override EnemyType Type { get { return EnemyType.SHIELDER; } }
    protected override void InitEnemy()
     {
 
