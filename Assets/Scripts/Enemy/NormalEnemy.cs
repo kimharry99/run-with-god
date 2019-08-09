@@ -86,7 +86,6 @@ public abstract class NormalEnemy : MonoBehaviour
     public GameObject bulletPrefab;
     [SerializeField]
     private AudioClip shotSFX, deathSFX, hitSFX;
-
     
 
     #endregion
@@ -222,6 +221,16 @@ public abstract class NormalEnemy : MonoBehaviour
         {
             pc?.GetDamaged();
         }
+    }
+
+    private void OnBecameVisible()
+    {
+        GameManager.inst.EnemyInCamera?.Invoke();
+    }
+
+    private void OnBecameInvisible()
+    {
+        GameManager.inst.EnemyOutCamera?.Invoke();
     }
 
     #endregion
