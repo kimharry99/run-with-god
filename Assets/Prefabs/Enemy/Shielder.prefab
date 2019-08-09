@@ -201,7 +201,7 @@ MonoBehaviour:
   maxHealth: 30
   speed: 0
   acceleration: 0
-  range: 0
+  size: {x: 0, y: 0}
   attack: 1
   hitEffect: {fileID: 0}
   dissolve: {fileID: 0}
@@ -240,7 +240,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5370037026834105882}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.09, y: 1.02, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.15, y: 0.15, z: 0}
   m_Children:
   - {fileID: 5370037026008510437}
@@ -312,7 +312,7 @@ MonoBehaviour:
   maxHealth: 2
   speed: 0
   acceleration: 0
-  range: 10
+  size: {x: 0, y: 0}
   attack: 1
   hitEffect: {fileID: 6167271254832917759}
   dissolve: {fileID: 4800000, guid: 588349a7a5b2c584f8732a9b5c4ba62c, type: 3}

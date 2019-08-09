@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class GameManager : SingletonBehaviour<GameManager>
 {
 	private float _playtime;
@@ -43,6 +44,9 @@ public class GameManager : SingletonBehaviour<GameManager>
 	private Dictionary<Tuple<TrustType, int>, List<Trust>> unplayedTrusts = new Dictionary<Tuple<TrustType, int>, List<Trust>>();
 	private Dictionary<Tuple<TrustType, int>, List<Trust>> playedTrusts = new Dictionary<Tuple<TrustType, int>, List<Trust>>();
 
+	public int mapSeed;
+	public List<GameObject> mapBlockPrefabs = new List<GameObject>();
+
 	private void OnEnable()
 	{
 		//Reset GameManager
@@ -80,7 +84,6 @@ public class GameManager : SingletonBehaviour<GameManager>
 		}
 
 		SceneManager.sceneLoaded += OnSceneLoaded;
-		OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
 	}
 
 #if UNITY_EDITOR
@@ -121,8 +124,17 @@ public class GameManager : SingletonBehaviour<GameManager>
 	{
 		if (scene.name == "InGameScene")
 		{
-			SelectedTrust.Init();
-            InGameUIManager.inst.UpdateTrustUI(SelectedTrust);
+			if (SelectedTrust != null)
+			{
+				SelectedTrust.Init();
+				InGameUIManager.inst.UpdateTrustUI(SelectedTrust);
+			}
+			GenerateMap();
+			PlayerController.inst.ResetPlayer();
+		}
+		if (scene.name == "Boss")
+		{
+
 		}
 		if (scene.name == "InGameScene" || scene.name == "Boss")
 		{
@@ -198,5 +210,41 @@ public class GameManager : SingletonBehaviour<GameManager>
 			enemyKillCounts.Add(type, 0);
 		enemyKillCounts[type]++;
 		OnEnemyKilled?.Invoke(type);
+	}
+
+	public void GameOver()
+	{
+		StartCoroutine(GameOverRoutine());
+	}
+
+	private IEnumerator GameOverRoutine()
+	{
+		Scene scene = SceneManager.GetActiveScene();
+		if (scene.name == "InGameScene")
+		{
+			SceneManager.LoadScene(scene.name);
+		}
+		else if (scene.name == "Boss")
+		{
+
+		}
+		yield return null;
+	}
+
+	private void GenerateMap()
+	{
+		UnityEngine.Random.InitState(mapSeed);
+
+		int rand = UnityEngine.Random.Range(0, mapBlockPrefabs.Count);
+		MapBlock prevBlock = Instantiate(mapBlockPrefabs[rand]).GetComponent<MapBlock>();
+		PlayerController.inst.transform.position = prevBlock.startPoint.position;
+
+		for (int i = 0; i < 10; ++i)
+		{
+			rand = UnityEngine.Random.Range(0,mapBlockPrefabs.Count);
+			MapBlock curBlock = Instantiate(mapBlockPrefabs[rand]).GetComponent<MapBlock>();
+			curBlock.ConnectNextTo(prevBlock);
+			prevBlock = curBlock;
+		}
 	}
 }

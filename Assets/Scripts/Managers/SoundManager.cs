@@ -10,7 +10,7 @@ public class SoundManager : SingletonBehaviour<SoundManager>
 
     void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+		/*
         audioClips = new Dictionary<string, AudioClip>();
         AudioClip[] clips = Resources.LoadAll<AudioClip>("Sounds");
         foreach (AudioClip clip in clips)
@@ -19,6 +19,7 @@ public class SoundManager : SingletonBehaviour<SoundManager>
                 continue;
             audioClips.Add(clip.name+clip.length, clip);
         }
+		*/
     }
 
     public void PlaySFX(GameObject target, AudioClip audio)

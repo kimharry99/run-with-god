@@ -32,8 +32,8 @@ public class MapRandomEditor : MonoBehaviour
     [Header("Prefab and MapLength")]
     public GameObject ground;
     public GameObject[] enemyArray = new GameObject[3];
-    public GameObject blue;
-    public GameObject red;
+    //public GameObject blue;
+    //public GameObject red;
     public int mapLength;
 
     [Header("Baic Parameters")]
@@ -43,8 +43,8 @@ public class MapRandomEditor : MonoBehaviour
     public int attackRate = 95;
 
     [Header("Upper Right Map Parameters")]
-    public float heightUpper = 1.0f;
-    public float distanceUpper = 0.5f;
+    public float heightUpper = 0.7f;
+    public float distanceUpper = 0.8f;
     public float rateUpperPerJump = 0.75f;
 
     [Header("Just Right Map Parameters")]
@@ -52,7 +52,7 @@ public class MapRandomEditor : MonoBehaviour
     //public float rateJustRight = 0.3f;
 
     [Header("Lower Right Map Parameters")]
-    public float heightLower = 1.0f;
+    public float heightLower = 0.7f;
     public float distanceLower = 0.5f;
     public float rateLowerPerFlat = 0.3f;
 
@@ -61,6 +61,7 @@ public class MapRandomEditor : MonoBehaviour
     private int[] randomPlayerActionParameter = new int[1000];
     private StructMotion[] playerAction = new StructMotion[1000];
     private StructPos[] playerPos = new StructPos[1000];
+    private bool leftSideCount = false;
 
     // Start is called before the first frame update
     void Start() {
@@ -94,59 +95,104 @@ public class MapRandomEditor : MonoBehaviour
 
         for (int i = 0; i < mapLength; i++)
         {
-            GameObject instance = Instantiate(ground, transform.position +
-                new Vector3(playerPos[i].x, playerPos[i].y, 0f), transform.rotation, transform.Find("Map")) as GameObject;
-            if (playerAction[i].direction == -1)
+            if (i > 0)
             {
-                GameObject reverseMark = Instantiate(blue, transform.position +
-                    new Vector3(playerPos[i].x - 0.05f, playerPos[i].y + heightUpper/2, 0f), transform.rotation, instance.transform) as GameObject;
+                if (playerPos[i].x == playerPos[i - 1].x)
+                {
+                    continue;
+                }
             }
+            GameObject instance = Instantiate(ground, transform.position +
+               new Vector3(playerPos[i].x, playerPos[i].y, 0f), transform.rotation, transform.Find("Map")) as GameObject;
+        }
+
+        /*
+        for(int i = 0; i < mapLength; i++)
+        {
             if (playerAction[i].isJump)
             {
                 GameObject jumpMark = Instantiate(red, transform.position +
-                    new Vector3(playerPos[i].x + 0.05f, playerPos[i].y + heightUpper/2, 0f), transform.rotation, instance.transform) as GameObject;
+                    new Vector3(playerPos[i].x + 0.05f, playerPos[i].y + heightUpper / 2, 0f), transform.rotation, transform.Find("Map")) as GameObject;
+
+                if (playerAction[i].direction == -1)
+                {
+                    GameObject reverseMark = Instantiate(blue, transform.position +
+                        new Vector3(playerPos[i].x - 0.05f, playerPos[i].y + heightUpper / 2, 0f), transform.rotation, transform.Find("Map")) as GameObject;
+                }
             }
         }
+        */
 
-        for(int i = 0; i < mapLength; i++) { 
+        for(int i = 0; i < mapLength; i++) {
+            if (i > 0)
+            {
+                if (playerPos[i].x == playerPos[i - 1].x)
+                {
+                    continue;
+                }
+            }
             if (playerAction[i].isAttack)
             {
                 GameObject instanEnemy = Instantiate(enemyArray[(int)Random.Range(0, enemyArray.GetLength(0) - 0.1f)], transform.position +
-                    new Vector3(playerPos[i].x, playerPos[i].y + heightUpper/2, 0f), transform.rotation, transform.Find("Map")) as GameObject;
+                    new Vector3(playerPos[i].x, playerPos[i].y + heightUpper/2, 0f), transform.rotation, transform.Find("Monsters")) as GameObject;
             }
         }
-
-        GameObject temp = Instantiate(transform.Find("Map").gameObject,transform.position+new Vector3(0,1000,0),transform.rotation, transform);
+        /*
+        GameObject tempMap = Instantiate(transform.Find("Map").gameObject,transform.position+new Vector3(0,1000,0),transform.rotation, transform);
+        GameObject tempMonsters = Instantiate(transform.Find("Monsters").gameObject,transform.position+new Vector3(0,1000,0),transform.rotation, transform);
+        */
     }
 
     private StructPos MakeNextPos(int i, StructPos tempPos)
     {
-        if (playerAction[i].direction > 0)
-            tempPos.x++;
-        else
-            tempPos.x--;
-
-        if (playerAction[i].isJump)
+        if (playerAction[i].direction == 1)
         {
-            //대각선 위 점프
-            if (randomPlayerActionParameter[i] < jumpRate * rateUpperPerJump)
+            
+            if (playerAction[i].isJump)
             {
-                tempPos.y += heightUpper;
-                tempPos.x += distanceUpper * playerAction[i].direction;
+                //오른쪽 대각선 위 점프
+                if (randomPlayerActionParameter[i] < jumpRate * rateUpperPerJump)
+                {
+                    tempPos.x++;
+                    tempPos.x += distanceUpper;
+                    tempPos.y += heightUpper;
+                    leftSideCount = false;
+                }
+                //오른쪽 평지 점프
+                else
+                {
+                    tempPos.x++;
+                    tempPos.x += distanceJustRight;
+                    leftSideCount = false;
+                }
             }
-            //긴 점프
-            else if(playerAction[i].direction==1)
+            else
             {
-                tempPos.x += playerAction[i].direction * distanceJustRight;
+                //오른쪽 내리막 길
+                if (randomPlayerActionParameter[i] < rateLowerPerFlat * (100 - jumpRate) + jumpRate)
+                {
+                    tempPos.x++;
+                    tempPos.x += distanceLower;
+                    tempPos.y -= heightLower;
+                    leftSideCount = false;
+                }
+                //오른쪽 직진
+                else
+                {
+                    if(!leftSideCount)
+                        tempPos.x++;
+                }
             }
         }
-        //내리막
         else
         {
-            if (randomPlayerActionParameter[i] < rateLowerPerFlat * (100 - jumpRate) + jumpRate)
+            //왼쪽 대각선 위
+            if (playerAction[i].isJump)
             {
-                tempPos.y -= heightLower;
-                tempPos.x += distanceLower * playerAction[i].direction;
+                tempPos.x--;
+                tempPos.x -= distanceUpper;
+                tempPos.y += heightUpper;
+                leftSideCount = true;
             }
         }
         return tempPos;
@@ -167,7 +213,27 @@ public class MapRandomEditor : MonoBehaviour
         }
         else
         {
-            tempState.isJump = false;
+            bool tooFlat=true;
+            if (i > notJumpLimit)
+            {
+                for(int j = i - notJumpLimit; j < i; j++)
+                {
+                    tooFlat = !playerAction[j].isJump && tooFlat;
+                }
+            }
+
+            if (tooFlat)
+            {
+                if (Random.Range(0, jumpRate) < jumpRate * rateUpperPerJump)
+                    randomPlayerActionParameter[i] = 0;
+                else
+                    randomPlayerActionParameter[i] = jumpRate - 1;
+                tempState.isJump = true;
+            }
+            else
+            {
+                tempState.isJump = false;
+            }
         }
 
         if (randomPlayerActionParameter[i] < attackRate)
