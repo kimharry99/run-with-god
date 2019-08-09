@@ -5,38 +5,29 @@ using UnityEngine;
 public class MonsterSpawner : MonoBehaviour
 {
     public GameObject monster;  //소환할 몬스터
-    public float term;          //주기(초)
-    public int range;
+    private bool isSummoned = false;
 
-    void Start()
+    private void Update()
     {
-        monster.transform.position = transform.position;
+        if (ThisIsInBack)
+            Spawn();
+    }
 
-        if(term != 0)
-            InvokeRepeating("Spawn", term, term);
+    private bool ThisIsInBack
+    {
+        get
+        {
+            Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
+            return pos.x < 0.0f;
+        }
     }
 
     public void Spawn()
     {
-        if(monster != null)
-            Instantiate(monster);
+        if (monster != null && !isSummoned)
+        {
+            Instantiate(monster, transform.position, Quaternion.identity, transform);
+            isSummoned = true;
+        }
     }
-
-    public void StopSpawn()
-    {
-        CancelInvoke("Spawn");
-    }
-
-    public void SetMonster(GameObject newMonster)
-    {
-        monster = newMonster;
-        newMonster.transform.position = transform.position;
-    }
-
-    /*IEnumerator SpawnRoutine()
-    {
-        Spawn();
-
-        yield return new WaitForSeconds(term * Time.deltaTime);
-    }*/
 }
