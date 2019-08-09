@@ -6,12 +6,12 @@ public class Shielder : NormalEnemy
 {
 	public override EnemyType Type { get { return EnemyType.SHIELDER; } }
 
-	public Transform Shield;
+	public GameObject Shield;
     private SpriteRenderer Child;
     protected override void Start()
     {
         base.Start();
-        Shield = transform.Find("Shield");
+       // Shield = transform.Find("Shield");
         Child = Shield.GetComponent<SpriteRenderer>();
     }
     protected override void InitEnemy()
