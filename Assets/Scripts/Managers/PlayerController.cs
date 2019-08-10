@@ -95,7 +95,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		InitPlayerStateMachine();
 		ResetPlayer();
 
-		OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
+        SceneManager.sceneLoaded += OnSceneLoaded;
+		//OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
 	}
 
 	private void Update()
