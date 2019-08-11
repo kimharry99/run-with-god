@@ -116,6 +116,12 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 	public void ResetPlayer()
 	{
+        foreach (var renderer in GetComponentsInChildren<SpriteRenderer>())
+        {
+            renderer.color = Color.white;
+        }
+        gameObject.layer = LayerMask.NameToLayer("Player");
+        graceTimer = 0;
 		Life = 3;
 	}
 
@@ -496,6 +502,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 	private void OnDead()
 	{
+        StopAllCoroutines();
 		StartCoroutine(DeadRoutine());
 	}
 
