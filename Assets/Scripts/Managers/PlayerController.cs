@@ -213,6 +213,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
             move.clip = walkSFX;
             move.Play();
         }
+
+        Camera.main.GetComponent<CameraController>()?.SetCameraOffset(horizontal * 1f, vertical * 0.5f);
     }
 
     private void PlayerAttackControl()
@@ -267,12 +269,16 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			dashTimer = 0.3f;
 		};
 
+        State dead = new State();
+        dead.Enter += OnDead;
+
 		State trustSelect = new State();
 		trustSelect.StateUpdate += PlayerMovementControl;
 
 		playerState.AddNewState("idle", idle);
 		playerState.AddNewState("hit", hit);
 		playerState.AddNewState("dash", dash);
+        playerState.AddNewState("dead", dead);
 		playerState.AddNewState("trustSelect", trustSelect);
 
 		playerState.Transition("idle");
@@ -490,7 +496,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
         GetHit?.Invoke();
 		if (Life <= 0)
 		{
-			OnDead();
+            playerState.Transition("dead");
 		}
 	}
 

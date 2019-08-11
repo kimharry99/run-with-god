@@ -34,10 +34,17 @@ public class CameraController : MonoBehaviour
 
 	private void LateUpdate()
 	{
-        offsetY = Input.GetAxis("Vertical") * 0.5f;
-        offsetX = Input.GetAxis("Horizontal") * 1f;
+        //offsetY = Input.GetAxis("Vertical") * 0.5f;
+        //offsetX = Input.GetAxis("Horizontal") * 1f;
         transform.position = Vector3.Lerp(transform.position, target.position + new Vector3(offsetX, offsetY, offsetZ), 0.1f);
 	}
+
+    public void SetCameraOffset(float x, float y)
+    {
+        Debug.Log(new Vector2(x, y));
+        offsetX = x;
+        offsetY = y;
+    }
 
 	private void CameraShake(float amount, float time)
 	{
