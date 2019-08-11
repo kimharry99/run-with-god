@@ -17,6 +17,10 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 
 	public Slider bossHealthUI;
 
+
+    public Transform explodeGrid;
+    public GameObject explodeUIPrefab;
+
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
 		bossHealthUI.gameObject.SetActive(scene.name.Contains("Boss"));
@@ -59,6 +63,11 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
             lifeUIs[i].SetActive(lifeCount > i);
         }
 	}
+
+    public void UpdateExplodeUI(int explodeCount)
+    {
+
+    }
 
 	public void OpenPauseUI()
 	{

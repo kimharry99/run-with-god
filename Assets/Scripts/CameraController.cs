@@ -9,20 +9,27 @@ public class CameraController : MonoBehaviour
 	public static Action<float, float> Shake;
 	public static Action<Vector2> ShockWave;
 	public static Action ChromaticAberration;
-
+    public static Action HitEffect;
 
 	private Transform target;
     private Rigidbody2D targetRb;
 	private float offsetX = 0.5f, offsetY = 0f, offsetZ = -9;
 
 	public Material shockwave, chromatic;
-	private void Start()
+
+    private Coroutine shockwaveRoutine, chromaticRoutine;
+
+    [SerializeField]
+    private ParticleSystem hitEffect;
+
+ 	private void Start()
 	{
 		target = PlayerController.inst.transform;
         targetRb = target.GetComponent<Rigidbody2D>();
 		Shake = CameraShake;
 		ShockWave = ShockwaveEffect;
 		ChromaticAberration = ChromaticAberrationEffect;
+        HitEffect = PlayHitEffect;
 	}
 
 	private void LateUpdate()
@@ -52,7 +59,9 @@ public class CameraController : MonoBehaviour
 
 	private void ChromaticAberrationEffect()
 	{
-		StartCoroutine(ChromaticAberrationEffectRoutine());
+        if (chromaticRoutine != null)
+            StopCoroutine(chromaticRoutine);
+        chromaticRoutine = StartCoroutine(ChromaticAberrationEffectRoutine());
 	}
 
 	IEnumerator ChromaticAberrationEffectRoutine()
@@ -67,7 +76,9 @@ public class CameraController : MonoBehaviour
 
 	private void ShockwaveEffect(Vector2 center)
 	{
-		StartCoroutine(ShockWaveEffectRoutine(center));
+        if (shockwaveRoutine != null)
+            StopCoroutine(shockwaveRoutine);
+		shockwaveRoutine = StartCoroutine(ShockWaveEffectRoutine(center));
 	}
 
 	IEnumerator ShockWaveEffectRoutine(Vector2 center)
@@ -75,10 +86,12 @@ public class CameraController : MonoBehaviour
 		shockwave.SetFloat("_CenterX", center.x);
 		shockwave.SetFloat("_CenterY", center.y);
 
-		float oriThickness = shockwave.GetFloat("_Thickness");
-		float oriRadius = shockwave.GetFloat("_Radius");
+        //float oriThickness = shockwave.GetFloat("_Thickness");
+        //float oriRadius = shockwave.GetFloat("_Radius");
+        float oriThickness = 0.2f;
+        float oriRadius = 1f;
 
-		float t = 0;
+        float t = 0;
 		float x = 0;
 		float waveRadius = 0;
 		while (x < 1)
@@ -106,4 +119,8 @@ public class CameraController : MonoBehaviour
 		RenderTexture.ReleaseTemporary(tmp);
 	}
 	
+    private void PlayHitEffect()
+    {
+        hitEffect.Play();
+    }
 }

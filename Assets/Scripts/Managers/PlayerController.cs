@@ -26,6 +26,16 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		}
 	}
 
+    private int _explodeItem;
+    public int ExplodeItem
+    {
+        get { return _explodeItem; }
+        private set
+        {
+            _explodeItem = value;
+        }
+    }
+
     private Collider2D col;
 	private Rigidbody2D rb;
 	private SpriteRenderer sr;
@@ -73,6 +83,9 @@ public class PlayerController : SingletonBehaviour<PlayerController>
     public Action OnShotBullet;
     public Action OnDash;
     public Action GetHit;
+
+    [SerializeField]
+    private ParticleSystem hitEffect;
 
 	private void Awake()
 	{
@@ -123,6 +136,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
         gameObject.layer = LayerMask.NameToLayer("Player");
         graceTimer = 0;
 		Life = 3;
+        ExplodeItem = 5;
 	}
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -203,6 +217,12 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
     private void PlayerAttackControl()
 	{
+        if (Input.GetKeyDown(KeyCode.A) && ExplodeItem > 0)
+        {
+            ExplodeItem--;
+            Explode();
+        }
+       
 		if (Input.GetButtonDown("Fire"))
 		{
 			gunState.Transition("fire");
@@ -463,16 +483,21 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		SoundManager.inst.PlaySFX(gameObject, hitSFX);
 		playerState.Transition("hit");
 		gunState.Transition("idle");
-		Explode();
-		GetHit?.Invoke();
+        //Explode();
+        CameraController.Shake(0.2f, 0.5f);
+        CameraController.ChromaticAberration();
+        CameraController.HitEffect();
+        GetHit?.Invoke();
 		if (Life <= 0)
 		{
 			OnDead();
 		}
 	}
 
+#if UNITY_EDITOR
     public Boolean IsKill;
-	private void Explode()
+#endif
+    private void Explode()
 	{
 		CameraController.Shake(0.1f, 0.5f);
 
@@ -484,8 +509,10 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 		foreach (var enemy in Physics2D.OverlapCircleAll(transform.position,explodeRange,1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Enemy Ghost")))
 		{
-            if(IsKill)
-			enemy.GetComponent<NormalEnemy>()?.GetDamagedToDeath();
+#if UNITY_EDITOR
+            if (IsKill)
+#endif
+                enemy.GetComponent<NormalEnemy>()?.GetDamagedToDeath();
 		}
 
         foreach (var projectile in Physics2D.OverlapCircleAll(transform.position, explodeRange))
