@@ -14,6 +14,7 @@ public class SkeletonArcher : NormalEnemy
     {
         State idle = new State();
         State attack = new State();
+        State dead = new State();
 
         idle.StateUpdate += delegate
         {
@@ -34,6 +35,7 @@ public class SkeletonArcher : NormalEnemy
 
         stateMachine.AddNewState("idle", idle);
         stateMachine.AddNewState("attack", attack);
+        stateMachine.AddNewState("dead", dead);
 
         stateMachine.Transition("idle");
     }
@@ -44,5 +46,11 @@ public class SkeletonArcher : NormalEnemy
         Vector3 pos = shotPosition.localPosition;
         pos.x = -pos.x;
         shotPosition.localPosition = pos;
+    }
+
+    protected override void OnDead()
+    {
+        base.OnDead();
+        stateMachine.Transition("dead");
     }
 }
