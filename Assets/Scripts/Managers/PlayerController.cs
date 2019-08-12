@@ -62,7 +62,9 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	public bool IsGround
 	{
 		get {
-            return Physics2D.Linecast(landChecker.position + new Vector3(-col.bounds.size.x / 2 - 0.01f, 0), landChecker.position + new Vector3(col.bounds.size.x / 2 + 0.01f, 0), 1 << LayerMask.NameToLayer("Ground")).transform != null;
+            return Physics2D.Linecast(landChecker.position + new Vector3(-col.bounds.size.x / 2 - 0.01f, 0),
+                landChecker.position + new Vector3(col.bounds.size.x / 2 + 0.01f, 0),
+                1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Ground Passable")).transform != null;
         }
 	}
 
@@ -195,7 +197,14 @@ public class PlayerController : SingletonBehaviour<PlayerController>
             Flip();
         }
 
-        if (Input.GetButtonDown("Jump") && jumpCount > 0)
+        if (Input.GetButtonDown("Jump") && Input.GetButton("Vertical") && vertical <= -1)
+        {
+            if (IsGround)
+                StartCoroutine(JumpOff());
+            else
+                playerState.Transition("stamp");
+        }
+        else if (Input.GetButtonDown("Jump") && jumpCount > 0)
         {
             rb.velocity += new Vector2(0, jumpSpeed - rb.velocity.y);
             //rb.velocity +=  rb.velocity.y < 0 ? new Vector2(0, jumpSpeed - rb.velocity.y) : new Vector2(0, jumpSpeed);
@@ -274,6 +283,9 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			dashCoolTimer = 0.3f;
 		};
 
+        State stamp = new State();
+        stamp.Enter += delegate { StartCoroutine(StampRoutine()); };
+
         State dead = new State();
         dead.Enter += OnDead;
 
@@ -283,6 +295,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		playerState.AddNewState("idle", idle);
 		playerState.AddNewState("hit", hit);
 		playerState.AddNewState("dash", dash);
+        playerState.AddNewState("stamp", stamp);
         playerState.AddNewState("dead", dead);
 		playerState.AddNewState("trustSelect", trustSelect);
 
@@ -549,4 +562,42 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		yield return new WaitForSeconds(1f);
 		GameManager.inst.GameOver();
 	}
+
+    private IEnumerator StampRoutine()
+    {
+        RaycastHit2D targetGround = Physics2D.Raycast(transform.position, Vector2.down, float.PositiveInfinity, 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Ground Passable"));
+        if (targetGround.collider != null)
+        {
+            //gameObject.layer = LayerMask.NameToLayer("Player Grace");
+            rb.velocity = Vector2.zero;
+            transform.position = targetGround.point + new Vector2(0, GetComponent<Collider2D>().bounds.extents.y);
+
+            CameraController.Shake(0.2f, 0.5f);
+            SoundManager.inst.PlaySFX(gameObject, boomSFX);
+
+            foreach (var enemy in Physics2D.OverlapCircleAll(transform.position, 0.5f, 1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Enemy Ghost")))
+            {
+                enemy.GetComponent<NormalEnemy>()?.GetDamagedToDeath();
+            }
+
+            yield return new WaitForSeconds(1);
+            if (graceTimer <= 0)
+                gameObject.layer = LayerMask.NameToLayer("Player");
+        }
+        else
+        {
+            yield break;
+        }
+        playerState.Transition("idle");
+    }
+
+    private IEnumerator JumpOff()
+    {
+        Collider2D other = Physics2D.OverlapPoint(landChecker.position, 1 << LayerMask.NameToLayer("Ground Passable"));
+        if (other == null)
+            yield break;
+        Physics2D.IgnoreCollision(col, other, true);
+        yield return new WaitForSeconds(0.3f);
+        Physics2D.IgnoreCollision(col, other, false);
+    }
 }
