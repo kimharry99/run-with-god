@@ -41,7 +41,6 @@ public class CameraController : MonoBehaviour
 
     public void SetCameraOffset(float x, float y)
     {
-        Debug.Log(new Vector2(x, y));
         offsetX = x;
         offsetY = y;
     }

@@ -46,7 +46,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	private const float gracePeriod = 2.5f;
 	private float graceTimer = 0;
 	private float hitTimer;
-	private float dashTimer;
+    private float dashTimer;
+	private float dashCoolTimer;
 	public bool IsDamagable { get { return graceTimer <= 0; } }
 
 	[SerializeField]
@@ -61,7 +62,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	public bool IsGround
 	{
 		get {
-            return Physics2D.Linecast(landChecker.position + new Vector3(-col.bounds.size.x / 2 - 0.01f, 0), landChecker.position + new Vector3(col.bounds.size.x / 2 + 0.01f, 0), 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Ground Passable")).transform != null;
+            return Physics2D.Linecast(landChecker.position + new Vector3(-col.bounds.size.x / 2 - 0.01f, 0), landChecker.position + new Vector3(col.bounds.size.x / 2 + 0.01f, 0), 1 << LayerMask.NameToLayer("Ground")).transform != null;
         }
 	}
 
@@ -121,6 +122,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			graceTimer -= Time.deltaTime;
 		if (hitTimer > 0)
 			hitTimer -= Time.deltaTime;
+        if (dashCoolTimer > 0)
+            dashCoolTimer -= Time.deltaTime;
         if (dashTimer > 0)
             dashTimer -= Time.deltaTime;
         gunFireLight.intensity -= 100 * Time.deltaTime;
@@ -203,7 +206,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
             OnJump?.Invoke();
         }
 
-        if (Input.GetButtonDown("Dash") && dashTimer <= 0)
+        if (Input.GetButtonDown("Dash") && dashCoolTimer <= 0)
         {
             playerState.Transition("dash");
         }
@@ -257,7 +260,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		State dash = new State();
 		dash.Enter += delegate
 		{
-			graceTimer = 0.3f;
+			graceTimer = Mathf.Max(0.3f, graceTimer);
+            dashTimer = 0.3f;
 			gameObject.layer = LayerMask.NameToLayer("Player Grace");
             StartCoroutine(DashRoutine());
             OnDash?.Invoke();
@@ -265,8 +269,9 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 		dash.Exit += delegate
 		{
-			gameObject.layer = LayerMask.NameToLayer("Player");
-			dashTimer = 0.3f;
+            if (graceTimer < 0)
+			    gameObject.layer = LayerMask.NameToLayer("Player");
+			dashCoolTimer = 0.3f;
 		};
 
         State dead = new State();
@@ -310,7 +315,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
             }
         }
         sr.color = oriColor;
-		gameObject.layer = LayerMask.NameToLayer("Player");
+        gameObject.layer = LayerMask.NameToLayer("Player");
 	}
 
     /*
@@ -329,7 +334,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
     private IEnumerator DashRoutine()
 	{
-		float oriGraceTimer = graceTimer;
+        float oriDashTimer = dashTimer;
 		Vector3 oriPosition = transform.position;
 		Vector3 destination = transform.position + (IsFlipped ? new Vector3(-3, 0) : new Vector3(3, 0));
 
@@ -356,9 +361,9 @@ public class PlayerController : SingletonBehaviour<PlayerController>
             }
         }
 
-        while (graceTimer > 0)
+        while (dashTimer > 0)
 		{
-            Vector3 lerped = Vector3.Lerp(oriPosition, destination, 1 - Mathf.Pow(graceTimer / oriGraceTimer, 3));
+            Vector3 lerped = Vector3.Lerp(oriPosition, destination, 1 - Mathf.Pow(dashTimer / oriDashTimer, 3));
 
             if (Vector3.Distance(lerped, oriPosition) <= blockDistance)
                 transform.position = lerped;
