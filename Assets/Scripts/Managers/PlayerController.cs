@@ -87,8 +87,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
     public Action OnDash;
     public Action GetHit;
 
-    [SerializeField]
-    private ParticleSystem hitEffect;
+	[SerializeField]
+	private ParticleSystem walkEffect;
 
 	private void Awake()
 	{
@@ -182,6 +182,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
             rb.velocity = new Vector2(horizontalJump * maxSpeed * speedScale, rb.velocity.y);
 		*/
 		rb.velocity = new Vector2(horizontal * maxSpeed * speedScale, rb.velocity.y);
+		if (horizontal != 0 && IsGround)
+			walkEffect.Play();
 
 		if (IsGround)
         {
@@ -213,6 +215,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
             move.clip = jumpSFX;
             move.Play();
             OnJump?.Invoke();
+			walkEffect.Play();
         }
 
         if (Input.GetButtonDown("Dash") && dashCoolTimer <= 0)
@@ -445,7 +448,11 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	{
         IsFlipped = !IsFlipped;
         transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-        /*
+		ParticleSystem.ForceOverLifetimeModule fol = walkEffect.forceOverLifetime;
+		fol.xMultiplier = -fol.xMultiplier;
+		ParticleSystem.MainModule main = walkEffect.main;
+		main.startSpeed = new ParticleSystem.MinMaxCurve(-main.startSpeed.constant);
+		/*
         foreach (Transform child in transform)
         {
             if (child == transform)
