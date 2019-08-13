@@ -63,7 +63,7 @@ public class Projectile : MonoBehaviour
 		}
 	}
 
-	protected IEnumerator DestroyRoutine(float time)
+	protected virtual IEnumerator DestroyRoutine(float time)
 	{
 		yield return new WaitForSeconds(time);
 		Destroy(gameObject);
