@@ -33,6 +33,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
         private set
         {
             _explodeItem = value;
+            InGameUIManager.inst.UpdateExplodeUI(_explodeItem);
         }
     }
 
