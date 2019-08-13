@@ -47,6 +47,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 	private Dictionary<Tuple<TrustType, int>, List<Trust>> playedTrusts = new Dictionary<Tuple<TrustType, int>, List<Trust>>();
 
 	public int mapSeed;
+    public GameObject firstMapBlockPrefab;
 	public List<GameObject> mapBlockPrefabs = new List<GameObject>();
 
 	private void OnEnable()
@@ -237,13 +238,12 @@ public class GameManager : SingletonBehaviour<GameManager>
 	{
 		UnityEngine.Random.InitState(mapSeed);
 
-		int rand = UnityEngine.Random.Range(0, mapBlockPrefabs.Count);
-		MapBlock prevBlock = Instantiate(mapBlockPrefabs[rand]).GetComponent<MapBlock>();
+		MapBlock prevBlock = Instantiate(firstMapBlockPrefab).GetComponent<MapBlock>();
 		PlayerController.inst.transform.position = prevBlock.startPoint.position;
 
 		for (int i = 0; i < 10; ++i)
 		{
-			rand = UnityEngine.Random.Range(0,mapBlockPrefabs.Count);
+			int rand = UnityEngine.Random.Range(0,mapBlockPrefabs.Count);
 			MapBlock curBlock = Instantiate(mapBlockPrefabs[rand]).GetComponent<MapBlock>();
 			curBlock.ConnectNextTo(prevBlock);
 			prevBlock = curBlock;

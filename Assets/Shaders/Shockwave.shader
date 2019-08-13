@@ -87,7 +87,7 @@
 					if (dist >= _Radius && dist <= _Radius + _Thickness)
 					{
 						displ_col = tex2D(_MainTex, i.uv + float2(displ, displ));
-						displ_col.rgb += fixed4(displ, displ, displ, 1);
+						displ_col.rgb += fixed4(displ, 0, 0, 1);
 						//displ_col.rgb = 1 - displ_col.rgb;
 					}
 					return displ_col;
