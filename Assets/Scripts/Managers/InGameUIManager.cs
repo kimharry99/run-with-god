@@ -12,6 +12,7 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 	public Text trustText;
 
 	public GameObject[] lifeUIs = new GameObject[3];
+    public GameObject[] ExplodeUIs = new GameObject[5];
 
 	public GameObject pauseUIPanel;
 
@@ -66,7 +67,10 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 
     public void UpdateExplodeUI(int explodeCount)
     {
-
+        for(int i = 0; i < 5; i++)
+        {
+            ExplodeUIs[i].SetActive(explodeCount > i);
+        }
     }
 
 	public void OpenPauseUI()

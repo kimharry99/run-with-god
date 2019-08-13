@@ -75,7 +75,7 @@ public class Gun : MonoBehaviour
                 gunFireLight.intensity = 10;
                 shotMethod.Shot(arm.rotation * Direction);
                 shotCount--;
-                shotCooltime = 0.05f;
+                shotCooltime = shotMethod.shotCooltime;
                 SoundManager.inst.PlaySFX(gameObject, shotSFX);
                 OnShotBullet?.Invoke();
             }
@@ -107,7 +107,7 @@ public class Gun : MonoBehaviour
         switch (type)
         {
             case GunType.RIFLE:
-                shotMethod = new RifleShotMethod(this, 3);
+                shotMethod = new RifleShotMethod(this, 3, 0.05f);
                 break;
             case GunType.SHOTGUN:
                 //TODO
@@ -120,15 +120,17 @@ public abstract class ShotMethod
 {
     protected Gun gun;
     public int bulletsPerShot;
+    public float shotCooltime;
     public abstract void Shot(Vector2 direction);
 }
 
 public class RifleShotMethod : ShotMethod
 {
-    public RifleShotMethod(Gun gun, int bps)
+    public RifleShotMethod(Gun gun, int bps, float cooltime)
     {
         this.gun = gun;
         bulletsPerShot = bps;
+        shotCooltime = cooltime;
     }
 
     public override void Shot(Vector2 direction)
@@ -150,6 +152,14 @@ public class ShotgunShot : ShotMethod
 
     public override void Shot(Vector2 direction)
     {
-        throw new NotImplementedException();
+        /*
+         
+         for(int i = 0; i < 6; i++)
+        {
+            GameObject bullet = Instantiate(bulletPrefab);
+            bullet.transform.position = shotPosition.position + new Vector3(0, UnityEngine.Random.Range(-0.01f, 0.01f));
+            bullet.GetComponent<Rigidbody2D>().velocity = ShotGunDirection() * 25f;
+        }
+        */
     }
 }

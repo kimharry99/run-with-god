@@ -33,6 +33,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
         private set
         {
             _explodeItem = value;
+            InGameUIManager.inst.UpdateExplodeUI(_explodeItem);
         }
     }
 
@@ -528,8 +529,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	}
 	#endregion
 
-	#region Deprecated Functions
-	/*
+    #region Deprecated Functions
+    /*
 	private IEnumerator HitRoutine()
 	{
 		Color oriColor = sr.color;
@@ -542,5 +543,5 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		}
 	}
     */
-	#endregion
+    #endregion
 }
