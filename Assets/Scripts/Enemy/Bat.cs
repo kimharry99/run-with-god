@@ -17,6 +17,7 @@ public class Bat : NormalEnemy
         base.Start();
         direction = Random.Range(0, 2);
         coordinate = Random.value * Mathf.PI + Random.value*Mathf.PI;
+        transform.position = new Vector2(transform.position.x + coordinate * 0.2f, transform.position.y+0.2f * Mathf.Sin(coordinate));
     }
 
     protected override void InitEnemy()
@@ -50,7 +51,7 @@ public class Bat : NormalEnemy
         {
 
             transform.position = new Vector2(transform.position.x + 0.01f, transform.position.y + (0.4f * Mathf.Sin(coordinate + 0.05f) - 0.4f * Mathf.Sin(coordinate)) / 2);
-            coordinate += 0.05f;
+            coordinate += 0.07f;
         }
         else
         {
@@ -60,7 +61,7 @@ public class Bat : NormalEnemy
                 cnt--;
             }
             transform.position = new Vector2(transform.position.x - 0.01f, transform.position.y + (0.4f * Mathf.Sin(coordinate + 0.05f) - 0.4f * Mathf.Sin(coordinate)) / 2);
-            coordinate += 0.05f;
+            coordinate += 0.07f;
             if (coordinate > 4 * Mathf.PI)
             {
                 Flip();
@@ -77,7 +78,7 @@ public class Bat : NormalEnemy
         if (coordinate > -2 * Mathf.PI)
         {
             transform.position = new Vector3(transform.position.x + 0.01f, transform.position.y + (0.4f*Mathf.Sin(coordinate + 0.05f) - 0.4f*Mathf.Sin(coordinate)) / 2, transform.position.z);
-            coordinate -= 0.05f;
+            coordinate -= 0.07f;
         }
         else
         {
@@ -86,8 +87,8 @@ public class Bat : NormalEnemy
                 Flip();
                 cnt--;
             }
-            transform.position = new Vector3(transform.position.x - 0.01f, transform.position.y + (0.4f*Mathf.Sin(coordinate + 0.05f) - 0.4f*   (coordinate)) / 2, transform.position.z);
-            coordinate -= 0.05f;
+            transform.position = new Vector3(transform.position.x - 0.01f, transform.position.y + (0.4f*Mathf.Sin(coordinate + 0.05f) - 0.4f*Mathf.Sin  (coordinate)) / 2, transform.position.z);
+            coordinate -= 0.07f;
             if (coordinate < -4 * Mathf.PI)
             {
                 Flip();

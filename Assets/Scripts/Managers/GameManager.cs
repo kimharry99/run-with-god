@@ -86,6 +86,13 @@ public class GameManager : SingletonBehaviour<GameManager>
 			unplayedTrusts[tuple].Add(trust);
 		}
 
+        foreach (var block in Resources.LoadAll<GameObject>("MapPrefabs"))
+        {
+            if (block.GetComponent<MapBlock>() == null)
+                continue;
+            mapBlockPrefabs.Add(block);
+        }
+
 		SceneManager.sceneLoaded += OnSceneLoaded;
 	}
 
