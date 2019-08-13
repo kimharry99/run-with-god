@@ -374,6 +374,8 @@ public abstract class NormalEnemy : MonoBehaviour
 				return "유령";
 			case EnemyType.SHIELDER:
 				return "방패병";
+            case EnemyType.SHIELD:
+                return "방패";
 			case EnemyType.SKELETON:
 				return "해골";
 			case EnemyType.SKELETONARCHER:

@@ -335,6 +335,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 		fire.Enter += delegate
 		{
+            //shotCount = 1;
 			shotCount = 3;
 			shotCooltime = 0;
 			playerAnimator.SetBool("isShooting", true);
@@ -345,7 +346,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			shotCooltime -= Time.deltaTime;
 			if (shotCooltime <= 0)
 			{
-				ShotBullet();
+                ShotBullet();
+                //ShotGunBullet();
 			}
 			if (shotCount <= 0)
 			{
@@ -353,6 +355,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			}
 			if (Input.GetButtonDown("Fire"))
 			{
+                //shotCount = 1;
 				shotCount = 3;
 			}
 		};
@@ -399,11 +402,28 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		bullet.transform.position = shotPosition.position + new Vector3(0, UnityEngine.Random.Range(-0.01f, 0.01f));
 		bullet.GetComponent<Rigidbody2D>().velocity = ShotDirection() * 25f;
 		shotCount--;
-		shotCooltime = 0.05f;
+        shotCooltime = 0.05f;
 		CameraController.Shake(0.02f, 0.05f);
 		SoundManager.inst.PlaySFX(gameObject, shotSFX);
 		OnShotBullet?.Invoke();
 	}
+
+    private void ShotGunBullet()
+    {
+        gunFireLight.intensity = 10;
+
+        for(int i = 0; i < 6; i++)
+        {
+            GameObject bullet = Instantiate(bulletPrefab);
+            bullet.transform.position = shotPosition.position + new Vector3(0, UnityEngine.Random.Range(-0.01f, 0.01f));
+            bullet.GetComponent<Rigidbody2D>().velocity = ShotGunDirection() * 25f;
+        }
+        shotCount--;
+        shotCooltime = 10f;
+        CameraController.Shake(0.02f, 0.05f);
+        SoundManager.inst.PlaySFX(gameObject, shotSFX);
+        OnShotBullet?.Invoke();
+    }
 
 	public void GetDamaged()
 	{
@@ -615,10 +635,28 @@ public class PlayerController : SingletonBehaviour<PlayerController>
         */
 
 	}
-	#endregion
 
-	#region Deprecated Functions
-	/*
+    private Vector2 ShotGunDirection()
+    {
+        Vector2 CurDirection = (IsFlipped ? -1 : 1) * (arm.rotation * Vector2.right).normalized;
+        return Rotate(CurDirection, UnityEngine.Random.Range(-20f,20f));
+    }
+
+    public static Vector2 Rotate(Vector2 v, float degrees)
+    {
+        float radians = degrees * Mathf.Deg2Rad;
+        float sin = Mathf.Sin(radians);
+        float cos = Mathf.Cos(radians);
+
+        float tx = v.x;
+        float ty = v.y;
+
+        return new Vector2(cos * tx - sin * ty, sin * tx + cos * ty);
+    }
+    #endregion
+
+    #region Deprecated Functions
+    /*
 	private IEnumerator HitRoutine()
 	{
 		Color oriColor = sr.color;
@@ -631,5 +669,5 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		}
 	}
     */
-	#endregion
+    #endregion
 }

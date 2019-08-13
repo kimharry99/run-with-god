@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Shield : NormalEnemy
 {
-    public override EnemyType Type { get { return EnemyType.SHIELDER; } }
+    public override EnemyType Type { get { return EnemyType.SHIELD; } }
    protected override void InitEnemy()
     {
 
