@@ -30,8 +30,8 @@ public class UseBulletTrust : Trust
     public override void Init()
     {
         useBulletCount = 0;
-        PlayerController.inst.OnShotBullet += BulletCount;
-        PlayerController.inst.OnShotBullet += delegate { InGameUIManager.inst.UpdateTrustUI(this); };
+        PlayerController.inst.gun.OnShotBullet += BulletCount;
+        PlayerController.inst.gun.OnShotBullet += delegate { InGameUIManager.inst.UpdateTrustUI(this); };
     }
 
     private void BulletCount()

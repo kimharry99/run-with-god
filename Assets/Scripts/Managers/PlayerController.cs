@@ -39,9 +39,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
     private Collider2D col;
 	private Rigidbody2D rb;
 	private SpriteRenderer sr;
-    private Transform arm;
 	private Transform landChecker;
-	private Transform shotPosition;
 
 	private const float gracePeriod = 2.5f;
 	private float graceTimer = 0;
@@ -50,10 +48,10 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	private float dashCoolTimer;
 	public bool IsDamagable { get { return graceTimer <= 0; } }
 
+    public Gun gun { get; private set; }
+
 	[SerializeField]
-	private AudioClip shotSFX = null, hitSFX = null, boomSFX = null;
-    [SerializeField]
-    private Light gunFireLight;
+	private AudioClip hitSFX = null, boomSFX = null;
 	[SerializeField]
 	private AudioSource move;
 	[SerializeField]
@@ -77,13 +75,11 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 	[SerializeField]
 	private GameObject bulletPrefab = null;
-	private StateMachine gunState = new StateMachine();
 	private StateMachine playerState = new StateMachine();
 
     private Animator playerAnimator;
 
     public Action OnJump;
-    public Action OnShotBullet;
     public Action OnDash;
     public Action GetHit;
 
@@ -104,11 +100,9 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
 		landChecker = transform.Find("LandChecker");
-        arm = transform.Find("Arm");
-		shotPosition = arm.Find("ShotPosition");
 		sr = GetComponent<SpriteRenderer>();
         playerAnimator = GetComponent<Animator>();
-		InitGunStateMachine();
+        gun = GetComponent<Gun>();
 		InitPlayerStateMachine();
 		ResetPlayer();
 
@@ -118,7 +112,6 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 	private void Update()
 	{
-		gunState.UpdateStateMachine();
 		playerState.UpdateStateMachine();
 
 		if (graceTimer > 0)
@@ -129,8 +122,6 @@ public class PlayerController : SingletonBehaviour<PlayerController>
             dashCoolTimer -= Time.deltaTime;
         if (dashTimer > 0)
             dashTimer -= Time.deltaTime;
-        gunFireLight.intensity -= 100 * Time.deltaTime;
-        gunFireLight.enabled = gunFireLight.intensity >= 0;
 	}
 
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -155,7 +146,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	private void OnDrawGizmos()
 	{
 		Gizmos.color = Color.green;
-		Gizmos.DrawLine(landChecker.position + new Vector3(-col.bounds.size.x / 2 - 0.01f, 0), landChecker.position + new Vector3(col.bounds.size.x / 2 + 0.01f, 0));
+		//Gizmos.DrawLine(landChecker.position + new Vector3(-col.bounds.size.x / 2 - 0.01f, 0), landChecker.position + new Vector3(col.bounds.size.x / 2 + 0.01f, 0));
 	}
 #endif
 	#endregion
@@ -167,7 +158,6 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		float horizontal = Input.GetAxis("Horizontal"); //up, down input
 		//float horizontalJump = Input.GetAxis("Horizontal_Jump");
 		float jump = Input.GetAxis("Jump"); //jump input
-		float fire = Input.GetAxis("Fire"); //attack input
 
 		playerAnimator.SetBool("isRunning", horizontal != 0);
 		playerAnimator.SetBool("isGround", IsGround);
@@ -240,7 +230,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 		if (Input.GetButtonDown("Fire"))
 		{
-			gunState.Transition("fire");
+            gun.Shot();
 		}
 	}
 
@@ -318,48 +308,6 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 		playerState.Transition("idle");
 	}
-
-	private void InitGunStateMachine()
-	{
-		State idle = new State();
-		idle.Enter += delegate
-		{
-			playerAnimator.SetBool("isShooting", false);
-		};
-
-		idle.StateUpdate += delegate
-		{
-
-		};
-		State fire = new State();
-
-		fire.Enter += delegate
-		{
-			shotCount = 3;
-			shotCooltime = 0;
-			playerAnimator.SetBool("isShooting", true);
-		};
-
-		fire.StateUpdate += delegate
-		{
-			shotCooltime -= Time.deltaTime;
-			if (shotCooltime <= 0)
-			{
-				ShotBullet();
-			}
-			if (shotCount <= 0)
-			{
-				gunState.Transition("idle");
-			}
-			if (Input.GetButtonDown("Fire"))
-			{
-				shotCount = 3;
-			}
-		};
-		gunState.AddNewState("idle", idle);
-		gunState.AddNewState("fire", fire);
-		gunState.Transition("idle");
-	}
 	#endregion
 
 	#region Action Functions
@@ -391,27 +339,12 @@ public class PlayerController : SingletonBehaviour<PlayerController>
         */
 	}
 
-	private void ShotBullet()
-	{
-		gunFireLight.intensity = 10;
-
-		GameObject bullet = Instantiate(bulletPrefab);
-		bullet.transform.position = shotPosition.position + new Vector3(0, UnityEngine.Random.Range(-0.01f, 0.01f));
-		bullet.GetComponent<Rigidbody2D>().velocity = ShotDirection() * 25f;
-		shotCount--;
-		shotCooltime = 0.05f;
-		CameraController.Shake(0.02f, 0.05f);
-		SoundManager.inst.PlaySFX(gameObject, shotSFX);
-		OnShotBullet?.Invoke();
-	}
-
 	public void GetDamaged()
 	{
 		graceTimer = gracePeriod;
 		Life--;
 		SoundManager.inst.PlaySFX(gameObject, hitSFX);
 		playerState.Transition("hit");
-		gunState.Transition("idle");
 		//Explode();
 		CameraController.Shake(0.2f, 0.5f);
 		CameraController.ChromaticAberration();
@@ -592,28 +525,6 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		Physics2D.IgnoreCollision(col, other, true);
 		yield return new WaitForSeconds(0.3f);
 		Physics2D.IgnoreCollision(col, other, false);
-	}
-	#endregion
-
-	#region Utility Functions
-	private Vector2 ShotDirection()
-	{
-		return (IsFlipped ? -1 : 1) * (arm.rotation * Vector2.right).normalized;
-		/*
-		Vector2 direction = Vector2.zero;
-		float vertical = Input.GetAxis("Vertical");
-        if (vertical != 0)
-        {
-            direction = new Vector2(0, 25 * (vertical > 0 ? 1 : -1));
-        }
-        else
-        {
-            direction = new Vector2(25 * (IsFlipped ? -1 : 1), 0);
-        }
-        
-        return direction;
-        */
-
 	}
 	#endregion
 

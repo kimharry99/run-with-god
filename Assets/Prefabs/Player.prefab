@@ -4916,6 +4916,7 @@ GameObject:
   - component: {fileID: 6160330047522942916}
   - component: {fileID: 6160330047522942917}
   - component: {fileID: 6160330047522942918}
+  - component: {fileID: 7427999952544652375}
   - component: {fileID: 6160330047522942919}
   - component: {fileID: 6160330047522942912}
   - component: {fileID: 4958810763441984766}
@@ -5009,10 +5010,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speedScale: 1
-  shotSFX: {fileID: 8300000, guid: cc200904bd8c11b45b2832d12634c141, type: 3}
   hitSFX: {fileID: 8300000, guid: 5a4d25eec482dc148a5bdd7592ffdc37, type: 3}
   boomSFX: {fileID: 8300000, guid: 3e1d461e96213c2489c07411cfab4e0e, type: 3}
-  gunFireLight: {fileID: 7288520183409638896}
   move: {fileID: 3782873543557064806}
   walkSFX: {fileID: 8300000, guid: 83658aa7c2fbc19459d632ed3628b7a1, type: 3}
   jumpSFX: {fileID: 8300000, guid: e07d7ec0c163324469a6966d7b77608f, type: 3}
@@ -5020,6 +5019,22 @@ MonoBehaviour:
     type: 3}
   walkEffect: {fileID: 1754761511}
   IsKill: 1
+--- !u!114 &7427999952544652375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6160330047522942913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3d1fc664e944ce458be681169f83f77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPrefab: {fileID: 8255848804799629962, guid: cfcc9bb1b8f3f32419905ed6de00e418,
+    type: 3}
+  shotSFX: {fileID: 8300000, guid: cc200904bd8c11b45b2832d12634c141, type: 3}
+  gunFireLight: {fileID: 7288520183409638896}
 --- !u!50 &6160330047522942919
 Rigidbody2D:
   serializedVersion: 4
