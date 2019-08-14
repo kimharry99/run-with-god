@@ -5,7 +5,7 @@ using UnityEngine;
 
 public enum GunType
 {
-    RIFLE,
+    RIFLE = 1,
     SHOTGUN,
     BAZOOKA
 }
@@ -15,6 +15,7 @@ public class Gun : MonoBehaviour
     public StateMachine gunState = new StateMachine();
     public ShotMethod shotMethod;
 
+    private int Guntype;
     private int shotCount = 0;
     private float shotCooltime = 0f;
 
@@ -36,7 +37,7 @@ public class Gun : MonoBehaviour
 
     private void Awake()
     {
-        SwitchGun(GunType.SHOTGUN);
+        SwitchGun(GunType.RIFLE);
         playerAnimator = GetComponent<Animator>();
         arm = transform.Find("Arm");
         ShotPosition = arm.Find("ShotPosition");
@@ -58,6 +59,19 @@ public class Gun : MonoBehaviour
         idle.Enter += delegate
         {
             playerAnimator.SetBool("isShooting", false);
+        };
+
+        idle.StateUpdate += delegate
+        {
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                if (Guntype == 0)
+                    SwitchGun(GunType.SHOTGUN);
+                else if (Guntype == 1)
+                    SwitchGun(GunType.BAZOOKA);
+                else if (Guntype == 2)
+                    SwitchGun(GunType.RIFLE);
+            }
         };
 
         State fire = new State();
@@ -109,12 +123,15 @@ public class Gun : MonoBehaviour
         switch (type)
         {
             case GunType.RIFLE:
+                Guntype = 0;
                 shotMethod = new RifleShotMethod(this, 3, 0.05f);
                 break;
             case GunType.SHOTGUN:
+                Guntype = 1;
                 shotMethod = new ShotgunShotMethod(this, 1, 1f);
                 break;
             case GunType.BAZOOKA:
+                Guntype = 2;
                 shotMethod = new BazookaShotMethod(this, 1, 0.5f);
                 break;
         }
