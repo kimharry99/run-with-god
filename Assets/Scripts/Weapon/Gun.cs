@@ -77,6 +77,7 @@ public class Gun : MonoBehaviour
             {
                 Shot();
             }
+            InGameUIManager.inst.UpdateWeapon(Guntype);
         };
 
         State fire = new State();
