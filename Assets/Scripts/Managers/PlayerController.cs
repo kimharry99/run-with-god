@@ -502,22 +502,26 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			gameObject.layer = LayerMask.NameToLayer("Player Grace");
 			rb.velocity = Vector2.zero;
 			rb.gravityScale = 100;
-			//transform.position = targetGround.point + new Vector2(0, GetComponent<Collider2D>().bounds.extents.y);
+            //transform.position = targetGround.point + new Vector2(0, GetComponent<Collider2D>().bounds.extents.y);
 
-			while (!IsGround)
-				yield return null;
-
+            while (!IsGround)
+            {
+                foreach (var enemy in Physics2D.OverlapCircleAll(transform.position, 0.7f, 1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Enemy Ghost")))
+                {
+                    enemy.GetComponent<NormalEnemy>()?.GetDamagedToDeath();
+                }
+                yield return null;
+            }
 			playerAnimator.SetBool("isRunning", false);
 			playerAnimator.SetBool("isGround", IsGround);
 			rb.gravityScale = 1;
 			CameraController.Shake(0.2f, 0.5f);
 			SoundManager.inst.PlaySFX(gameObject, boomSFX);
-
-			foreach (var enemy in Physics2D.OverlapCircleAll(transform.position, 0.5f, 1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Enemy Ghost")))
+            
+			foreach (var enemy in Physics2D.OverlapCircleAll(transform.position, 1.0f, 1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Enemy Ghost")))
 			{
 				enemy.GetComponent<NormalEnemy>()?.GetDamagedToDeath();
 			}
-
 			yield return new WaitForSeconds(0.3f);
 			if (graceTimer <= 0)
 				gameObject.layer = LayerMask.NameToLayer("Player");
