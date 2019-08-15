@@ -27,6 +27,7 @@ public class Gun : MonoBehaviour
 
     public GameObject bulletPrefab;
     public GameObject bazookaPrefab;
+    Rigidbody2D rb;
 
     [SerializeField]
     private AudioClip shotSFX = null;
@@ -124,15 +125,15 @@ public class Gun : MonoBehaviour
         {
             case GunType.RIFLE:
                 Guntype = 0;
-                shotMethod = new RifleShotMethod(this, 3, 0.05f);
+                shotMethod = new RifleShotMethod(this, 3, 0.05f); //초당 60발
                 break;
             case GunType.SHOTGUN:
                 Guntype = 1;
-                shotMethod = new ShotgunShotMethod(this, 1, 1f);
+                shotMethod = new ShotgunShotMethod(this, 1, 0.6f); //초당 60발
                 break;
             case GunType.BAZOOKA:
                 Guntype = 2;
-                shotMethod = new BazookaShotMethod(this, 1, 0.5f);
+                shotMethod = new BazookaShotMethod(this, 1, 0.6f); //바주카 상태에서는 대쉬 봉인, 뒤로 반동 주고 싶음
                 break;
         }
     }
@@ -166,7 +167,6 @@ public class RifleShotMethod : ShotMethod
 
 public class ShotgunShotMethod : ShotMethod
 {
-    //TODO
     public ShotgunShotMethod(Gun gun, int bps, float cooltime)
     {
         this.gun = gun;
@@ -177,11 +177,11 @@ public class ShotgunShotMethod : ShotMethod
     public override void Shot(Vector2 direction)
     {
         Vector2 Original = direction;
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < 6; i++)
         {
             GameObject bullet = GameObject.Instantiate(gun.bulletPrefab);
             bullet.transform.position = gun.ShotPosition.position + new Vector3(0, UnityEngine.Random.Range(-0.01f, 0.01f));
-            direction = Quaternion.Euler(0,0,15f - (UnityEngine.Random.Range(5f,9f)*i)) * Original;
+            direction = Quaternion.Euler(0,0,20f - (UnityEngine.Random.Range(5f,9f)*i)) * Original;
             bullet.GetComponent<Rigidbody2D>().velocity = direction * 20f;
         }
     }
@@ -201,5 +201,6 @@ public class BazookaShotMethod : ShotMethod
         GameObject bullet = GameObject.Instantiate(gun.bazookaPrefab);
         bullet.transform.position = gun.ShotPosition.position + new Vector3(0, UnityEngine.Random.Range(-0.01f, 0.01f));
         bullet.GetComponent<Rigidbody2D>().velocity = direction * 20f;
+        
     }
 }

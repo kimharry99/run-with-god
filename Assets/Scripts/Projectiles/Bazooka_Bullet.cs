@@ -35,7 +35,7 @@ public class Bazooka_Bullet : Projectile
     private void Explode()
     {
         CameraController.Shake(0.1f, 0.5f);
-        Destroy(Instantiate(boomEffect,transform.position,transform.rotation),10);
+        Destroy(Instantiate(boomEffect,transform.position,transform.rotation),0.6f);
         SoundManager.inst.PlaySFX(gameObject, boomSFX);
         foreach (var enemy in Physics2D.OverlapCircleAll(transform.position, explodeRange, 1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Enemy Ghost")))
         {
