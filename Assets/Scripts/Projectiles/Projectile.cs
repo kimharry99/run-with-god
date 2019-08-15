@@ -41,7 +41,7 @@ public class Projectile : MonoBehaviour
 			case ProjectileType.PLAYER:
 				if (collision.tag.Contains("Enemy"))
 					collision.GetComponent<NormalEnemy>()?.GetDamaged(attack, transform.position, GetComponent<Rigidbody2D>().velocity);
-				if (collision.tag != "Player" && collision.tag != "Projectile" && !collision.isTrigger)
+				if (collision.tag != "Player" && collision.tag != "Projectile" && collision.tag != "Ground Passable" &&!collision.isTrigger)
 				{
 					StopAllCoroutines();
 					Destroy(gameObject);
