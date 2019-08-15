@@ -187,15 +187,12 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		{
 			Flip();
 		}
-
-		if (Input.GetButtonDown("Jump") && Input.GetButton("Vertical") && vertical <= -1)
-		{
-			if (IsGround)
-				StartCoroutine(JumpOff());
-			else
-				playerState.Transition("stamp");
-		}
-		else if (Input.GetButtonDown("Jump") && jumpCount > 0)
+        if (Input.GetButtonDown("Jump") && Input.GetButton("Vertical") && vertical <= -1)
+        {
+            if (IsGround)
+                StartCoroutine(JumpOff());
+        }
+        else if (Input.GetButtonDown("Jump") && jumpCount > 0)
 		{
 			rb.velocity += new Vector2(0, jumpSpeed - rb.velocity.y);
 			//rb.velocity +=  rb.velocity.y < 0 ? new Vector2(0, jumpSpeed - rb.velocity.y) : new Vector2(0, jumpSpeed);
@@ -223,7 +220,15 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 	private void PlayerAttackControl()
 	{
-		if (Input.GetKeyDown(KeyCode.A) && ExplodeItem > 0)
+        float vertical = Input.GetAxis("Vertical");
+        if (Input.GetKeyDown(KeyCode.A) && Input.GetButton("Vertical") && vertical <= -1)
+        {
+            if (IsGround)
+                StartCoroutine(JumpOff());
+            else
+                playerState.Transition("stamp");
+        }
+        else if (Input.GetKeyDown(KeyCode.A) && ExplodeItem > 0)
 		{
 			ExplodeItem--;
 			Explode();
@@ -246,7 +251,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		}
 		gameObject.layer = LayerMask.NameToLayer("Player");
 		graceTimer = 0;
-		Life = 3;
+		Life = 4;
 		ExplodeItem = 5;
 	}
 
@@ -511,7 +516,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 				enemy.GetComponent<NormalEnemy>()?.GetDamagedToDeath();
 			}
 
-			yield return new WaitForSeconds(1);
+			yield return new WaitForSeconds(0.3f);
 			if (graceTimer <= 0)
 				gameObject.layer = LayerMask.NameToLayer("Player");
 		}
