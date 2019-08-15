@@ -73,6 +73,10 @@ public class Gun : MonoBehaviour
                 else if (Guntype == 2)
                     SwitchGun(GunType.RIFLE);
             }
+            if (Input.GetButton("Fire"))
+            {
+                Shot();
+            }
         };
 
         State fire = new State();
@@ -87,7 +91,7 @@ public class Gun : MonoBehaviour
         fire.StateUpdate += delegate
         {
             shotCooltime -= Time.deltaTime;
-            if (shotCooltime <= 0)
+            if (shotCooltime <= 0 && shotCount > 0)
             {
                 gunFireLight.intensity = 10;
                 shotMethod.Shot(arm.rotation * Direction);
@@ -98,9 +102,14 @@ public class Gun : MonoBehaviour
             }
             if (shotCount <= 0)
             {
-                gunState.Transition("idle");
+                if (shotMethod.GetType() == typeof(RifleShotMethod) || Input.GetButtonUp("Fire"))
+                {
+                    Debug.Log((shotMethod.GetType() == typeof(RifleShotMethod)) + " " + Input.GetButtonUp("Fire"));
+                    gunState.Transition("idle");
+                }
             }
         };
+
         gunState.AddNewState("idle", idle);
         gunState.AddNewState("fire", fire);
         gunState.Transition("idle");
@@ -138,6 +147,8 @@ public class Gun : MonoBehaviour
         }
     }
 }
+
+#region ShotMethod
 
 public abstract class ShotMethod
 {
@@ -204,3 +215,24 @@ public class BazookaShotMethod : ShotMethod
         
     }
 }
+
+#endregion
+
+/*
+#region FireMode
+public abstract class FireMode
+{
+
+}
+
+public class FireModeOnce : FireMode
+{
+
+}
+
+public class FireModeContinuous : FireMode
+{
+
+}
+#endregion
+*/

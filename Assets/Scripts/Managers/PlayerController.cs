@@ -229,10 +229,12 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			Explode();
 		}
 
+        /*
 		if (Input.GetButtonDown("Fire"))
 		{
             gun.Shot();
 		}
+        */
 	}
 
 	#endregion
