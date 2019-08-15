@@ -12,6 +12,7 @@ public class Shield : NormalEnemy
 
     protected override void OnDead()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
+        //Destroy(gameObject);
     }
 }
