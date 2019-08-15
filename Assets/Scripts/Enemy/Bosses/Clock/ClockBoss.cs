@@ -10,10 +10,13 @@ public class ClockBoss : NormalEnemy
 
     public Transform handOrigin;
     public ClockHand hourHand, minuteHand, secondHand;
-    public float shakeTimer = 5f;
-    public float changeTimeSpeedTimer = 10f;
+    public float patternTimer = 5f;
 
     private Animator anim;
+
+    private int phase = 0;
+
+    public AnimationCurve handCurve;
 
     private void Awake()
     {
@@ -24,48 +27,65 @@ public class ClockBoss : NormalEnemy
     protected override void Update()
     {
         base.Update();
-        if (shakeTimer > 0)
-            shakeTimer -= Time.deltaTime;
-        if (changeTimeSpeedTimer > 0)
-            changeTimeSpeedTimer -= Time.deltaTime;
+        if (phase == 0 && Health < 700)
+        {
+            stateMachine.Transition("p1to2");
+        }
+        else if (phase == 1 && Health < 400)
+        {
+            stateMachine.Transition("p2to3");
+        }
     }
 
     protected override void InitEnemy()
     {
         InGameUIManager.inst.UpdateBossHelthUI(1);
 
-        State phase1 = new State();
-        State phase2 = new State();
-        State phase3 = new State();
-
         State P1To2 = new State();
         State P2To3 = new State();
 
+        State idle = new State();
+        State pattern1 = new State();
+        State pattern2 = new State();
+        State pattern3 = new State();
+        State pattern4 = new State();
+        State pattern5 = new State();
+        State pattern6 = new State();
 
-        phase1.StateUpdate += delegate
+        idle.Enter += delegate
         {
+            patternTimer = Random.Range(10f - phase, 15f - 2 * phase);
+        };
 
-            if (shakeTimer <= 0)
+        idle.StateUpdate += delegate
+        {
+            if (patternTimer > 0)
             {
-                minuteHand.Shake();
-                secondHand.Shake();
-                shakeTimer = Random.Range(10, 15);
+                patternTimer -= Time.deltaTime;
+                if (patternTimer <= 0)
+                {
+                    stateMachine.Transition("pattern" + Random.Range(1, 3).ToString());
+                }
             }
-            if (changeTimeSpeedTimer <= 0)
-            {
-                ChangeTimeSpeed();
-            }
-            if (Health < 700)
-            {
-                stateMachine.Transition("p1to2");
-            }
+        };
+
+        pattern1.Enter += delegate
+        {
+            minuteHand.Shake();
+            secondHand.Shake();
+        };
+
+        pattern2.Enter += delegate
+        {
+            ChangeTimeSpeed();
+            stateMachine.Transition("idle");
         };
 
         P1To2.Enter += delegate {
             hourHand.DisableHand();
             minuteHand.MoveToOrigin(handOrigin);
             anim.SetTrigger("NextPhase");
-            StartCoroutine(MovePhaseRoutine("phase2"));
+            StartCoroutine(MovePhaseRoutine());
         };
 
         P1To2.Exit += delegate
@@ -73,30 +93,12 @@ public class ClockBoss : NormalEnemy
             hourHand.EnableHand();
         };
 
-        phase2.StateUpdate += delegate
-        {
-            if (shakeTimer <= 0)
-            {
-                minuteHand.Shake();
-                secondHand.Shake();
-                shakeTimer = Random.Range(10, 15);
-            }
-            if (changeTimeSpeedTimer <= 0)
-            {
-                ChangeTimeSpeed();
-            }
-            if (Health < 400)
-            {
-                stateMachine.Transition("p2to3");
-            }
-        };
-
         P2To3.Enter += delegate {
             hourHand.DisableHand();
             minuteHand.DisableHand();
             secondHand.MoveToOrigin(handOrigin);
             anim.SetTrigger("NextPhase");
-            StartCoroutine(MovePhaseRoutine("phase3"));
+            StartCoroutine(MovePhaseRoutine());
         };
 
         P2To3.Exit += delegate
@@ -105,33 +107,18 @@ public class ClockBoss : NormalEnemy
             minuteHand.EnableHand();
         };
 
-        phase3.Enter += delegate
-        {
-
-        };
-
-        phase3.StateUpdate += delegate
-        {
-            if (changeTimeSpeedTimer <= 0)
-            {
-                ChangeTimeSpeed();
-            }
-            if (shakeTimer <= 0)
-            {
-                minuteHand.Shake();
-                secondHand.Shake();
-                shakeTimer = Random.Range(10, 15);
-            }
-        };
-
-        stateMachine.AddNewState("phase1", phase1);
-        stateMachine.AddNewState("phase2", phase2);
-        stateMachine.AddNewState("phase3", phase3);
+        stateMachine.AddNewState("idle", idle);
+        stateMachine.AddNewState("pattern1", pattern1);
+        stateMachine.AddNewState("pattern2", pattern2);
+        stateMachine.AddNewState("pattern3", pattern3);
+        stateMachine.AddNewState("pattern4", pattern4);
+        stateMachine.AddNewState("pattern5", pattern5);
+        stateMachine.AddNewState("pattern6", pattern6);
 
         stateMachine.AddNewState("p1to2", P1To2);
         stateMachine.AddNewState("p2to3", P2To3);
 
-        stateMachine.Transition("phase1");
+        stateMachine.Transition("idle");
     }
 
     private void RotateHand(Transform target, Vector3 axis, float speed)
@@ -146,10 +133,11 @@ public class ClockBoss : NormalEnemy
         bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
     }
 
-    private IEnumerator MovePhaseRoutine(string nextState)
+    private IEnumerator MovePhaseRoutine()
     {
+        ++phase;
         yield return new WaitForSeconds(3);
-        stateMachine.Transition(nextState);
+        stateMachine.Transition("idle");
     }
 
     private IEnumerator ShakeHand(Transform hand)
@@ -198,7 +186,6 @@ public class ClockBoss : NormalEnemy
         {
             StartCoroutine(ChangeTimeSpeedRoutine(2f));
         }
-        changeTimeSpeedTimer = 5f;
     }
 
     private IEnumerator ChangeTimeSpeedRoutine(float speed)
