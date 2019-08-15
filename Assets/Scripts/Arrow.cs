@@ -35,6 +35,11 @@ public class Arrow : Projectile
                     StopAllCoroutines();
                     Destroy(gameObject);
                 }
+                if (collision.tag == "Ground" || collision.tag == "Wall")
+                {
+                    StopAllCoroutines();
+                    Destroy(gameObject);
+                }
                 break;
         }
     }

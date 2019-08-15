@@ -8,7 +8,7 @@ public class SkeletonArcher : NormalEnemy
 
 	[SerializeField]
     float shotCooltime;
-    float currentCooltime = 0;
+    float currentCooltime = 0.2f;
 
     protected override void InitEnemy()
     {
