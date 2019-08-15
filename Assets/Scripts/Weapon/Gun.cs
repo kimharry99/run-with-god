@@ -104,7 +104,6 @@ public class Gun : MonoBehaviour
             {
                 if (shotMethod.GetType() == typeof(RifleShotMethod) || Input.GetButtonUp("Fire"))
                 {
-                    Debug.Log((shotMethod.GetType() == typeof(RifleShotMethod)) + " " + Input.GetButtonUp("Fire"));
                     gunState.Transition("idle");
                 }
             }

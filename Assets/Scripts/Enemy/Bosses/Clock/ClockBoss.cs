@@ -9,24 +9,21 @@ public class ClockBoss : NormalEnemy
 	public static float timeSpeed = 1.0f;
 
     public Transform handOrigin;
-    public Transform hourHand, minuteHand, secondHand;
-    public Transform hourShot, minuteShot, secondShot;
-    public GameObject hourBulletPrefab, minBulletPrefab, secBulletPrefab;
-    public float hourShotTimer, minShotTimer, secShotTimer;
+    public ClockHand hourHand, minuteHand, secondHand;
     public float shakeTimer = 5f;
     public float changeTimeSpeedTimer = 10f;
 
-    private Coroutine minuteShake, secondShake;
+    private Animator anim;
 
-	protected override void Update()
+    private void Awake()
+    {
+        anim = GetComponent<Animator>();
+        hourHand.EnableHand();
+    }
+
+    protected override void Update()
     {
         base.Update();
-        if (hourShotTimer > 0)
-            hourShotTimer -= Time.deltaTime;
-        if (minShotTimer > 0)
-            minShotTimer -= Time.deltaTime;
-        if (secShotTimer > 0)
-            secShotTimer -= Time.deltaTime;
         if (shakeTimer > 0)
             shakeTimer -= Time.deltaTime;
         if (changeTimeSpeedTimer > 0)
@@ -47,16 +44,11 @@ public class ClockBoss : NormalEnemy
 
         phase1.StateUpdate += delegate
         {
-            RotateHand(hourHand, Vector3.back, 40);
-            if (hourShotTimer <= 0)
-            {
-                ShotBullet(hourHand, hourShot, hourBulletPrefab);
-                hourShotTimer = 0.2f;
-            }
+
             if (shakeTimer <= 0)
             {
-                secondShake = StartCoroutine(ShakeHand(secondHand));
-                minuteShake = StartCoroutine(ShakeHand(minuteHand));
+                minuteHand.Shake();
+                secondHand.Shake();
                 shakeTimer = Random.Range(10, 15);
             }
             if (changeTimeSpeedTimer <= 0)
@@ -69,28 +61,24 @@ public class ClockBoss : NormalEnemy
             }
         };
 
-        phase1.Exit += delegate { if (minuteShake != null) StopCoroutine(minuteShake); };
+        P1To2.Enter += delegate {
+            hourHand.DisableHand();
+            minuteHand.MoveToOrigin(handOrigin);
+            anim.SetTrigger("NextPhase");
+            StartCoroutine(MovePhaseRoutine("phase2"));
+        };
 
-        P1To2.Enter += delegate { StartCoroutine(MovePhaseRoutine(minuteHand, handOrigin, "phase2")); };
+        P1To2.Exit += delegate
+        {
+            hourHand.EnableHand();
+        };
 
         phase2.StateUpdate += delegate
         {
-            RotateHand(hourHand, Vector3.back, 40);
-            RotateHand(minuteHand, Vector3.back, 60);
-            if (hourShotTimer <= 0)
-            {
-                ShotBullet(hourHand, hourShot, hourBulletPrefab);
-                hourShotTimer = 0.2f;
-            }
-            if (minShotTimer <= 0)
-            {
-                ShotBullet(minuteHand, minuteShot, minBulletPrefab);
-                minShotTimer = 0.2f;
-            }
             if (shakeTimer <= 0)
             {
-                StartCoroutine(ShakeHand(secondHand));
-                StartCoroutine(ShakeHand(minuteHand));
+                minuteHand.Shake();
+                secondHand.Shake();
                 shakeTimer = Random.Range(10, 15);
             }
             if (changeTimeSpeedTimer <= 0)
@@ -103,46 +91,35 @@ public class ClockBoss : NormalEnemy
             }
         };
 
-        phase2.Exit += delegate { if (secondShake != null) StopCoroutine(secondShake); };
+        P2To3.Enter += delegate {
+            hourHand.DisableHand();
+            minuteHand.DisableHand();
+            secondHand.MoveToOrigin(handOrigin);
+            anim.SetTrigger("NextPhase");
+            StartCoroutine(MovePhaseRoutine("phase3"));
+        };
 
-        P2To3.Enter += delegate { StartCoroutine(MovePhaseRoutine(secondHand, handOrigin, "phase3")); };
+        P2To3.Exit += delegate
+        {
+            hourHand.EnableHand();
+            minuteHand.EnableHand();
+        };
 
         phase3.Enter += delegate
         {
-            hourShotTimer = 2f;
-            minShotTimer = 1.5f;
-            secShotTimer = 1f;
+
         };
 
         phase3.StateUpdate += delegate
         {
-            RotateHand(hourHand, Vector3.back, 40);
-            RotateHand(minuteHand, Vector3.back, 60);
-            RotateHand(secondHand, Vector3.back, 120);
-
-            if (hourShotTimer <= 0)
-            {
-                ShotBullet(hourHand, hourShot, hourBulletPrefab);
-                hourShotTimer = 0.2f;
-            }
-            if (minShotTimer <= 0)
-            {
-                ShotBullet(minuteHand, minuteShot, minBulletPrefab);
-                minShotTimer = 0.2f;
-            }
-            if (secShotTimer <= 0)
-            {
-                ShotBullet(secondHand, secondShot, secBulletPrefab);
-                secShotTimer = 0.2f;
-            }
             if (changeTimeSpeedTimer <= 0)
             {
                 ChangeTimeSpeed();
             }
             if (shakeTimer <= 0)
             {
-                StartCoroutine(ShakeHand(secondHand));
-                StartCoroutine(ShakeHand(minuteHand));
+                minuteHand.Shake();
+                secondHand.Shake();
                 shakeTimer = Random.Range(10, 15);
             }
         };
@@ -169,16 +146,9 @@ public class ClockBoss : NormalEnemy
         bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
     }
 
-    private IEnumerator MovePhaseRoutine(Transform hand, Transform to, string nextState)
+    private IEnumerator MovePhaseRoutine(string nextState)
     {
-        Vector3 oriPos = hand.position;
-        Quaternion oriRot = hand.rotation;
-        for (float t = 0; t <= 2.5f; t += Time.deltaTime)
-        {
-            hand.position = Vector3.Lerp(oriPos, to.position, t / 2.5f);
-            hand.rotation = Quaternion.Lerp(oriRot, to.rotation, t / 2.5f);
-            yield return null;
-        }
+        yield return new WaitForSeconds(3);
         stateMachine.Transition(nextState);
     }
 
