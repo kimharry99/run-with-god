@@ -325,7 +325,7 @@ public abstract class NormalEnemy : MonoBehaviour
     protected bool DetectPlayer(Vector2 size)  //플레이어가 시야 범위 내에 있는지를 반환하는 함수입니다.
     {
         bool ret = false;
-        Collider2D find = Physics2D.OverlapBox(transform.position, size, 0, 1 << LayerMask.NameToLayer("Player"));
+        Collider2D find = Physics2D.OverlapBox(transform.position, size, 0, 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Player Grace"));
         //(DistanceWithPlayer() <= range * unit);
         if (find != null)
                 ret = true;
