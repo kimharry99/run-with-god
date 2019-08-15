@@ -6,7 +6,8 @@ using UnityEngine;
 public enum GunType
 {
     RIFLE,
-    SHOTGUN
+    SHOTGUN,
+    BAZOOKA
 }
 
 public class Gun : MonoBehaviour
@@ -24,6 +25,7 @@ public class Gun : MonoBehaviour
     private Animator playerAnimator;
 
     public GameObject bulletPrefab;
+    public GameObject bazookaPrefab;
 
     [SerializeField]
     private AudioClip shotSFX = null;
@@ -34,7 +36,7 @@ public class Gun : MonoBehaviour
 
     private void Awake()
     {
-        SwitchGun(GunType.RIFLE);
+        SwitchGun(GunType.SHOTGUN);
         playerAnimator = GetComponent<Animator>();
         arm = transform.Find("Arm");
         ShotPosition = arm.Find("ShotPosition");
@@ -110,7 +112,10 @@ public class Gun : MonoBehaviour
                 shotMethod = new RifleShotMethod(this, 3, 0.05f);
                 break;
             case GunType.SHOTGUN:
-                //TODO
+                shotMethod = new ShotgunShotMethod(this, 1, 1f);
+                break;
+            case GunType.BAZOOKA:
+                shotMethod = new BazookaShotMethod(this, 1, 0.5f);
                 break;
         }
     }
@@ -142,24 +147,42 @@ public class RifleShotMethod : ShotMethod
     }
 }
 
-public class ShotgunShot : ShotMethod
+public class ShotgunShotMethod : ShotMethod
 {
     //TODO
-    public ShotgunShot()
+    public ShotgunShotMethod(Gun gun, int bps, float cooltime)
     {
-
+        this.gun = gun;
+        bulletsPerShot = bps;
+        shotCooltime = cooltime;
     }
 
     public override void Shot(Vector2 direction)
     {
-        /*
-         
-         for(int i = 0; i < 6; i++)
+        Vector2 Original = direction;
+        for(int i = 0; i < 5; i++)
         {
-            GameObject bullet = Instantiate(bulletPrefab);
-            bullet.transform.position = shotPosition.position + new Vector3(0, UnityEngine.Random.Range(-0.01f, 0.01f));
-            bullet.GetComponent<Rigidbody2D>().velocity = ShotGunDirection() * 25f;
+            GameObject bullet = GameObject.Instantiate(gun.bulletPrefab);
+            bullet.transform.position = gun.ShotPosition.position + new Vector3(0, UnityEngine.Random.Range(-0.01f, 0.01f));
+            direction = Quaternion.Euler(0,0,15f - (UnityEngine.Random.Range(5f,9f)*i)) * Original;
+            bullet.GetComponent<Rigidbody2D>().velocity = direction * 20f;
         }
-        */
+    }
+}
+
+public class BazookaShotMethod : ShotMethod
+{
+    public BazookaShotMethod(Gun gun, int bps, float cooltime)
+    {
+        this.gun = gun;
+        bulletsPerShot = bps;
+        shotCooltime = cooltime;
+    }
+
+    public override void Shot(Vector2 direction)
+    {
+        GameObject bullet = GameObject.Instantiate(gun.bazookaPrefab);
+        bullet.transform.position = gun.ShotPosition.position + new Vector3(0, UnityEngine.Random.Range(-0.01f, 0.01f));
+        bullet.GetComponent<Rigidbody2D>().velocity = direction * 20f;
     }
 }
