@@ -251,7 +251,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 
         //switch(SelectedTrust.tier)
         //for debug
-        switch (1)
+        switch (2)
         {
             case 0:
                 difficultyCount[0] = 6;
