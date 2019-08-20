@@ -85,14 +85,13 @@ public class GameManager : SingletonBehaviour<GameManager>
 			}
 			unplayedTrusts[tuple].Add(trust);
 		}
-
+        
         foreach (var block in Resources.LoadAll<GameObject>("MapPrefabs"))
         {
             if (block.GetComponent<MapBlock>() == null)
                 continue;
             mapBlockPrefabs.Add(block);
         }
-
 		SceneManager.sceneLoaded += OnSceneLoaded;
 	}
 
@@ -243,14 +242,60 @@ public class GameManager : SingletonBehaviour<GameManager>
 
 	private void GenerateMap()
 	{
+        int[] difficultyCount = { 0, 0, 0, 0 };
+        
 		UnityEngine.Random.InitState(mapSeed);
 
 		MapBlock prevBlock = Instantiate(firstMapBlockPrefab).GetComponent<MapBlock>();
 		PlayerController.inst.transform.position = prevBlock.startPoint.position;
 
-		for (int i = 0; i < 10; ++i)
+        //switch(SelectedTrust.tier)
+        //for debug
+        switch (1)
+        {
+            case 0:
+                difficultyCount[0] = 6;
+                difficultyCount[1] = 2;
+                break;
+            case 1:
+            case -1:
+                difficultyCount[0] = 4;
+                difficultyCount[1] = 3;
+                difficultyCount[2] = 1;
+                break;
+            case 2:
+            case -2:
+                difficultyCount[0] = 1;
+                difficultyCount[1] = 5;
+                difficultyCount[2] = 2;
+                break;
+            case 3:
+            case -3:
+                difficultyCount[0] = 0;
+                difficultyCount[1] = 4;
+                difficultyCount[2] = 3;
+                difficultyCount[3] = 1;
+                break;
+            default:
+                difficultyCount[0] = 0;
+                difficultyCount[1] = 2;
+                difficultyCount[2] = 4;
+                difficultyCount[3] = 2;
+                break;
+        }
+
+        for (int i = 0; i < 8; ++i)
 		{
-			int rand = UnityEngine.Random.Range(0,mapBlockPrefabs.Count);
+            int rand = 0;
+            for(bool is1=true;is1;)
+            {
+                rand = UnityEngine.Random.Range(0,mapBlockPrefabs.Count);
+                if (difficultyCount[mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty] > 0)
+                {
+                    difficultyCount[mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty]--;
+                    is1 = false;
+                }
+            }
 			MapBlock curBlock = Instantiate(mapBlockPrefabs[rand]).GetComponent<MapBlock>();
 			curBlock.ConnectNextTo(prevBlock);
 			prevBlock = curBlock;

@@ -5,6 +5,7 @@ using UnityEngine;
 public class MapBlock : MonoBehaviour
 {
 	public Transform leftJoint, rightJoint, startPoint;
+    public int difficulty=0;
 
 	PlayerPrefs prefs;
 	public void ConnectNextTo(MapBlock block)
