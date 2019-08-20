@@ -34,6 +34,12 @@ public class Projectile : MonoBehaviour
 		this.type = type;
 	}
 
+    public void Init(Vector2 velocity, float reach, int attack, ProjectileType type)
+    {
+        GetComponent<Rigidbody2D>().velocity = velocity;
+        Init(reach, attack, type);
+    }
+
 	protected virtual void OnTriggerEnter2D(Collider2D collision)
 	{
 		switch (type)

@@ -104,7 +104,7 @@ public class Butcher : NormalEnemy
 
 	private IEnumerator AttackRoutine()
 	{
-		yield return attackRange.Activate(0.3f);
+		yield return attackRange.Activate(0.3f, true);
 		yield return new WaitForSeconds(0.2f);
 		stateMachine.Transition("move");
 	}
@@ -198,7 +198,7 @@ public class Butcher : NormalEnemy
 
 	private IEnumerator SummonTombstonesRoutine()
 	{
-		yield return shockwaveRange.Activate(1f);
+		yield return shockwaveRange.Activate(1f, true);
 		CameraController.Shake(0.2f, 0.5f);
 		yield return new WaitForSeconds(2f);
 		tombstones[0].Summon();
