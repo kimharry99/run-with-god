@@ -14,6 +14,7 @@ public class CameraController : MonoBehaviour
 	private Transform target;
     private Rigidbody2D targetRb;
 	private float offsetX = 0.5f, offsetY = 0f, offsetZ = -9;
+    private float timeCount;
 
 	public Material shockwave, chromatic;
 
@@ -30,13 +31,19 @@ public class CameraController : MonoBehaviour
 		ShockWave = ShockwaveEffect;
 		ChromaticAberration = ChromaticAberrationEffect;
         HitEffect = PlayHitEffect;
+        timeCount = 0;
 	}
 
 	private void LateUpdate()
 	{
         //offsetY = Input.GetAxis("Vertical") * 0.5f;
         //offsetX = Input.GetAxis("Horizontal") * 1f;
-        transform.position = Vector3.Lerp(transform.position, target.position + new Vector3(offsetX, offsetY, offsetZ), 0.1f);
+        timeCount += Time.deltaTime;
+        if (timeCount > 0.01f)
+        {
+            transform.position = Vector3.Lerp(transform.position, target.position + new Vector3(offsetX, offsetY, offsetZ), 0.1f);
+            timeCount = 0;
+        }
 	}
 
     public void SetCameraOffset(float x, float y)
@@ -54,12 +61,17 @@ public class CameraController : MonoBehaviour
 	{
 		float oriAmount = amount;
 		float oriTime = time;
-		for (float t = 0; t < time; t += Time.deltaTime)
+        float shakingTimeCount=0;
+		for (float t = 0; t < time; t += Time.deltaTime,shakingTimeCount+=Time.deltaTime)
 		{
-			Vector2 randVec = UnityEngine.Random.insideUnitCircle;
-			amount = oriAmount * ((time - t) / oriTime);
-			transform.position += new Vector3(randVec.x, randVec.y) * amount;
-			yield return null;
+            if (shakingTimeCount > 0.01)
+            {
+                Vector2 randVec = UnityEngine.Random.insideUnitCircle;
+                amount = oriAmount * ((time - t) / oriTime);
+                transform.position += new Vector3(randVec.x, randVec.y) * amount;
+                shakingTimeCount = 0;
+                yield return null;
+            }
 		}
 	}
 
