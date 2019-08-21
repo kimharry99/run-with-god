@@ -17,7 +17,7 @@ public class TrustAssetEditor : EditorWindow
 	EnemyType enemyType;
 	int killCount;
     #endregion
-    #region ClearTimeTrust & OnGroundTrust
+    #region ClearTimeTrust & OnGroundTrust & LeftMoveTrust
     float needTime;
     #endregion
     #region UseBulletTrust
@@ -35,6 +35,9 @@ public class TrustAssetEditor : EditorWindow
     #endregion
     #region HitCountTrust
     int needHit;
+    #endregion
+    #region LeftSeeTrust
+    float limitSeeTime;
     #endregion
 
     [MenuItem("Editors/신탁 어셋 만들기")]
@@ -106,6 +109,14 @@ public class TrustAssetEditor : EditorWindow
         else if (script.GetClass().Name == "HitCountTrust")
         {
             needHit = EditorGUILayout.IntField("맞는 횟수", needHit);
+        }
+        else if (script.GetClass().Name == "LeftMoveTrust")
+        {
+            needTime = EditorGUILayout.FloatField("필요 시간(s)", needTime);
+        }
+        else if(script.GetClass().Name == "LeftSeeTrust")
+        {
+            limitSeeTime = EditorGUILayout.FloatField("제한 시간(s)", limitSeeTime);
         }
 
 		if (GUILayout.Button("생성"))
@@ -239,6 +250,32 @@ public class TrustAssetEditor : EditorWindow
                 trust.tier = trustTier;
 
                 trust.needHitCount = needHit;
+
+                AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
+            }
+            else if (script.GetClass().Name == "LeftMoveTrust")
+            {
+                LeftMoveTrust trust = CreateInstance(script.GetClass()) as LeftMoveTrust;
+
+                trust.trustName = trustName;
+                trust.description = trustDescription;
+                trust.trustType = trustType;
+                trust.tier = trustTier;
+
+                trust.needTime = needTime;
+
+                AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
+            }
+            else if(script.GetClass().Name == "LeftSeeTrust")
+            {
+                LeftSeeTrust trust = CreateInstance(script.GetClass()) as LeftSeeTrust;
+
+                trust.trustName = trustName;
+                trust.description = trustDescription;
+                trust.trustType = trustType;
+                trust.tier = trustTier;
+
+                trust.limitTime = limitSeeTime;
 
                 AssetDatabase.CreateAsset(trust, "Assets/Resources/Trusts/" + assetName + ".asset");
             }
