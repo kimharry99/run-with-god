@@ -85,7 +85,6 @@ public class GameManager : SingletonBehaviour<GameManager>
 			}
 			unplayedTrusts[tuple].Add(trust);
 		}
-        
         foreach (var block in Resources.LoadAll<GameObject>("MapPrefabs"))
         {
             if (block.GetComponent<MapBlock>() == null)
@@ -251,7 +250,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 
         //switch(SelectedTrust.tier)
         //for debug
-        switch (2)
+        switch (1)
         {
             case 0:
                 difficultyCount[0] = 6;
