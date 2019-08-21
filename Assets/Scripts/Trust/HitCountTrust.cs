@@ -17,20 +17,12 @@ public class HitCountTrust : Trust
 
     public override string GetDescription()
     {
-        string desc = "";
-        foreach (var substring in description.Split(' ', '\n'))
-        {
-            if (substring == "%need_hit")
-            {
-                desc += needHitCount;
-            }
-            else
-            {
-                desc += substring;
-            }
-            desc += " ";
-        }
-        return desc;
+        return needHitCount.ToString() + "번 맞으시오.";
+    }
+
+    public override string GetName()
+    {
+        return "맞기";
     }
 
     public override void Init()

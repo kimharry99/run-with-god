@@ -39,20 +39,12 @@ public class OnGroundTrust : Trust
 
     public override string GetDescription()
     {
-        string desc = "";
-        foreach (var substring in description.Split(' ', '\n'))
-        {
-            if (substring == "%need_time")
-            {
-                desc += limitTime;
-            }
-            else
-            {
-                desc += substring;
-            }
-            desc += " ";
-        }
-        return desc;
+        return "지면에서 " + limitTime.ToString() + "초 이상 떨어져 있지 마시오.";
+    }
+
+    public override string GetName()
+    {
+        return "땅에서 떨어지기 금지";
     }
 
     public override bool IsDone { get { return isDone; } }

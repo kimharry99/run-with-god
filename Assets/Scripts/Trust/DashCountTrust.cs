@@ -15,20 +15,12 @@ public class DashCountTrust : Trust
 
     public override string GetDescription()
     {
-        string desc = "";
-        foreach (var substring in description.Split(' ', '\n'))
-        {
-            if (substring == "%need_dash")
-            {
-                desc += needDashCount;
-            }
-            else
-            {
-                desc += substring;
-            }
-            desc += " ";
-        }
-        return desc;
+        return "대쉬를 " + needDashCount.ToString() + "번 하시오.";
+    }
+
+    public override string GetName()
+    {
+        return "대쉬하기";
     }
 
     public override bool IsDone { get { return dashCount >= needDashCount; } }
