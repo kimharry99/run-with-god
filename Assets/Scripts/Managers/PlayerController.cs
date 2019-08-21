@@ -215,7 +215,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			move.Play();
 		}
 
-		Camera.main.GetComponent<CameraController>()?.SetCameraOffset(horizontal * 1f, vertical * 0.5f);
+		Camera.main.GetComponent<CameraController>()?.SetCameraOffset(horizontal * 1f, vertical * 0.3f);
 	}
 
 	private void PlayerAttackControl()
