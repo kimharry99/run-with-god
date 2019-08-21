@@ -13,7 +13,7 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 
 	public GameObject[] lifeUIs = new GameObject[3];
     public GameObject[] ExplodeUIs = new GameObject[5];
-
+    public GameObject[] WeaponUIs = new GameObject[3];
 	public GameObject pauseUIPanel;
 
 	public Slider bossHealthUI;
@@ -64,6 +64,13 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
             lifeUIs[i].SetActive(lifeCount > i);
         }
 	}
+
+    public void UpdateWeapon(int Guntype)
+    {
+        for (int i = 0; i < 3; i++)
+            WeaponUIs[i].SetActive(false);
+        WeaponUIs[Guntype].SetActive(true);
+    }
 
     public void UpdateExplodeUI(int explodeCount)
     {

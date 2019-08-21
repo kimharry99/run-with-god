@@ -210,7 +210,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 0}
   shotSFX: {fileID: 0}
   deathSFX: {fileID: 0}
-  hitSFX: {fileID: 0}
+  hitSFX: {fileID: 8300000, guid: ac1e4ced1ea0e8c4d91bddeecf128736, type: 3}
 --- !u!1 &5370037026834105882
 GameObject:
   m_ObjectHideFlags: 0
@@ -319,8 +319,8 @@ MonoBehaviour:
   shotSpeed: 0
   bulletPrefab: {fileID: 0}
   shotSFX: {fileID: 0}
-  deathSFX: {fileID: 0}
-  hitSFX: {fileID: 0}
+  deathSFX: {fileID: 8300000, guid: 1c3b774a4d5c4754da0de46ab9acc3db, type: 3}
+  hitSFX: {fileID: 8300000, guid: 323719a5ed94eab42ab77e1bcdc20971, type: 3}
   Shield: {fileID: 5370037026008510438}
 --- !u!50 &5016139259429700632
 Rigidbody2D:
@@ -385,6 +385,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1205422381347208394, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
@@ -460,11 +465,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingOrder
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
-        type: 3}
-      propertyPath: playOnAwake
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf5b43d29a393fa4cb369c6042b07403, type: 3}

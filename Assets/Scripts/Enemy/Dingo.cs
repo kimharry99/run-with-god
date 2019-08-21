@@ -6,7 +6,8 @@ using UnityEngine.Events;
 public class Dingo : NormalEnemy
 {
 	public override EnemyType Type { get { return EnemyType.DINGO; } }
-	[SerializeField]
+    public AudioClip runSFX;
+    [SerializeField]
     private Transform landChecker;
     private Collider2D col;
     public bool IsGround
@@ -43,6 +44,8 @@ public class Dingo : NormalEnemy
         
         move.Enter += delegate
         {
+            if(runSFX != null)
+                SoundManager.inst.PlaySFX(gameObject, runSFX);
             dingoAnimator.SetBool("isRunning", true);
         };
         move.StateUpdate += FollowPlayer;
