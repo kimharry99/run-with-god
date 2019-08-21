@@ -18,6 +18,11 @@ public class ClockBoss : NormalEnemy
 
     public AnimationCurve handCurve;
 
+	[SerializeField]
+	private GameObject traps;
+	[SerializeField]
+	private HitRange trapRange;
+
     private void Awake()
     {
         anim = GetComponent<Animator>();
@@ -91,6 +96,7 @@ public class ClockBoss : NormalEnemy
         P1To2.Exit += delegate
         {
             hourHand.EnableHand();
+			StartCoroutine(ActiveTrapRoutine());
         };
 
         P2To3.Enter += delegate {
@@ -197,6 +203,12 @@ public class ClockBoss : NormalEnemy
             yield return null;
         }
     }
+
+	private IEnumerator ActiveTrapRoutine()
+	{
+		yield return trapRange.Activate(3);
+		traps.SetActive(true);
+	}
 
 	public override void GetDamaged(int damage)
 	{

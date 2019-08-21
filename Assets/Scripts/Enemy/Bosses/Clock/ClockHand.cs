@@ -38,7 +38,7 @@ public class ClockHand : MonoBehaviour
         float angle = Mathf.Deg2Rad * (transform.rotation.eulerAngles.z + 90);
         GameObject projectile = Instantiate(projectilePrefab, shotOrigin.position, transform.rotation);
         projectile.GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
-        shotTimer = 0.3f;
+        shotTimer = 0.15f;
     }
 
     public void EnableHand()

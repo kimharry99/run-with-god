@@ -30,7 +30,7 @@ public class Gun : MonoBehaviour
     Rigidbody2D rb;
 
     [SerializeField]
-    private AudioClip shotSFX = null;
+    private AudioSource shot = null;
     [SerializeField]
     private Light gunFireLight;
 
@@ -98,7 +98,7 @@ public class Gun : MonoBehaviour
                 shotMethod.Shot(arm.rotation * Direction);
                 shotCount--;
                 shotCooltime = shotMethod.shotCooltime;
-                SoundManager.inst.PlaySFX(gameObject, shotSFX);
+				shot.Play();
                 OnShotBullet?.Invoke();
             }
             if (shotCount <= 0)

@@ -86,8 +86,9 @@ public abstract class NormalEnemy : MonoBehaviour
     protected int shotSpeed;
     public GameObject bulletPrefab;
     [SerializeField]
-    private AudioClip shotSFX, deathSFX, hitSFX;
-    
+    private AudioClip shotSFX, deathSFX;
+	[SerializeField]
+	private AudioSource hit;
 
     #endregion
 
@@ -131,8 +132,7 @@ public abstract class NormalEnemy : MonoBehaviour
     protected abstract void InitEnemy();
 	public virtual void GetDamaged(int damage)
 	{
-        if (hitSFX != null)
-            SoundManager.inst.PlaySFX(gameObject, hitSFX, 1);
+		hit?.Play();
         if (isInvincibe)
             return;
 
