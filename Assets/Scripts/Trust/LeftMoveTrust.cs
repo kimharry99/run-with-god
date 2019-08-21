@@ -38,20 +38,12 @@ public class LeftMoveTrust : Trust
 
     public override string GetDescription()
     {
-        string desc = "";
-        foreach (var substring in description.Split(' ', '\n'))
-        {
-            if (substring == "%need_time")
-            {
-                desc += needTime;
-            }
-            else
-            {
-                desc += substring;
-            }
-            desc += " ";
-        }
-        return desc;
+        return "왼쪽으로 " + needTime.ToString() + "초 이상 이동하시오.";
+    }
+
+    public override string GetName()
+    {
+        return "왼쪽으로 이동";
     }
 
     public override string TrustToText()

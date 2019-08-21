@@ -11,28 +11,16 @@ public class KillCountTrust : Trust
 	public override bool IsDone { get { return killCount >= needKillCount; } }
 
 	public override string GetDescription()
-	{
-		string desc = "";
-		foreach (var substring in description.Split(' ', '\n'))
-		{
-			if (substring == "%monster_name")
-			{
-				desc += NormalEnemy.TypeToName(enemyType);
-			}
-			else if (substring == "%monster_killcount")
-			{
-				desc += needKillCount;
-			}
-			else
-			{
-				desc += substring;
-			}
-			desc += " ";
-		}
-		return desc;
+    {
+        return NormalEnemy.TypeToName(enemyType) + "를(을) " + needKillCount.ToString() + "마리 처치하시오.";
 	}
 
-	public override void Init()
+    public override string GetName()
+    {
+        return NormalEnemy.TypeToName(enemyType) + " 처치";
+    }
+
+    public override void Init()
 	{
 		killCount = 0;
 		GameManager.inst.OnEnemyKilled += KillCheck;

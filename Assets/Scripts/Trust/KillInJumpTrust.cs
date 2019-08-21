@@ -11,22 +11,13 @@ public class KillInJumpTrust : Trust
 
     public override string GetDescription()
     {
-        string desc = "";
-        foreach (var substring in description.Split(' ', '\n'))
-        {
-            if (substring == "%monster_killcount")
-            {
-                desc += needKillCount;
-            }
-            else
-            {
-                desc += substring;
-            }
-            desc += " ";
-        }
-        return desc;
+        return "공중에서 " + needKillCount.ToString() + "마리의 몬스터를 처치하시오.";
     }
 
+    public override string GetName()
+    {
+        return "공중에서 몬스터 처치";
+    }
     public override void Init()
     {
         killCount = 0;

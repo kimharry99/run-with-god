@@ -9,8 +9,6 @@ public class TrustAssetEditor : EditorWindow
 	MonoScript script;
 	string assetName;
 	TrustType trustType;
-	string trustName;
-	string trustDescription;
 	int trustTier;
 
 	#region KillCountTrust & KillInJumpTrust & OneKillTrust
@@ -59,11 +57,6 @@ public class TrustAssetEditor : EditorWindow
 		assetName = EditorGUILayout.TextField("어셋 이름", assetName);
 
 		trustType = (TrustType)EditorGUILayout.EnumPopup("신탁 유형",trustType);
-
-		trustName = EditorGUILayout.TextField("신탁 이름", trustName);
-
-		GUILayout.Label("신탁 내용", EditorStyles.helpBox);
-		trustDescription = EditorGUILayout.TextArea(trustDescription);
 
 		GUILayout.Label("신탁 티어", EditorStyles.helpBox);
 		trustTier = EditorGUILayout.IntSlider(trustTier, -5, 5);
@@ -125,8 +118,6 @@ public class TrustAssetEditor : EditorWindow
             {
                 KillCountTrust trust = CreateInstance(script.GetClass()) as KillCountTrust;
 
-                trust.trustName = trustName;
-                trust.description = trustDescription;
                 trust.trustType = trustType;
                 trust.tier = trustTier;
 
@@ -139,8 +130,6 @@ public class TrustAssetEditor : EditorWindow
             {
                 ClearTimeTrust trust = CreateInstance(script.GetClass()) as ClearTimeTrust;
 
-                trust.trustName = trustName;
-                trust.description = trustDescription;
                 trust.trustType = trustType;
                 trust.tier = trustTier;
 
@@ -152,8 +141,6 @@ public class TrustAssetEditor : EditorWindow
             {
                 UseBulletTrust trust = CreateInstance(script.GetClass()) as UseBulletTrust;
 
-                trust.trustName = trustName;
-                trust.description = trustDescription;
                 trust.trustType = trustType;
                 trust.tier = trustTier;
 
@@ -165,8 +152,6 @@ public class TrustAssetEditor : EditorWindow
             {
                 JumpCountTrust trust = CreateInstance(script.GetClass()) as JumpCountTrust;
 
-                trust.trustName = trustName;
-                trust.description = trustDescription;
                 trust.trustType = trustType;
                 trust.tier = trustTier;
 
@@ -178,8 +163,6 @@ public class TrustAssetEditor : EditorWindow
             {
                 DashCountTrust trust = CreateInstance(script.GetClass()) as DashCountTrust;
 
-                trust.trustName = trustName;
-                trust.description = trustDescription;
                 trust.trustType = trustType;
                 trust.tier = trustTier;
 
@@ -191,8 +174,6 @@ public class TrustAssetEditor : EditorWindow
             {
                 KillInJumpTrust trust = CreateInstance(script.GetClass()) as KillInJumpTrust;
 
-                trust.trustName = trustName;
-                trust.description = trustDescription;
                 trust.trustType = trustType;
                 trust.tier = trustTier;
 
@@ -204,8 +185,6 @@ public class TrustAssetEditor : EditorWindow
             {
                 OneKillTrust trust = CreateInstance(script.GetClass()) as OneKillTrust;
 
-                trust.trustName = trustName;
-                trust.description = trustDescription;
                 trust.trustType = trustType;
                 trust.tier = trustTier;
 
@@ -217,8 +196,6 @@ public class TrustAssetEditor : EditorWindow
             {
                 OnGroundTrust trust = CreateInstance(script.GetClass()) as OnGroundTrust;
 
-                trust.trustName = trustName;
-                trust.description = trustDescription;
                 trust.trustType = trustType;
                 trust.tier = trustTier;
 
@@ -230,8 +207,6 @@ public class TrustAssetEditor : EditorWindow
             {
                 EnemyInViewTrust trust = CreateInstance(script.GetClass()) as EnemyInViewTrust;
 
-                trust.trustName = trustName;
-                trust.description = trustDescription;
                 trust.trustType = trustType;
                 trust.tier = trustTier;
 
@@ -244,8 +219,6 @@ public class TrustAssetEditor : EditorWindow
             {
                 HitCountTrust trust = CreateInstance(script.GetClass()) as HitCountTrust;
 
-                trust.trustName = trustName;
-                trust.description = trustDescription;
                 trust.trustType = trustType;
                 trust.tier = trustTier;
 
@@ -257,8 +230,6 @@ public class TrustAssetEditor : EditorWindow
             {
                 LeftMoveTrust trust = CreateInstance(script.GetClass()) as LeftMoveTrust;
 
-                trust.trustName = trustName;
-                trust.description = trustDescription;
                 trust.trustType = trustType;
                 trust.tier = trustTier;
 
@@ -270,8 +241,6 @@ public class TrustAssetEditor : EditorWindow
             {
                 LeftSeeTrust trust = CreateInstance(script.GetClass()) as LeftSeeTrust;
 
-                trust.trustName = trustName;
-                trust.description = trustDescription;
                 trust.trustType = trustType;
                 trust.tier = trustTier;
 
@@ -283,8 +252,6 @@ public class TrustAssetEditor : EditorWindow
             {
                 Trust trust = CreateInstance(script.GetClass()) as Trust;
 
-                trust.trustName = trustName;
-                trust.description = trustDescription;
                 trust.trustType = trustType;
                 trust.tier = trustTier;
 

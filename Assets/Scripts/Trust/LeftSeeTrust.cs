@@ -45,20 +45,12 @@ public class LeftSeeTrust : Trust
 
     public override string GetDescription()
     {
-        string desc = "";
-        foreach (var substring in description.Split(' ', '\n'))
-        {
-            if (substring == "%limit_time")
-            {
-                desc += limitTime;
-            }
-            else
-            {
-                desc += substring;
-            }
-            desc += " ";
-        }
-        return desc;
+        return "왼쪽을 " + ((int)limitTime).ToString() + "초 이상 보지 마시오.";
+    }
+
+    public override string GetName()
+    {
+        return "왼쪽보기 금지";
     }
 
     public override string TrustToText()

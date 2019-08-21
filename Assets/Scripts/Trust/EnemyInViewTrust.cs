@@ -63,24 +63,12 @@ public class EnemyInViewTrust : Trust
 
     public override string GetDescription()
     {
-        string desc = "";
-        foreach (var substring in description.Split(' ', '\n'))
-        {
-            if (substring == "%limit_time")
-            {
-                desc += limitTime;
-            }
-            else if (substring == "%limit_count")
-            {
-                desc += limitEnemycount;   
-            }
-            else
-            {
-                desc += substring;
-            }
-            desc += " ";
-        }
-        return desc;
+        return "시야 안에 몬스터 " + limitEnemycount.ToString() + "마리가 " + ((int)limitTime).ToString() + "초 이상 보이지 않게 하시오.";
+    }
+
+    public override string GetName()
+    {
+        return "시야 내 몬스터";
     }
 
     public override bool IsDone { get { return isDone; } }

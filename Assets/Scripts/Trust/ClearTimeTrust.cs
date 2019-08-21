@@ -10,20 +10,12 @@ public class ClearTimeTrust : Trust
 
     public override string GetDescription()
     {
-        string desc = "";
-        foreach (var substring in description.Split(' ', '\n'))
-        {
-            if (substring == "%need_minute")
-            {
-                desc += needClearTime / 60;
-            }
-            else
-            {
-                desc += substring;
-            }
-            desc += " ";
-        }
-        return desc;
+        return ((int)needClearTime / 60).ToString() + "분 이내로 클리어 하시오.";
+    }
+
+    public override string GetName()
+    {
+        return "시간 내에 클리어";
     }
 
     public override void Init()

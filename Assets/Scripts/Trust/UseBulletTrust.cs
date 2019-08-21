@@ -11,20 +11,12 @@ public class UseBulletTrust : Trust
 
     public override string GetDescription()
     {
-        string desc = "";
-        foreach (var substring in description.Split(' ', '\n'))
-        {
-            if (substring == "%need_bullet")
-            {
-                desc += needUseBullet;
-            }
-            else
-            {
-                desc += substring;
-            }
-            desc += " ";
-        }
-        return desc;
+        return "총알을 " + needUseBullet.ToString() + "발 사용하시오.";
+    }
+
+    public override string GetName()
+    {
+        return "총알 사용하기";
     }
 
     public override void Init()
