@@ -47,6 +47,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	private float hitTimer;
     private float dashTimer;
 	private float dashCoolTimer;
+    private float explodeCoolTimer;
 	public bool IsDamagable { get { return graceTimer <= 0; } }
 
     public Gun gun { get; private set; }
@@ -123,6 +124,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
             dashCoolTimer -= Time.deltaTime;
         if (dashTimer > 0)
             dashTimer -= Time.deltaTime;
+        if (explodeCoolTimer > 0)
+            explodeCoolTimer -= Time.deltaTime;
 	}
 
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -230,8 +233,12 @@ public class PlayerController : SingletonBehaviour<PlayerController>
         }
         else if (Input.GetKeyDown(KeyCode.A) && ExplodeItem > 0)
 		{
-			ExplodeItem--;
-			Explode();
+            if (explodeCoolTimer <= 0)
+            {
+                ExplodeItem--;
+                explodeCoolTimer = 0.5f;
+                Explode();
+            }
 		}
 
         /*
