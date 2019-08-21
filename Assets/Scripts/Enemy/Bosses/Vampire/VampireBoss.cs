@@ -18,12 +18,18 @@ public class VampireBoss : NormalEnemy
     
     private Collider2D col;
 
+	private float nextPatternTimer;
+
     [SerializeField]
     private GameObject alterPrefab;
     [SerializeField]
     private GameObject bloodPillarPrefab;
+	[SerializeField]
+	private GameObject bloodProjectilePrefab;
 
     private Vector3 RandomInsideMap { get { return new Vector2(Random.Range(mapBounds.min.x / 2, mapBounds.max.x / 2), Random.Range(mapBounds.min.y / 2, mapBounds.max.y / 2)); } }
+
+	private int phase = 1;
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
@@ -59,14 +65,69 @@ public class VampireBoss : NormalEnemy
         {
             StartCoroutine(MakeBloodPillarRoutine());
         }
+		if (Input.GetKeyDown(KeyCode.Alpha5))
+		{
+			StartCoroutine(TeleportRoutine(MakeBloodProjectileRoutine()));
+		}
+		nextPatternTimer -= Time.deltaTime;
     }
 
     protected override void InitEnemy()
     {
+		State phase1 = new State();
+		State phase2 = new State();
+		State pattern1 = new State();
+		State pattern2 = new State();
+		State pattern3 = new State();
+		State pattern4 = new State();
 
-    }
+		State p1to2 = new State();
 
-    public override void GetDamagedToDeath()
+		phase1.Enter += delegate { nextPatternTimer = 6; };
+		phase1.StateUpdate += delegate {
+			if (nextPatternTimer <= 0)
+			{
+				stateMachine.Transition("pattern" + Random.Range(1, 5).ToString());
+			}
+			if (Health <= maxHealth / 2)
+			{
+				stateMachine.Transition("p1to2");
+			}
+		};
+		phase2.Enter += delegate { nextPatternTimer = 3; };
+		phase2.StateUpdate += delegate {
+			if (nextPatternTimer <= 0)
+			{
+				stateMachine.Transition("pattern" + Random.Range(1, 5).ToString());
+			}
+		};
+
+		pattern1.Enter += delegate { StartCoroutine(MakeAlterRoutine()); };
+		pattern2.Enter += delegate { StartCoroutine(TeleportRoutine(MakeBloodPillarRoutine())); };
+		pattern3.Enter += delegate { StartCoroutine(TeleportRoutine(MakeBloodProjectileRoutine())); };
+		pattern4.Enter += delegate { StartCoroutine(TeleportRoutine(BloodLaserRoutine())); };
+
+		p1to2.Enter += delegate { StartCoroutine(Phase1To2Routine()); };
+
+		stateMachine.AddNewState("phase1", phase1);
+		stateMachine.AddNewState("phase2", phase2);
+		stateMachine.AddNewState("pattern1", pattern1);
+		stateMachine.AddNewState("pattern2", pattern2);
+		stateMachine.AddNewState("pattern3", pattern3);
+		stateMachine.AddNewState("pattern4", pattern4);
+
+		stateMachine.AddNewState("p1to2", p1to2);
+
+		stateMachine.Transition("phase1");
+	}
+
+	public override void GetDamaged(int damage)
+	{
+		base.GetDamaged(damage);
+		InGameUIManager.inst.UpdateBossHelthUI((float)Health / maxHealth);
+	}
+
+	public override void GetDamagedToDeath()
     {
         
     }
@@ -74,21 +135,30 @@ public class VampireBoss : NormalEnemy
     private IEnumerator MakeAlterRoutine()
     {
         yield return new WaitForSeconds(1);
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 2; i++)
         {
-            StartCoroutine(MoveTo(Instantiate(alterPrefab, transform.position, transform.rotation).transform, RandomInsideMap, 3));
+			GameObject alter = Instantiate(alterPrefab, transform.position, transform.rotation);
+			alter.GetComponent<VampireAlter>().vampire = this;
+			StartCoroutine(MoveTo(alter.transform, RandomInsideMap, 3));
         }
-    }
+		stateMachine.Transition("phase" + phase.ToString());
+	}
 
     private IEnumerator MoveTo(Transform transform, Vector3 to, float time)
     {
         Vector3 oriPos = transform.position;
         for (float t = 0; t < time; t += Time.deltaTime)
         {
-            transform.position = Vector3.Lerp(oriPos, to, moveCurve.Evaluate(t / time));
-            yield return null;
-        }
-        
+			try
+			{
+				transform.position = Vector3.Lerp(oriPos, to, moveCurve.Evaluate(t / time));
+			}
+			catch
+			{
+				yield break;
+			}
+			yield return null;
+		}
     }
 
     private IEnumerator TeleportRoutine(IEnumerator nextRoutine)
@@ -118,8 +188,9 @@ public class VampireBoss : NormalEnemy
 
     private IEnumerator BloodLaserRoutine()
     {
-        const float laserTime = 1;
-        bloodLaser.enabled = true;
+		const float laserTime = 1;
+		yield return new WaitForSeconds(2);
+		bloodLaser.enabled = true;
         for (float t = 0; t < laserTime; t += Time.deltaTime)
         {
             float rotationZ = 360 * laserCurve.Evaluate(t / laserTime);
@@ -138,7 +209,8 @@ public class VampireBoss : NormalEnemy
             yield return new WaitForFixedUpdate();
         }
         bloodLaser.enabled = false;
-    }
+		stateMachine.Transition("phase" + phase.ToString());
+	}
 
     private IEnumerator MakeBloodPillarRoutine()
     {
@@ -149,5 +221,40 @@ public class VampireBoss : NormalEnemy
                 .GetComponent<BloodPillar>().Initialize(new Vector2(Random.Range(-1f, 1f), 0), 10);
             yield return new WaitForSeconds(Random.Range(0.2f, 0.5f));
         }
+		stateMachine.Transition("phase" + phase.ToString());
     }
+
+	private IEnumerator MakeBloodProjectileRoutine()
+	{
+		yield return new WaitForSeconds(1);
+		for (int i = 0; i < 4; i++)
+		{
+			GameObject projectile = Instantiate(bloodProjectilePrefab, transform.position, transform.rotation);
+			projectile.GetComponent<BloodProjectile>().SetStartValues(transform.position, 90 * i);
+			Destroy(projectile, 2);
+		}
+		stateMachine.Transition("phase" + phase.ToString());
+	}
+
+	private IEnumerator Phase1To2Routine()
+	{
+		const float moveTime = 3f;
+		const float changeColorTime = 1f;
+		Vector3 oriPos = transform.position;
+		Color oriColor = sr.color;
+		col.enabled = false;
+		for (float t = 0; t < moveTime; t += Time.deltaTime)
+		{
+			transform.position = Vector3.Lerp(oriPos, mapBounds.center, moveCurve.Evaluate(t / moveTime));
+			yield return null;
+		}
+		for (float t = 0; t < changeColorTime; t += Time.deltaTime)
+		{
+			sr.color = Color.Lerp(oriColor, Color.red, t / changeColorTime);
+			yield return null;
+		}
+		col.enabled = true;
+		phase = 2;
+		stateMachine.Transition("phase" + phase.ToString());
+	}
 }

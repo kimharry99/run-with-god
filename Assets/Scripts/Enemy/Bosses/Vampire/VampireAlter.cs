@@ -7,6 +7,9 @@ public class VampireAlter : NormalEnemy
     public override EnemyType Type { get { return EnemyType.ALL; } }
 
     private float shotTimer = 5;
+	private float healTimer = 5;
+
+	public VampireBoss vampire;
 
     [SerializeField]
     private GameObject projectilePrefab;
@@ -19,13 +22,20 @@ public class VampireAlter : NormalEnemy
     protected override void Update()
     {
         base.Update();
-        if (shotTimer > 0)
-            shotTimer -= Time.deltaTime;
+		shotTimer -= Time.deltaTime;
+		healTimer -= Time.deltaTime;
+
         if (shotTimer <= 0)
         {
             ShotProjectile();
             shotTimer = 2f;
         }
+
+		if (healTimer <= 0)
+		{
+			vampire.GetHealed(10);
+			healTimer = 2f;
+		}
     }
 
     private void ShotProjectile()
