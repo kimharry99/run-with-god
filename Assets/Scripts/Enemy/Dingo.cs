@@ -5,8 +5,8 @@ using UnityEngine.Events;
 
 public class Dingo : NormalEnemy
 {
-	public override EnemyType Type { get { return EnemyType.DINGO; } }
-	[SerializeField]
+    public override EnemyType Type { get { return EnemyType.DINGO; } }
+    [SerializeField]
     private Transform landChecker;
     private Collider2D col;
     public bool IsGround
@@ -18,10 +18,10 @@ public class Dingo : NormalEnemy
         }
     }
 
-	[SerializeField]
-	private Animator dingoAnimator;
+    [SerializeField]
+    private Animator dingoAnimator;
 
-	protected override void Start()
+    protected override void Start()
     {
         Health = maxHealth;
         rb = GetComponent<Rigidbody2D>();
@@ -40,7 +40,7 @@ public class Dingo : NormalEnemy
             dingoAnimator.SetBool("isRunning", false);
         };
         idle.StateUpdate += MonitorAndTransition;
-        
+
         move.Enter += delegate
         {
             dingoAnimator.SetBool("isRunning", true);
@@ -55,9 +55,21 @@ public class Dingo : NormalEnemy
 
     protected override void Moving()
     {
-        if ((rb.velocity.magnitude < speed || rb.velocity.normalized != Direction)&&IsGround) //목표 속력보다 현재 속력이 작을때 또는 현재 속도의 방향과 자신의 방향이 다를때
+        /*
+        if (rb.velocity.magnitude >= speed)
+        {
+            rb.velocity = speed * rb.velocity.normalized;
+        }
+        else if ((rb.velocity.normalized != Direction)&&IsGround) //목표 속력보다 현재 속력이 작을때 또는 현재 속도의 방향과 자신의 방향이 다를때
         {
             rb.AddForce(acceleration * Direction); //가속도만큼 속도에 더합니다.
+            
+        }
+        */
+        if ((rb.velocity.magnitude < speed || rb.velocity.normalized != Direction) && IsGround)
+        { //목표 속력보다 현재 속력이 작을때 또는 현재 속도의 방향과 자신의 방향이 다를때
+            rb.velocity += new Vector2(acceleration * Time.deltaTime, 0)*Direction;
+            Debug.Log(new Vector2(acceleration * Time.deltaTime, 0) * Direction);
         }
     }
 }
