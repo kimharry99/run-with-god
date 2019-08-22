@@ -28,20 +28,12 @@ public class OneKillTrust : Trust
 
     public override string GetDescription()
     {
-        string desc = "";
-        foreach (var substring in description.Split(' ', '\n'))
-        {
-            if (substring == "%monster_killcount")
-            {
-                desc += needKillCount;
-            }
-            else
-            {
-                desc += substring;
-            }
-            desc += " ";
-        }
-        return desc;
+        return "몬스터를 한 번에 " + needKillCount.ToString() + "마리 처치하시오.";
+    }
+
+    public override string GetName()
+    {
+        return "몬스터 한 번에 처치";
     }
 
     public override void Init()

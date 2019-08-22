@@ -10,6 +10,10 @@ public abstract class Trust : ScriptableObject
 	public string description = null;
 	public int tier = 0;
 	public abstract bool IsDone { get; }
+    public virtual string GetName()
+    {
+        return trustName;
+    }
 	public virtual string GetDescription()
 	{
 		return description;

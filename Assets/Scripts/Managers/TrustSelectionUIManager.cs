@@ -62,7 +62,7 @@ public class TrustSelectionUIManager : SingletonBehaviour<TrustSelectionUIManage
 	{
         if (trust != null)
         {
-            trustNameText.text = trust.trustName;
+            trustNameText.text = trust.GetName();
             string descript = trust.GetDescription();
             yield return new WaitForSeconds(0.05f);
             for (int i = 0; i <= descript.Length; i++)

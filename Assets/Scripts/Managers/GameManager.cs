@@ -120,7 +120,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 		int i = 0;
 		foreach (var ts in selectors)
 		{
-			GUI.Label(new Rect(10, 90 + 20 * i++, 500, 20), ts.type + " : " + (ts.Trust != null ? ts.Trust.trustName : "Null"));
+			GUI.Label(new Rect(10, 90 + 20 * i++, 500, 20), ts.type + " : " + (ts.Trust != null ? ts.Trust.GetName() : "Null"));
 		}
 		
 	}

@@ -15,20 +15,12 @@ public class JumpCountTrust : Trust
 
     public override string GetDescription()
     {
-        string desc = "";
-        foreach (var substring in description.Split(' ', '\n'))
-        {
-            if (substring == "%need_jump")
-            {
-                desc += needJumpCount;
-            }
-            else
-            {
-                desc += substring;
-            }
-            desc += " ";
-        }
-        return desc;
+        return "점프를 " + needJumpCount.ToString() + "번 하시오.";
+    }
+
+    public override string GetName()
+    {
+        return "점프하기";
     }
 
     public override bool IsDone { get { return jumpCount >= needJumpCount; } }
