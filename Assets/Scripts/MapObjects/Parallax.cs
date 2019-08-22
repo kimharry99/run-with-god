@@ -6,17 +6,18 @@ using UnityEngine;
 public class Parallax : MonoBehaviour
 {
     private float length, startPos;
-    public GameObject cam;
+    private GameObject cam;
     public float parallaxEffect;
 
     void Start()
     {
+        cam = Camera.main.GetComponent<CameraController>().gameObject;
+        //cam = PlayerController.inst.gameObject;
         startPos = transform.position.x;
         length = GetComponent<SpriteRenderer>().bounds.size.x;
     }
 
-
-    void FixedUpdate()
+    void LateUpdate()
     {
         float temp = (cam.transform.position.x * (1 - parallaxEffect));
         float dist = (cam.transform.position.x * parallaxEffect);

@@ -29,12 +29,14 @@ public class TrustSelector : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
 	{
-		OnHighlighted();
+        if(collision.CompareTag("Player"))
+		    OnHighlighted();
 	}
 
 	private void OnTriggerStay2D(Collider2D collision)
 	{
-		if (Input.GetAxis("Vertical") > 0)
+        if (collision.CompareTag("Player"))
+            if (Input.GetAxis("Vertical") > 0)
 		{
 			OnSelected();
 		}
@@ -42,8 +44,9 @@ public class TrustSelector : MonoBehaviour
 
 	private void OnTriggerExit2D(Collider2D collision)
 	{
-		OnUnhighlighted();
-	}
+        if (collision.CompareTag("Player"))
+            OnUnhighlighted();
+    }
 
 	public void InitTrustSelector(Trust trust)
 	{
@@ -79,9 +82,9 @@ public class TrustSelector : MonoBehaviour
 
     IEnumerator FadeIn()
     {
-        while(Light.intensity < 30f)
+        while(Light.intensity < 180f)
         {
-            Light.intensity += 2;
+            Light.intensity += 18;
             yield return new WaitForSeconds(0.02f);
         }  
     }
@@ -90,7 +93,7 @@ public class TrustSelector : MonoBehaviour
     {
         while (Light.intensity > 0.0f)
         {
-            Light.intensity -= 2.5f;
+            Light.intensity -= 30f;
             yield return new WaitForSeconds(0.02f);
         }
     }
