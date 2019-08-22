@@ -76,15 +76,6 @@ public class Butcher : NormalEnemy
 		stateMachine.Transition("move");
 	}
 
-    protected override void Flip()
-    {
-        base.Flip();
-        foreach(Transform child in transform)
-        {
-            child.localPosition = new Vector3(-child.localPosition.x, child.localPosition.y, child.localPosition.z);
-        }
-    }
-
 	public override void GetDamaged(int damage)
 	{
 		base.GetDamaged(damage);
@@ -187,7 +178,7 @@ public class Butcher : NormalEnemy
 		BoxCollider2D col = GetComponent<BoxCollider2D>();
 		while (!col.IsTouchingLayers(1 << LayerMask.NameToLayer("Wall")))
 		{
-			rb.AddForce(40 * (sr.flipX ? Vector2.left : Vector2.right));
+			rb.AddForce(40 * Direction);
 			yield return null;
 		}
 		gameObject.layer = LayerMask.NameToLayer("Enemy Passable");

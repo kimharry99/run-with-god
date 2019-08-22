@@ -155,7 +155,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: e3fc6f86adf9da1458ab305d88c1ba69, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 1
+  m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 0.16, y: 0.16}
@@ -235,7 +235,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 0}
   shotSFX: {fileID: 0}
   deathSFX: {fileID: 8300000, guid: ac13d1105ffd1cc4bb6f15c05547cf95, type: 3}
-  hitSFX: {fileID: 8300000, guid: a4e97e9401617d7448952a848d90baf2, type: 3}
+  hit: {fileID: 0}
   zombieAnimator: {fileID: 3629748110064062386}
 --- !u!95 &3629748110064062386
 Animator:

@@ -28,14 +28,4 @@ public class Shielder : NormalEnemy
         stateMachine.Transition("idle");
 
     }
-
-    protected override void Flip()
-    {
-        base.Flip();
-        Vector3 pos = Shield.transform.localPosition;
-        pos.x = -pos.x;
-        Shield.transform.localPosition = pos;
-        Child.flipX = !Child.flipX;
-        
-    }
 }

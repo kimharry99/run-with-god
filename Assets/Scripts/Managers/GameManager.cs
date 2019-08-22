@@ -51,6 +51,9 @@ public class GameManager : SingletonBehaviour<GameManager>
     public GameObject lastMapBlockPrefab;
 	public List<GameObject> mapBlockPrefabs = new List<GameObject>();
 
+	[SerializeField]
+	private List<GameObject> bossMapBlockPrefabs = new List<GameObject>();
+
 	private void OnEnable()
 	{
 		//Reset GameManager
@@ -145,11 +148,13 @@ public class GameManager : SingletonBehaviour<GameManager>
 				SelectedTrust.Init();
 				InGameUIManager.inst.UpdateTrustUI(SelectedTrust);
 			}
+			mapSeed = UnityEngine.Random.Range(0, int.MaxValue);
 			GenerateMap();
 			PlayerController.inst.ResetPlayer();
 		}
 		if (scene.name == "Boss")
 		{
+			GenerateBossMap();
             //티어별 패턴 선택
             //플레이어 위치 초기화 
 		}
@@ -337,6 +342,15 @@ public class GameManager : SingletonBehaviour<GameManager>
         MapBlock lastBlock = Instantiate(lastMapBlockPrefab).GetComponent<MapBlock>();
         lastBlock.ConnectNextTo(prevBlock);
     }
+
+	private void GenerateBossMap()
+	{
+		if (SelectedTrust != null)
+			PlayerController.inst.transform.position = Instantiate(bossMapBlockPrefabs[(int)SelectedTrust.trustType]).GetComponent<MapBlock>().startPoint.position;
+		else
+			PlayerController.inst.transform.position = Instantiate(bossMapBlockPrefabs[0]).GetComponent<MapBlock>().startPoint.position;
+	}
+
 	public void GameClear()
 	{
 		do

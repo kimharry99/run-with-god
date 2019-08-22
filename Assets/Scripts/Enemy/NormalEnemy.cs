@@ -31,7 +31,7 @@ public abstract class NormalEnemy : MonoBehaviour
 
     protected Vector2 Direction
     {
-        get { return sr.flipX ? Vector2.left : Vector2.right; }
+        get { return transform.localScale.x < 0 ? Vector2.left : Vector2.right; }
         //set { if (Direction != value.normalized) Flip(); }
     }
 
@@ -313,14 +313,14 @@ public abstract class NormalEnemy : MonoBehaviour
 
     protected void SeePlayer()  //플레이어를 보는 함수
     {
-        if (PlayerController.inst.PlayerPosition.x > transform.position.x == sr.flipX)
+        if (PlayerController.inst.PlayerPosition.x > transform.position.x != transform.localScale.x > 0)
             Flip();
         //sr.flipX = PlayerController.inst.PlayerPosition.x < transform.position.x;
     }
 
     protected virtual void Flip() //방향을 바꾸는 함수
     {
-        sr.flipX = !sr.flipX;
+		transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
     }
 
     #endregion
