@@ -10,6 +10,7 @@ public abstract class Boss : NormalEnemy
 	{
 		base.Start();
 		difficulty = GetComponentInParent<MapBlock>().difficulty;
+		InGameUIManager.inst.UpdateBossHelthUI(Health);
 	}
 
 	public override void GetDamaged(int damage)
