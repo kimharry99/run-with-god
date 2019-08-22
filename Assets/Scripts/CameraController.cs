@@ -10,6 +10,7 @@ public class CameraController : MonoBehaviour
 	public static Action<Vector2> ShockWave;
 	public static Action ChromaticAberration;
     public static Action HitEffect;
+    public bool isFollowingPlayer;
 
 	private Transform target;
     private Rigidbody2D targetRb;
@@ -32,6 +33,7 @@ public class CameraController : MonoBehaviour
 		ChromaticAberration = ChromaticAberrationEffect;
         HitEffect = PlayHitEffect;
         timeCount = 0;
+        isFollowingPlayer = true;
 	}
 
 	private void LateUpdate()
@@ -41,8 +43,11 @@ public class CameraController : MonoBehaviour
         timeCount += Time.deltaTime;
         if (timeCount > 0.01f)
         {
-            transform.position = Vector3.Lerp(transform.position, target.position + new Vector3(offsetX, offsetY, offsetZ), 0.1f);
-            timeCount = 0;
+            if (isFollowingPlayer)
+            {
+                transform.position = Vector3.Lerp(transform.position, target.position + new Vector3(offsetX, offsetY, offsetZ), 0.1f);
+                timeCount = 0;
+            }
         }
 	}
 

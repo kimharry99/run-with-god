@@ -48,6 +48,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 
 	public int mapSeed;
     public GameObject firstMapBlockPrefab;
+    public GameObject lastMapBlockPrefab;
 	public List<GameObject> mapBlockPrefabs = new List<GameObject>();
 
 	private void OnEnable()
@@ -94,6 +95,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 		SceneManager.sceneLoaded += OnSceneLoaded;
 	}
 
+    /*
 #if UNITY_EDITOR
 
 	private TrustSelector[] selectors;
@@ -123,6 +125,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 		
 	}
 #endif
+*/
 	private void Update()
 	{
 		gameState.UpdateStateMachine();
@@ -142,9 +145,18 @@ public class GameManager : SingletonBehaviour<GameManager>
 		}
 		if (scene.name == "Boss")
 		{
-
+            //티어별 패턴 선택
+            //플레이어 위치 초기화 
 		}
-		if (scene.name == "InGameScene" || scene.name == "Boss")
+        else if (scene.name == "Boss_Butcher")
+        {
+
+        }
+        else if (scene.name == "Boss_Vampire")
+        {
+
+        }
+		if (scene.name == "InGameScene" || scene.name == "Boss" || scene.name == "Boss_Butcher" || scene.name == "Boss_Vampire")
 		{
 			gameState.Transition("play");
 		}
@@ -152,12 +164,14 @@ public class GameManager : SingletonBehaviour<GameManager>
 		{
 			gameState.Transition("pause");
 		}
+        /*
 #if UNITY_EDITOR
 		if (scene.name == "TrustSelection")
 		{
 			selectors = FindObjectsOfType<TrustSelector>();
 		}
 #endif
+*/
 	}
 
 	private void InitGameState()
@@ -313,5 +327,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 			curBlock.ConnectNextTo(prevBlock);
 			prevBlock = curBlock;
 		}
-	}
+        MapBlock lastBlock = Instantiate(lastMapBlockPrefab).GetComponent<MapBlock>();
+        lastBlock.ConnectNextTo(prevBlock);
+    }
 }
