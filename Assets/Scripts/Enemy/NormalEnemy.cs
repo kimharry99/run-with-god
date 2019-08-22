@@ -132,7 +132,8 @@ public abstract class NormalEnemy : MonoBehaviour
     protected abstract void InitEnemy();
 	public virtual void GetDamaged(int damage)
 	{
-		hit?.Play();
+		if (hit != null)
+			hit.Play();
         if (isInvincibe)
             return;
 
@@ -183,7 +184,11 @@ public abstract class NormalEnemy : MonoBehaviour
 	protected IEnumerator DissolveEffectRoutine(float time)
 	{
 		Material mat = new Material(dissolve);
-		GetComponent<SpriteRenderer>().material = mat;
+		foreach (var renderer in GetComponentsInChildren<SpriteRenderer>())
+		{
+			renderer.material = mat;
+		}
+		//GetComponent<SpriteRenderer>().material = mat;
 		Texture2D noise = new Texture2D(100, 100);
 
 		float scale = Random.Range(20, 50);

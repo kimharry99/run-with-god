@@ -314,4 +314,27 @@ public class GameManager : SingletonBehaviour<GameManager>
 			prevBlock = curBlock;
 		}
 	}
+
+	public void GameClear()
+	{
+		do
+		{
+			if (SelectedTrust == null)
+				break;
+			if (SelectedTrust.IsDone)
+				trustTier[SelectedTrust.trustType]++;
+			else
+				trustTier[SelectedTrust.trustType]--;
+		}
+		while (trustTier[SelectedTrust.trustType] == 0);
+
+		StartCoroutine(GameClearRoutine());
+	}
+
+	private IEnumerator GameClearRoutine()
+	{
+		yield return InGameUIManager.inst.FadeIn(5);
+		SceneManager.LoadScene("TrustSelection");
+		InGameUIManager.inst.FadeOut(5);
+	}
 }

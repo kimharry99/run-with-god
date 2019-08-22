@@ -220,4 +220,10 @@ public class ClockBoss : NormalEnemy
 	{
 		
 	}
+
+	protected override void OnDead()
+	{
+		base.OnDead();
+		GameManager.inst.GameClear();
+	}
 }

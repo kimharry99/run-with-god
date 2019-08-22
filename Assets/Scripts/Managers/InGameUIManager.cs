@@ -22,6 +22,8 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
     public Transform explodeGrid;
     public GameObject explodeUIPrefab;
 
+	public Image BlackPanel;
+
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
 		bossHealthUI.gameObject.SetActive(scene.name.Contains("Boss"));
@@ -94,5 +96,37 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 	public void UpdateBossHelthUI(float value)
 	{
 		bossHealthUI.value = value;
+	}
+
+	public WaitForSeconds FadeIn(float time)
+	{
+		StartCoroutine(FadeInRoutine(time));
+		return new WaitForSeconds(time);
+	}
+
+	private IEnumerator FadeInRoutine(float time)
+	{
+		BlackPanel.color -= new Color(0, 0, 0, 1);
+		while (BlackPanel.color.a < 1)
+		{
+			BlackPanel.color += new Color(0, 0, 0, (1 / time) * Time.deltaTime);
+			yield return new WaitForEndOfFrame();
+		}
+	}
+
+	public WaitForSeconds FadeOut(float time)
+	{
+		StartCoroutine(FadeOutRoutine(time));
+		return new WaitForSeconds(time);
+	}
+
+	private IEnumerator FadeOutRoutine(float time)
+	{
+		BlackPanel.color += new Color(0, 0, 0, 1);
+		while (BlackPanel.color.a > 0)
+		{
+			BlackPanel.color -= new Color(0, 0, 0, (1 / time) * Time.deltaTime);
+			yield return new WaitForEndOfFrame();
+		}
 	}
 }
