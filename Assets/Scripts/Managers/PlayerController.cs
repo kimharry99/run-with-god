@@ -53,7 +53,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
     public Gun gun { get; private set; }
 
 	[SerializeField]
-	private AudioClip hitSFX = null, boomSFX = null;
+	private AudioClip hitSFX = null, boomSFX = null, dashSFX = null;
 	[SerializeField]
 	private AudioSource move;
 	[SerializeField]
@@ -293,6 +293,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			graceTimer = Mathf.Max(0.3f, graceTimer);
 			dashTimer = 0.3f;
 			gameObject.layer = LayerMask.NameToLayer("Player Grace");
+			SoundManager.inst.PlaySFX(gameObject, dashSFX);
 			StartCoroutine(DashRoutine());
 			OnDash?.Invoke();
 			;

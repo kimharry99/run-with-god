@@ -255,27 +255,27 @@ public class GameManager : SingletonBehaviour<GameManager>
     
     //for Development, tier -> SelectedTruth.tier
     public int tier;
-	private void GenerateMap()
-	{
+    private void GenerateMap()
+    {
         UnityEngine.Random.InitState(mapSeed);
 
-		MapBlock prevBlock = Instantiate(firstMapBlockPrefab).GetComponent<MapBlock>();
-		PlayerController.inst.transform.position = prevBlock.startPoint.position;
+        MapBlock prevBlock = Instantiate(firstMapBlockPrefab).GetComponent<MapBlock>();
+        PlayerController.inst.transform.position = prevBlock.startPoint.position;
 
         int[/*tier*/][/*difficulty*/] difficultyCount = { new int[] { 7, 2, 0, 0 }, new int[] { 5, 3, 1, 0 }, new int[] { 0, 5, 3, 1 }, new int[] { 0, 3, 4, 2 } };
         for (int i = 0; i < 9; ++i)
-		{
+        {
             int rand = 0;
-            for(bool is1=true;is1;)
+            for (bool is1 = true; is1;)
             {
-                rand = UnityEngine.Random.Range(0,mapBlockPrefabs.Count);
+                rand = UnityEngine.Random.Range(0, mapBlockPrefabs.Count);
                 if (difficultyCount[tier][mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty] > 0)
                 {
                     difficultyCount[tier][mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty]--;
                     is1 = false;
                 }
             }
-            
+
             /* delete map when first map is difficult */
             if (i == 0)
             {
@@ -323,11 +323,33 @@ public class GameManager : SingletonBehaviour<GameManager>
                 }
             }
 
-			MapBlock curBlock = Instantiate(mapBlockPrefabs[rand]).GetComponent<MapBlock>();
-			curBlock.ConnectNextTo(prevBlock);
-			prevBlock = curBlock;
-		}
+            MapBlock curBlock = Instantiate(mapBlockPrefabs[rand]).GetComponent<MapBlock>();
+            curBlock.ConnectNextTo(prevBlock);
+            prevBlock = curBlock;
+        }
         MapBlock lastBlock = Instantiate(lastMapBlockPrefab).GetComponent<MapBlock>();
         lastBlock.ConnectNextTo(prevBlock);
     }
+	public void GameClear()
+	{
+		do
+		{
+			if (SelectedTrust == null)
+				break;
+			if (SelectedTrust.IsDone)
+				trustTier[SelectedTrust.trustType]++;
+			else
+				trustTier[SelectedTrust.trustType]--;
+		}
+		while (trustTier[SelectedTrust.trustType] == 0);
+
+		StartCoroutine(GameClearRoutine());
+	}
+
+	private IEnumerator GameClearRoutine()
+	{
+		yield return InGameUIManager.inst.FadeIn(5);
+		SceneManager.LoadScene("TrustSelection");
+		InGameUIManager.inst.FadeOut(5);
+	}
 }
