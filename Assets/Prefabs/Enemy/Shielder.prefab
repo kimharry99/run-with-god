@@ -42,7 +42,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 275ddebfcd2db214898a2ca859224b41, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -339,6 +339,8 @@ MonoBehaviour:
   shotSFX: {fileID: 0}
   deathSFX: {fileID: 0}
   hit: {fileID: 2592003243189347495}
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  hitColor: {r: 1, g: 0.75, b: 0, a: 1}
 --- !u!1 &5370037026834105882
 GameObject:
   m_ObjectHideFlags: 0
@@ -450,6 +452,8 @@ MonoBehaviour:
   shotSFX: {fileID: 0}
   deathSFX: {fileID: 8300000, guid: 1c3b774a4d5c4754da0de46ab9acc3db, type: 3}
   hit: {fileID: 6898212579326716954}
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  hitColor: {r: 1, g: 0.75, b: 0, a: 1}
   Shield: {fileID: 5370037026008510438}
 --- !u!50 &5016139259429700632
 Rigidbody2D:
@@ -540,7 +544,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: ac1e4ced1ea0e8c4d91bddeecf128736, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

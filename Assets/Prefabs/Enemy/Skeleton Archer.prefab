@@ -42,7 +42,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 275ddebfcd2db214898a2ca859224b41, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -395,6 +395,8 @@ MonoBehaviour:
   shotSFX: {fileID: 8300000, guid: 68aa3d140ff7e7240b27636353abe631, type: 3}
   deathSFX: {fileID: 8300000, guid: f03967d9b26005a46a2a4523f2196d35, type: 3}
   hit: {fileID: 4833018610738195077}
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  hitColor: {r: 1, g: 0.75, b: 0, a: 1}
   shotCooltime: 5
 --- !u!1001 &6594468088764436633
 PrefabInstance:

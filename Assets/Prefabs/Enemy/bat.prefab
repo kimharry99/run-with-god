@@ -110,6 +110,8 @@ MonoBehaviour:
   shotSFX: {fileID: 0}
   deathSFX: {fileID: 0}
   hit: {fileID: 9038146020121131837}
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  hitColor: {r: 1, g: 0.75, b: 0, a: 1}
   dead: {fileID: 0}
 --- !u!61 &3765649358443452402
 BoxCollider2D:
@@ -277,7 +279,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: a4e97e9401617d7448952a848d90baf2, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
