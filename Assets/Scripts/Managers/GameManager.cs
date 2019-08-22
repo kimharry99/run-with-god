@@ -267,6 +267,11 @@ public class GameManager : SingletonBehaviour<GameManager>
     private bool isFirstPlay;
     private void GenerateMap()
     {
+        if (SelectedTrust != null)
+            tier = SelectedTrust.tier;
+        else
+            tier = 0;
+
         UnityEngine.Random.InitState(mapSeed);
 
         MapBlock prevBlock;
@@ -282,6 +287,7 @@ public class GameManager : SingletonBehaviour<GameManager>
         PlayerController.inst.transform.position = prevBlock.startPoint.position;
 
         int[/*tier*/][/*difficulty*/] difficultyCount = { new int[] { 7, 2, 0, 0 }, new int[] { 5, 3, 1, 0 }, new int[] { 0, 5, 3, 1 }, new int[] { 0, 3, 4, 2 } };
+        int monsterCnt = 0;
         for (int i = 0; i < 9; ++i)
         {
             int rand = 0;
@@ -355,6 +361,23 @@ public class GameManager : SingletonBehaviour<GameManager>
                     difficultyCount[tier][mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty]++;
                     i--;
                     continue;
+                }
+            }
+
+            if (SelectedTrust.description.Equals("유령을 16마리 처치해라."))
+            {
+                if (mapBlockPrefabs[rand].GetComponent<MapBlock>().isMonster[5])
+                {
+                    monsterCnt++;
+                }
+                else
+                {
+                    if (difficultyCount[tier][1] == 3 - monsterCnt)
+                    {
+                        i--;
+                        continue;
+                    }
+
                 }
             }
             MapBlock curBlock = Instantiate(mapBlockPrefabs[rand]).GetComponent<MapBlock>();
