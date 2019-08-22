@@ -4762,7 +4762,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4143568139256443159}
   - component: {fileID: 4143568139256443158}
-  - component: {fileID: 4143568139256443153}
   - component: {fileID: 4143568139256443156}
   m_Layer: 0
   m_Name: Main Camera
@@ -4829,14 +4828,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &4143568139256443153
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4143568139256443152}
-  m_Enabled: 1
 --- !u!114 &4143568139256443156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4849,6 +4840,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed1df85cf68bf6748a08977e67dc40ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isFollowingPlayer: 0
   shockwave: {fileID: 2100000, guid: a1773ac3c88e6cc4bb3655d8691104c9, type: 2}
   chromatic: {fileID: 2100000, guid: 3c95561b7658c07428556e3ce111b263, type: 2}
   hitEffect: {fileID: 4143568139218777257}
