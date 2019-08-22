@@ -150,6 +150,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 				SelectedTrust.Init();
 				InGameUIManager.inst.UpdateTrustUI(SelectedTrust);
 			}
+            Playtime=0;
 			GenerateMap();
 			PlayerController.inst.ResetPlayer();
 		}
@@ -392,6 +393,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 
 	private void ResetGame()
 	{
+        InGameUIManager.inst.BlackPanel.color = new Color(0, 0, 0, 0);
 		TrustSelector.SelectedTrust = null;
 		PlayerController.inst.ResetPlayer();
 		enemyKillCounts = new Dictionary<EnemyType, int>();
