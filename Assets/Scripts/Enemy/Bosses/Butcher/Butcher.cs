@@ -75,11 +75,11 @@ public class Butcher : Boss
 		stateMachine.AddNewState("pattern4", pattern4);
 		stateMachine.AddNewState("pattern5", pattern5);
 
+
 		stateMachine.AddNewState("dead", dead);
 
 		stateMachine.Transition("move");
 	}
-
 	public override void GetDamagedToDeath()
 	{
 		
