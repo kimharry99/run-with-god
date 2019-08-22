@@ -15,15 +15,7 @@ public class BossStagePortal : MonoBehaviour
         {
             if (collision.tag == "Player")
             {
-                if (GameManager.inst.SelectedTrust.trustType == TrustType.ACTION)
-                    //Debug.Log("To Boss1");
-                    SceneManager.LoadScene("Boss_Butcher");
-                else if (GameManager.inst.SelectedTrust.trustType == TrustType.ATTACK)
-                    //Debug.Log("To Boss2");
-                    SceneManager.LoadScene("Boss_Vampire");
-                else
-                    //Debug.Log("To Boss3");
-                    SceneManager.LoadScene("Boss");
+                SceneManager.LoadScene("Boss");
                 //SceneManager.LoadScene("InGameScene");
             }
         }
