@@ -39,16 +39,19 @@ public class CameraController : MonoBehaviour
 	private void LateUpdate()
 	{
         //offsetY = Input.GetAxis("Vertical") * 0.5f;
-        //offsetX = Input.GetAxis("Horizontal") * 1f;
+        offsetX = Input.GetAxis("Horizontal") * 1;
+        print(offsetX);
         timeCount += Time.deltaTime;
         if (timeCount > 0.01f)
         {
             if (isFollowingPlayer)
             {
-                transform.position = Vector3.Lerp(transform.position, target.position + new Vector3(offsetX, offsetY, offsetZ), 0.1f);
+                //transform.position = Vector3.Lerp(transform.position, target.position + new Vector3(offsetX, offsetY, offsetZ), 0.1f);
                 timeCount = 0;
             }
+            
         }
+        transform.position = Vector3.Lerp(transform.position, target.position + new Vector3(offsetX, offsetY, offsetZ), 0.1f);
 	}
 
     public void SetCameraOffset(float x, float y)
@@ -66,17 +69,13 @@ public class CameraController : MonoBehaviour
 	{
 		float oriAmount = amount;
 		float oriTime = time;
-        float shakingTimeCount=0;
-		for (float t = 0; t < time; t += Time.deltaTime,shakingTimeCount+=Time.deltaTime)
+		for (float t = 0; t < time; t += Time.deltaTime)
 		{
-            if (shakingTimeCount > 0.01)
-            {
-                Vector2 randVec = UnityEngine.Random.insideUnitCircle;
-                amount = oriAmount * ((time - t) / oriTime);
-                transform.position += new Vector3(randVec.x, randVec.y) * amount;
-                shakingTimeCount = 0;
-                yield return null;
-            }
+            Vector2 randVec = UnityEngine.Random.insideUnitCircle;
+            amount = oriAmount * ((time - t) / oriTime);
+            transform.position += new Vector3(randVec.x, randVec.y) * amount;
+            yield return null;
+            
 		}
 	}
 
