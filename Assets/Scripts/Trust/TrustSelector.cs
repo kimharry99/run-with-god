@@ -29,12 +29,14 @@ public class TrustSelector : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
 	{
-		OnHighlighted();
+        if(collision.CompareTag("Player"))
+		    OnHighlighted();
 	}
 
 	private void OnTriggerStay2D(Collider2D collision)
 	{
-		if (Input.GetAxis("Vertical") > 0)
+        if (collision.CompareTag("Player"))
+            if (Input.GetAxis("Vertical") > 0)
 		{
 			OnSelected();
 		}
@@ -42,8 +44,9 @@ public class TrustSelector : MonoBehaviour
 
 	private void OnTriggerExit2D(Collider2D collision)
 	{
-		OnUnhighlighted();
-	}
+        if (collision.CompareTag("Player"))
+            OnUnhighlighted();
+    }
 
 	public void InitTrustSelector(Trust trust)
 	{
