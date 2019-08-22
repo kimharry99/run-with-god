@@ -99,7 +99,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 		SceneManager.sceneLoaded += OnSceneLoaded;
 	}
 
-    /*
+    
 #if UNITY_EDITOR
 
 	private TrustSelector[] selectors;
@@ -129,7 +129,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 		
 	}
 #endif
-*/
+
 	private void Update()
 	{
 		gameState.UpdateStateMachine();
@@ -178,14 +178,14 @@ public class GameManager : SingletonBehaviour<GameManager>
 		}
 		if (scene.name != "Title")
 			Camera.main.transform.position = PlayerController.inst.transform.position;
-        /*
+        
 #if UNITY_EDITOR
 		if (scene.name == "TrustSelection")
 		{
 			selectors = FindObjectsOfType<TrustSelector>();
 		}
 #endif
-*/
+
 	}
 
 	private void InitGameState()
