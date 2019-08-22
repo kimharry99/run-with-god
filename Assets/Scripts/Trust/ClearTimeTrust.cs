@@ -34,7 +34,7 @@ public class ClearTimeTrust : Trust
         }
         else
         {
-            return InGameUIManager.inst.playtimeText.text+ " / " + minutes + ":" + seconds;
+            return InGameUIManager.inst.playtimeText+ " / " + minutes + ":" + seconds;
         }
     }
 }
