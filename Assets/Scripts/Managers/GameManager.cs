@@ -253,15 +253,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 
 	private IEnumerator GameOverRoutine()
 	{
-		Scene scene = SceneManager.GetActiveScene();
-		if (scene.name == "InGameScene")
-		{
-			SceneManager.LoadScene(scene.name);
-		}
-		else if (scene.name == "Boss")
-		{
-
-		}
+		SceneManager.LoadScene("InGameScene");
 		yield return null;
 	}
     
