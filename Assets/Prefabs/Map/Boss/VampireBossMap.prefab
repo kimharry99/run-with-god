@@ -548,7 +548,7 @@ LineRenderer:
     textureMode: 0
     shadowBias: 0.5
     generateLightingData: 0
-  m_UseWorldSpace: 0
+  m_UseWorldSpace: 1
   m_Loop: 0
 --- !u!1 &493570232780804235
 GameObject:
@@ -560,8 +560,8 @@ GameObject:
   m_Component:
   - component: {fileID: 493570232780804231}
   - component: {fileID: 493570232780804230}
-  - component: {fileID: 493570232780804233}
   - component: {fileID: 493570232780804232}
+  - component: {fileID: 5233636841663223253}
   m_Layer: 14
   m_Name: Vampire
   m_TagString: Enemy
@@ -578,7 +578,7 @@ Transform:
   m_GameObject: {fileID: 493570232780804235}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 1}
   m_Children:
   - {fileID: 1613140539701232311}
   - {fileID: 493570232294324342}
@@ -622,7 +622,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -8021109167705974710, guid: 2c4a30686703792428c4f6bce862196b,
+  m_Sprite: {fileID: 8006883494099244843, guid: 5d1808ea32189f54ab5e402fe5348620,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -634,32 +634,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &493570232780804233
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 493570232780804235}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 5, y: 5}
-    newSize: {x: 4, y: 3}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 5, y: 5}
-  m_EdgeRadius: 0
 --- !u!114 &493570232780804232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -685,6 +659,8 @@ MonoBehaviour:
   shotSFX: {fileID: 0}
   deathSFX: {fileID: 0}
   hit: {fileID: 0}
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  hitColor: {r: 1, g: 0.75, b: 0, a: 1}
   difficulty: 0
   mapBounds:
     m_Center: {x: 0, y: 0, z: 0}
@@ -748,6 +724,32 @@ MonoBehaviour:
     type: 3}
   bloodProjectilePrefab: {fileID: 8003838786656185171, guid: 60241dc774d757b488fa4d59c97e2be1,
     type: 3}
+--- !u!61 &5233636841663223253
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 493570232780804235}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -2.357749, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 17, y: 20.004885}
+    newSize: {x: 4, y: 3}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 12.284502, y: 20.004885}
+  m_EdgeRadius: 0
 --- !u!1 &1588930065061440196
 GameObject:
   m_ObjectHideFlags: 0

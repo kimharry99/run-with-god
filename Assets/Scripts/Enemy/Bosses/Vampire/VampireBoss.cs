@@ -166,10 +166,11 @@ public class VampireBoss : Boss
 
     private IEnumerator BloodLaserRoutine()
     {
-		const float laserTime = 1;
+		const float laserTime = 5;
 		yield return new WaitForSeconds(2);
 		bloodLaser.enabled = true;
-        for (float t = 0; t < laserTime; t += Time.deltaTime)
+		bloodLaser.SetPosition(0, transform.position);
+		for (float t = 0; t < laserTime; t += Time.deltaTime)
         {
             float rotationZ = 360 * laserCurve.Evaluate(t / laserTime);
             RaycastHit2D hit = Physics2D.Raycast(transform.position, Quaternion.Euler(0, 0, rotationZ) * Vector2.up, 50, bloodLaserMask);
@@ -180,7 +181,7 @@ public class VampireBoss : Boss
                 {
                     hit.collider.GetComponent<PlayerController>().GetDamaged();
                 }
-                bloodLaser.SetPosition(1, hit.point - new Vector2(transform.position.x, transform.position.y));
+                bloodLaser.SetPosition(1, hit.point);
                 bloodEffect.transform.position = hit.point;
                 bloodEffect.Play();
             }
