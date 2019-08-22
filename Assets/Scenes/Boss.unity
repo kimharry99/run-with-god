@@ -217,6 +217,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapSeed: 0
   firstMapBlockPrefab: {fileID: 0}
+  lastMapBlockPrefab: {fileID: 0}
   mapBlockPrefabs: []
   tier: 0
 --- !u!4 &405834492
@@ -563,6 +564,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1006490692954204934, guid: b245d6ea8e728ae4b96537d929870196,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b245d6ea8e728ae4b96537d929870196, type: 3}
 --- !u!1 &1355950952
@@ -671,12 +677,12 @@ PrefabInstance:
     - target: {fileID: 4143568139256443159, guid: 084196617771fb447a855403d34054d2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.7165442
+      value: 0.21
       objectReference: {fileID: 0}
     - target: {fileID: 4143568139256443159, guid: 084196617771fb447a855403d34054d2,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.3249036
+      value: -3.33
       objectReference: {fileID: 0}
     - target: {fileID: 4143568139256443159, guid: 084196617771fb447a855403d34054d2,
         type: 3}

@@ -133,6 +133,11 @@ public class GameManager : SingletonBehaviour<GameManager>
 
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
+		if(scene.name == "TrustSelection")
+		{
+			ResetGame();
+			PlayerController.inst.transform.position = FindObjectOfType<MapBlock>().startPoint.position;
+		}
 		if (scene.name == "InGameScene")
 		{
 			if (SelectedTrust != null)
@@ -164,6 +169,8 @@ public class GameManager : SingletonBehaviour<GameManager>
 		{
 			gameState.Transition("pause");
 		}
+		if (scene.name != "Title")
+			Camera.main.transform.position = PlayerController.inst.transform.position;
         /*
 #if UNITY_EDITOR
 		if (scene.name == "TrustSelection")
@@ -345,11 +352,17 @@ public class GameManager : SingletonBehaviour<GameManager>
 
 		StartCoroutine(GameClearRoutine());
 	}
-
 	private IEnumerator GameClearRoutine()
 	{
 		yield return InGameUIManager.inst.FadeIn(5);
 		SceneManager.LoadScene("TrustSelection");
-		InGameUIManager.inst.FadeOut(5);
+	}
+
+	private void ResetGame()
+	{
+		TrustSelector.SelectedTrust = null;
+		PlayerController.inst.ResetPlayer();
+		enemyKillCounts = new Dictionary<EnemyType, int>();
+		_playtime = 0;
 	}
 }
