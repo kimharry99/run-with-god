@@ -76,6 +76,7 @@ public class Butcher : NormalEnemy
 		stateMachine.Transition("move");
 	}
 
+
     protected override void Flip()
     {
         base.Flip();
@@ -84,6 +85,7 @@ public class Butcher : NormalEnemy
             child.localPosition = new Vector3(-child.localPosition.x, child.localPosition.y, child.localPosition.z);
         }
     }
+
 
 	public override void GetDamaged(int damage)
 	{
