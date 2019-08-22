@@ -345,6 +345,16 @@ public class GameManager : SingletonBehaviour<GameManager>
                 }
             }
 
+            /* delete ghost map when not kill - trust */
+            if (SelectedTrust.description.Equals("몬스터를 0마리 처치해라."))
+            {
+                if (mapBlockPrefabs[rand].GetComponent<MapBlock>().isMonster[5])
+                {
+                    difficultyCount[tier][mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty]++;
+                    i--;
+                    continue;
+                }
+            }
             MapBlock curBlock = Instantiate(mapBlockPrefabs[rand]).GetComponent<MapBlock>();
             curBlock.ConnectNextTo(prevBlock);
             prevBlock = curBlock;
