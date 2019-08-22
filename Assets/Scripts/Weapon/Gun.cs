@@ -26,6 +26,7 @@ public class Gun : MonoBehaviour
     private Animator playerAnimator;
 
     public GameObject bulletPrefab;
+    public GameObject ShotgunbulletPrefab;
     public GameObject bazookaPrefab;
     Rigidbody2D rb;
 
@@ -140,15 +141,15 @@ public class Gun : MonoBehaviour
         {
             case GunType.RIFLE:
                 Guntype = 0;
-                shotMethod = new RifleShotMethod(this, 3, 0.05f); //초당 60발
+                shotMethod = new RifleShotMethod(this, 2, 0.05f); //초당 40발 ; 분당 2400발
                 break;
             case GunType.SHOTGUN:
                 Guntype = 1;
-                shotMethod = new ShotgunShotMethod(this, 1, 0.6f); //초당 60발
+                shotMethod = new ShotgunShotMethod(this, 1, 0.5f); //초당 20발 ; 분당 1200발
                 break;
             case GunType.BAZOOKA:
                 Guntype = 2;
-                shotMethod = new BazookaShotMethod(this, 1, 0.6f); //바주카 상태에서는 대쉬 봉인, 뒤로 반동 주고 싶음
+                shotMethod = new BazookaShotMethod(this, 1, 0.6f); // 
                 break;
         }
     }
@@ -194,11 +195,11 @@ public class ShotgunShotMethod : ShotMethod
     public override void Shot(Vector2 direction)
     {
         Vector2 Original = direction;
-        for(int i = 0; i < 6; i++)
+        for(int i = 0; i < 10; i++)
         {
-            GameObject bullet = GameObject.Instantiate(gun.bulletPrefab);
+            GameObject bullet = GameObject.Instantiate(gun.ShotgunbulletPrefab);
             bullet.transform.position = gun.ShotPosition.position + new Vector3(0, UnityEngine.Random.Range(-0.01f, 0.01f));
-            direction = Quaternion.Euler(0,0,20f - (UnityEngine.Random.Range(5f,9f)*i)) * Original;
+            direction = Quaternion.Euler(0,0,17f - (UnityEngine.Random.Range(2f,4f)*i)) * Original;
             bullet.GetComponent<Rigidbody2D>().velocity = direction * 20f;
         }
     }
