@@ -79,9 +79,9 @@ public class TrustSelector : MonoBehaviour
 
     IEnumerator FadeIn()
     {
-        while(Light.intensity < 30f)
+        while(Light.intensity < 180f)
         {
-            Light.intensity += 2;
+            Light.intensity += 18;
             yield return new WaitForSeconds(0.02f);
         }  
     }
@@ -90,7 +90,7 @@ public class TrustSelector : MonoBehaviour
     {
         while (Light.intensity > 0.0f)
         {
-            Light.intensity -= 2.5f;
+            Light.intensity -= 30f;
             yield return new WaitForSeconds(0.02f);
         }
     }
