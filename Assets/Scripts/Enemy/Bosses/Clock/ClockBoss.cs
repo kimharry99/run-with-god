@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClockBoss : NormalEnemy
+public class ClockBoss : Boss
 {
 	public override EnemyType Type { get { return EnemyType.BOSS_CLOCK; } }
 
@@ -56,6 +56,8 @@ public class ClockBoss : NormalEnemy
         State pattern4 = new State();
         State pattern5 = new State();
         State pattern6 = new State();
+
+		State dead = new State();
 
         idle.Enter += delegate
         {
@@ -113,6 +115,13 @@ public class ClockBoss : NormalEnemy
             minuteHand.EnableHand();
         };
 
+		dead.Enter += delegate
+		{
+			hourHand.DisableHand();
+			minuteHand.DisableHand();
+			secondHand.DisableHand();
+		};
+
         stateMachine.AddNewState("idle", idle);
         stateMachine.AddNewState("pattern1", pattern1);
         stateMachine.AddNewState("pattern2", pattern2);
@@ -124,10 +133,12 @@ public class ClockBoss : NormalEnemy
         stateMachine.AddNewState("p1to2", P1To2);
         stateMachine.AddNewState("p2to3", P2To3);
 
+		stateMachine.AddNewState("dead", dead);
+
         stateMachine.Transition("idle");
     }
 
-    private void RotateHand(Transform target, Vector3 axis, float speed)
+	private void RotateHand(Transform target, Vector3 axis, float speed)
     {
         target.Rotate(axis, speed * timeSpeed * Time.deltaTime);
     }
@@ -210,12 +221,6 @@ public class ClockBoss : NormalEnemy
 		traps.SetActive(true);
 	}
 
-	public override void GetDamaged(int damage)
-	{
-		base.GetDamaged(damage);
-		InGameUIManager.inst.UpdateBossHelthUI((float)Health / maxHealth);
-	}
-
 	public override void GetDamagedToDeath()
 	{
 		
@@ -224,6 +229,7 @@ public class ClockBoss : NormalEnemy
 	protected override void OnDead()
 	{
 		base.OnDead();
+		stateMachine.Transition("dead");
 		GameManager.inst.GameClear();
 	}
 }

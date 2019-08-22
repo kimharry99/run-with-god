@@ -51,6 +51,9 @@ public class GameManager : SingletonBehaviour<GameManager>
     public GameObject lastMapBlockPrefab;
 	public List<GameObject> mapBlockPrefabs = new List<GameObject>();
 
+	[SerializeField]
+	private List<GameObject> bossMapBlockPrefabs = new List<GameObject>();
+
 	private void OnEnable()
 	{
 		//Reset GameManager
@@ -133,6 +136,11 @@ public class GameManager : SingletonBehaviour<GameManager>
 
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
+		if(scene.name == "TrustSelection")
+		{
+			ResetGame();
+			PlayerController.inst.transform.position = FindObjectOfType<MapBlock>().startPoint.position;
+		}
 		if (scene.name == "InGameScene")
 		{
 			if (SelectedTrust != null)
@@ -140,11 +148,13 @@ public class GameManager : SingletonBehaviour<GameManager>
 				SelectedTrust.Init();
 				InGameUIManager.inst.UpdateTrustUI(SelectedTrust);
 			}
+			mapSeed = UnityEngine.Random.Range(0, int.MaxValue);
 			GenerateMap();
 			PlayerController.inst.ResetPlayer();
 		}
 		if (scene.name == "Boss")
 		{
+			GenerateBossMap();
             //티어별 패턴 선택
             //플레이어 위치 초기화 
 		}
@@ -164,6 +174,8 @@ public class GameManager : SingletonBehaviour<GameManager>
 		{
 			gameState.Transition("pause");
 		}
+		if (scene.name != "Title")
+			Camera.main.transform.position = PlayerController.inst.transform.position;
         /*
 #if UNITY_EDITOR
 		if (scene.name == "TrustSelection")
@@ -241,15 +253,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 
 	private IEnumerator GameOverRoutine()
 	{
-		Scene scene = SceneManager.GetActiveScene();
-		if (scene.name == "InGameScene")
-		{
-			SceneManager.LoadScene(scene.name);
-		}
-		else if (scene.name == "Boss")
-		{
-
-		}
+		SceneManager.LoadScene("InGameScene");
 		yield return null;
 	}
     
@@ -330,8 +334,26 @@ public class GameManager : SingletonBehaviour<GameManager>
         MapBlock lastBlock = Instantiate(lastMapBlockPrefab).GetComponent<MapBlock>();
         lastBlock.ConnectNextTo(prevBlock);
     }
+
+	private void GenerateBossMap()
+	{
+		MapBlock mapBlock;
+		if (SelectedTrust != null)
+		{
+			mapBlock = Instantiate(bossMapBlockPrefabs[(int)SelectedTrust.trustType]).GetComponent<MapBlock>();
+			mapBlock.difficulty = SelectedTrust.tier;
+		}
+		else
+		{
+			mapBlock = Instantiate(bossMapBlockPrefabs[0]).GetComponent<MapBlock>();
+		}
+		PlayerController.inst.transform.position = mapBlock.startPoint.position;
+	}
+
 	public void GameClear()
 	{
+		GameObject player = PlayerController.inst.gameObject;
+		player.GetComponent<Rigidbody2D>().simulated = false;
 		do
 		{
 			if (SelectedTrust == null)
@@ -345,11 +367,17 @@ public class GameManager : SingletonBehaviour<GameManager>
 
 		StartCoroutine(GameClearRoutine());
 	}
-
 	private IEnumerator GameClearRoutine()
 	{
 		yield return InGameUIManager.inst.FadeIn(5);
 		SceneManager.LoadScene("TrustSelection");
-		InGameUIManager.inst.FadeOut(5);
+	}
+
+	private void ResetGame()
+	{
+		TrustSelector.SelectedTrust = null;
+		PlayerController.inst.ResetPlayer();
+		enemyKillCounts = new Dictionary<EnemyType, int>();
+		_playtime = 0;
 	}
 }

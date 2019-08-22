@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Butcher : NormalEnemy
+public class Butcher : Boss
 {
     public override EnemyType Type { get { return EnemyType.ALL; } }
     public Transform anchor;
@@ -36,6 +36,8 @@ public class Butcher : NormalEnemy
         State pattern3 = new State();
         State pattern4 = new State();
         State pattern5 = new State();
+
+		State dead = new State();
 
 		move.Enter += delegate { nextPatternTimer = Random.Range(3f, 5f); };
 
@@ -73,24 +75,11 @@ public class Butcher : NormalEnemy
 		stateMachine.AddNewState("pattern4", pattern4);
 		stateMachine.AddNewState("pattern5", pattern5);
 
+
+		stateMachine.AddNewState("dead", dead);
+
 		stateMachine.Transition("move");
 	}
-
-    protected override void Flip()
-    {
-        base.Flip();
-        foreach(Transform child in transform)
-        {
-            child.localPosition = new Vector3(-child.localPosition.x, child.localPosition.y, child.localPosition.z);
-        }
-    }
-
-	public override void GetDamaged(int damage)
-	{
-		base.GetDamaged(damage);
-		InGameUIManager.inst.UpdateBossHelthUI((float)Health / maxHealth);
-	}
-
 	public override void GetDamagedToDeath()
 	{
 		
@@ -187,7 +176,7 @@ public class Butcher : NormalEnemy
 		BoxCollider2D col = GetComponent<BoxCollider2D>();
 		while (!col.IsTouchingLayers(1 << LayerMask.NameToLayer("Wall")))
 		{
-			rb.AddForce(40 * (sr.flipX ? Vector2.left : Vector2.right));
+			rb.AddForce(40 * Direction);
 			yield return null;
 		}
 		gameObject.layer = LayerMask.NameToLayer("Enemy Passable");
@@ -204,5 +193,12 @@ public class Butcher : NormalEnemy
 		tombstones[0].Summon();
 		tombstones[1].Summon();
 		stateMachine.Transition("move");
+	}
+
+	protected override void OnDead()
+	{
+		base.OnDead();
+		stateMachine.Transition("dead");
+		GameManager.inst.GameClear();
 	}
 }

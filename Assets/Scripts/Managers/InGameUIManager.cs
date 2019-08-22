@@ -107,9 +107,10 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 
 	private IEnumerator FadeInRoutine(float time)
 	{
-		BlackPanel.color -= new Color(0, 0, 0, 1);
+		BlackPanel.color = new Color(0, 0, 0, 0);
 		while (BlackPanel.color.a < 1)
 		{
+			Debug.Log(BlackPanel.color);
 			BlackPanel.color += new Color(0, 0, 0, (1 / time) * Time.deltaTime);
 			yield return new WaitForEndOfFrame();
 		}
@@ -123,7 +124,7 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 
 	private IEnumerator FadeOutRoutine(float time)
 	{
-		BlackPanel.color += new Color(0, 0, 0, 1);
+		BlackPanel.color = Color.black;
 		while (BlackPanel.color.a > 0)
 		{
 			BlackPanel.color -= new Color(0, 0, 0, (1 / time) * Time.deltaTime);

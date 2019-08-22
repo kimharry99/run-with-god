@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VampireBoss : NormalEnemy
+public class VampireBoss : Boss
 {
     public Bounds mapBounds;
 
@@ -31,6 +31,8 @@ public class VampireBoss : NormalEnemy
 
 	private int phase = 1;
 
+	private Vector3 destination;
+
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
@@ -49,26 +51,6 @@ public class VampireBoss : NormalEnemy
     protected override void Update()
     {
         base.Update();
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            StartCoroutine(BloodLaserRoutine());
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            StartCoroutine(TeleportRoutine(BloodLaserRoutine()));
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            StartCoroutine(MakeAlterRoutine());
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            StartCoroutine(MakeBloodPillarRoutine());
-        }
-		if (Input.GetKeyDown(KeyCode.Alpha5))
-		{
-			StartCoroutine(TeleportRoutine(MakeBloodProjectileRoutine()));
-		}
 		nextPatternTimer -= Time.deltaTime;
     }
 
@@ -83,6 +65,8 @@ public class VampireBoss : NormalEnemy
 
 		State p1to2 = new State();
 
+		State dead = new State();
+
 		phase1.Enter += delegate { nextPatternTimer = 6; };
 		phase1.StateUpdate += delegate {
 			if (nextPatternTimer <= 0)
@@ -93,6 +77,9 @@ public class VampireBoss : NormalEnemy
 			{
 				stateMachine.Transition("p1to2");
 			}
+			transform.position += (destination - transform.position).normalized * Time.deltaTime;
+			if (Vector3.Distance(transform.position, destination) < 0.01f)
+				destination = RandomInsideMap;
 		};
 		phase2.Enter += delegate { nextPatternTimer = 3; };
 		phase2.StateUpdate += delegate {
@@ -118,13 +105,9 @@ public class VampireBoss : NormalEnemy
 
 		stateMachine.AddNewState("p1to2", p1to2);
 
-		stateMachine.Transition("phase1");
-	}
+		stateMachine.AddNewState("dead", dead);
 
-	public override void GetDamaged(int damage)
-	{
-		base.GetDamaged(damage);
-		InGameUIManager.inst.UpdateBossHelthUI((float)Health / maxHealth);
+		stateMachine.Transition("phase1");
 	}
 
 	public override void GetDamagedToDeath()
@@ -166,7 +149,7 @@ public class VampireBoss : NormalEnemy
         col.enabled = false;
         const float teleportTimer = 0.2f;
 
-        Color color = sr.color;
+        Color color = baseColor;
         for (float t= 0; t<teleportTimer; t += Time.deltaTime)
         {
             sr.color = new Color(color.r, color.g, color.b, Mathf.Lerp(1, 0, t / teleportTimer));
@@ -188,10 +171,11 @@ public class VampireBoss : NormalEnemy
 
     private IEnumerator BloodLaserRoutine()
     {
-		const float laserTime = 1;
+		const float laserTime = 5;
 		yield return new WaitForSeconds(2);
 		bloodLaser.enabled = true;
-        for (float t = 0; t < laserTime; t += Time.deltaTime)
+		bloodLaser.SetPosition(0, transform.position);
+		for (float t = 0; t < laserTime; t += Time.deltaTime)
         {
             float rotationZ = 360 * laserCurve.Evaluate(t / laserTime);
             RaycastHit2D hit = Physics2D.Raycast(transform.position, Quaternion.Euler(0, 0, rotationZ) * Vector2.up, 50, bloodLaserMask);
@@ -202,7 +186,7 @@ public class VampireBoss : NormalEnemy
                 {
                     hit.collider.GetComponent<PlayerController>().GetDamaged();
                 }
-                bloodLaser.SetPosition(1, hit.point - new Vector2(transform.position.x, transform.position.y));
+                bloodLaser.SetPosition(1, hit.point);
                 bloodEffect.transform.position = hit.point;
                 bloodEffect.Play();
             }
@@ -250,11 +234,18 @@ public class VampireBoss : NormalEnemy
 		}
 		for (float t = 0; t < changeColorTime; t += Time.deltaTime)
 		{
-			sr.color = Color.Lerp(oriColor, Color.red, t / changeColorTime);
+			sr.color = baseColor = Color.Lerp(oriColor, Color.red, t / changeColorTime);
 			yield return null;
 		}
 		col.enabled = true;
 		phase = 2;
 		stateMachine.Transition("phase" + phase.ToString());
+	}
+
+	protected override void OnDead()
+	{
+		base.OnDead();
+		stateMachine.Transition("dead");
+		GameManager.inst.GameClear();
 	}
 }
