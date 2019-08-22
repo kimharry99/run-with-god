@@ -578,6 +578,12 @@ public class PlayerController : SingletonBehaviour<PlayerController>
             Life = 3;
             Debug.Log(Life);
         }
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            StartCoroutine(DeadRoutine());
+        }
     }
+
+
     #endregion
 }
