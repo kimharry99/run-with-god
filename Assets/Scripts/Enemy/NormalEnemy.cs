@@ -90,6 +90,11 @@ public abstract class NormalEnemy : MonoBehaviour
 	[SerializeField]
 	private AudioSource hit;
 
+	[SerializeField]
+	protected Color baseColor = Color.white;
+	[SerializeField]
+	protected Color hitColor = new Color(1, 0.75f, 0);
+
     #endregion
 
     protected virtual void Start()
@@ -97,6 +102,7 @@ public abstract class NormalEnemy : MonoBehaviour
         Health = maxHealth;
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+		sr.color = baseColor;
         InitEnemy();
     }
 
@@ -216,9 +222,9 @@ public abstract class NormalEnemy : MonoBehaviour
 
 	protected IEnumerator HitEffectRoutine()
 	{
-        sr.color = new Color(1, 0.75f, 0);
-		yield return null;
-        sr.color = Color.white;
+		sr.color = hitColor;
+		yield return new WaitForEndOfFrame();
+        sr.color = baseColor;
 	}
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)//노말몹과 플레이어 충돌판정함수

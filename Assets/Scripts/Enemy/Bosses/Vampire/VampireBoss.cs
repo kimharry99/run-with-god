@@ -228,7 +228,7 @@ public class VampireBoss : Boss
 		}
 		for (float t = 0; t < changeColorTime; t += Time.deltaTime)
 		{
-			sr.color = Color.Lerp(oriColor, Color.red, t / changeColorTime);
+			sr.color = baseColor = Color.Lerp(oriColor, Color.red, t / changeColorTime);
 			yield return null;
 		}
 		col.enabled = true;

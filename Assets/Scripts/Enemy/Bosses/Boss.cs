@@ -15,7 +15,7 @@ public abstract class Boss : NormalEnemy
 	public override void GetDamaged(int damage)
 	{
 		base.GetDamaged(damage);
-		InGameUIManager.inst.UpdateBossHelthUI(Health / maxHealth);
+		InGameUIManager.inst.UpdateBossHelthUI((float)Health / maxHealth);
 	}
 
 	public override void GetDamagedToDeath()
