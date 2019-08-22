@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 5f190de2bed5e2344b5919f49793db01, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: f051522e65cb418498140324f5454933, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -152,6 +152,8 @@ MonoBehaviour:
   mapSeed: 3
   firstMapBlockPrefab: {fileID: 7518774133327650737, guid: d14fa09d270541543979c817e4b2bae6,
     type: 3}
+  lastMapBlockPrefab: {fileID: 1457591929043342694, guid: 262a9ade1ece4c24eb8bb3783e614746,
+    type: 3}
   mapBlockPrefabs: []
   tier: 0
 --- !u!4 &112483779
@@ -162,7 +164,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 112483777}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.7165442, y: 0.3249036, z: -0.8107106}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -245,6 +247,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_CullingMask.m_Bits
       value: 229175
+      objectReference: {fileID: 0}
+    - target: {fileID: 4143568139256443158, guid: 084196617771fb447a855403d34054d2,
+        type: 3}
+      propertyPath: m_ClearFlags
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 084196617771fb447a855403d34054d2, type: 3}
@@ -589,7 +596,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1.0000002, z: 1.0000002}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1157411057
 PrefabInstance:
@@ -1242,7 +1249,7 @@ PrefabInstance:
     - target: {fileID: 7770249736614924727, guid: b245d6ea8e728ae4b96537d929870196,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7770249736614924727, guid: b245d6ea8e728ae4b96537d929870196,
         type: 3}
