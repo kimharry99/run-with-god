@@ -36,6 +36,6 @@ public class KillCountTrust : Trust
 
 	public override string TrustToText()
 	{
-		return Mathf.Min(killCount, needKillCount) + " / " + needKillCount;
+		return killCount + " / " + needKillCount;
 	} 
 }
