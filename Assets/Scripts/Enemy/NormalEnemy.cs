@@ -31,7 +31,7 @@ public abstract class NormalEnemy : MonoBehaviour
 
     protected Vector2 Direction
     {
-        get { return sr.flipX ? Vector2.left : Vector2.right; }
+        get { return transform.localScale.x < 0 ? Vector2.left : Vector2.right; }
         //set { if (Direction != value.normalized) Flip(); }
     }
 
@@ -90,6 +90,11 @@ public abstract class NormalEnemy : MonoBehaviour
 	[SerializeField]
 	private AudioSource hit;
 
+	[SerializeField]
+	protected Color baseColor = Color.white;
+	[SerializeField]
+	protected Color hitColor = new Color(1, 0.75f, 0);
+
     #endregion
 
     protected virtual void Start()
@@ -97,6 +102,7 @@ public abstract class NormalEnemy : MonoBehaviour
         Health = maxHealth;
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+		sr.color = baseColor;
         InitEnemy();
     }
 
@@ -130,6 +136,7 @@ public abstract class NormalEnemy : MonoBehaviour
     //기본 함수들
     #region Monster Basic Functions
     protected abstract void InitEnemy();
+
 	public virtual void GetDamaged(int damage)
 	{
 		if (hit != null)
@@ -215,9 +222,9 @@ public abstract class NormalEnemy : MonoBehaviour
 
 	protected IEnumerator HitEffectRoutine()
 	{
-        sr.color = new Color(1, 0.75f, 0);
-		yield return null;
-        sr.color = Color.white;
+		sr.color = hitColor;
+		yield return new WaitForEndOfFrame();
+        sr.color = baseColor;
 	}
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)//노말몹과 플레이어 충돌판정함수
@@ -313,14 +320,14 @@ public abstract class NormalEnemy : MonoBehaviour
 
     protected void SeePlayer()  //플레이어를 보는 함수
     {
-        if (PlayerController.inst.PlayerPosition.x > transform.position.x == sr.flipX)
+        if (PlayerController.inst.PlayerPosition.x > transform.position.x != transform.localScale.x > 0)
             Flip();
         //sr.flipX = PlayerController.inst.PlayerPosition.x < transform.position.x;
     }
 
     protected virtual void Flip() //방향을 바꾸는 함수
     {
-        sr.flipX = !sr.flipX;
+		transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
     }
 
     #endregion

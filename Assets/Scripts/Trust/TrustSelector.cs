@@ -10,8 +10,8 @@ public enum TrustType
 }
 
 public class TrustSelector : MonoBehaviour
-{   
-	public static Trust SelectedTrust { get; private set; }
+{
+	public static Trust SelectedTrust;
 
 	public TrustType type;
 	[SerializeField]
