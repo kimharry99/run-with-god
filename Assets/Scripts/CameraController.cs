@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering.PostProcessing;
 
 public class CameraController : MonoBehaviour
@@ -24,8 +25,12 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private ParticleSystem hitEffect;
 
+	[SerializeField]
+	private PostProcessProfile ppp;
+
  	private void Start()
 	{
+		ppp = GetComponentInChildren<PostProcessVolume>().profile;
 		target = PlayerController.inst.transform;
         targetRb = target.GetComponent<Rigidbody2D>();
 		Shake = CameraShake;
@@ -88,12 +93,15 @@ public class CameraController : MonoBehaviour
 
 	IEnumerator ChromaticAberrationEffectRoutine()
 	{
+		ChromaticAberration chromatic = ppp.GetSetting<ChromaticAberration>();
+
 		for (float t = 0; t < 1; t += Time.deltaTime)
 		{
-			chromatic.SetFloat("_Bias", (1 - 4 * (t - 0.5f) * (t - 0.5f)) / 200);
+			chromatic.intensity.value = (1 - 4 * (t - 0.5f) * (t - 0.5f));
+			Debug.Log(chromatic.intensity.value);
 			yield return null;
 		}
-		chromatic.SetFloat("_Bias", 0);
+		chromatic.intensity.value = 0;
 	}
 
 	private void ShockwaveEffect(Vector2 center)
@@ -105,11 +113,10 @@ public class CameraController : MonoBehaviour
 
 	IEnumerator ShockWaveEffectRoutine(Vector2 center)
 	{
-		shockwave.SetFloat("_CenterX", center.x);
-		shockwave.SetFloat("_CenterY", center.y);
+		Shockwave shockwave = ppp.GetSetting<Shockwave>();
 
-        //float oriThickness = shockwave.GetFloat("_Thickness");
-        //float oriRadius = shockwave.GetFloat("_Radius");
+		shockwave.center.value = new Vector2(center.x, center.y);
+
         float oriThickness = 0.2f;
         float oriRadius = 1f;
 
@@ -120,28 +127,18 @@ public class CameraController : MonoBehaviour
 		{
 			x += Time.deltaTime;
 			t = 1 - (x - 1) * (x - 1);
-			shockwave.SetFloat("_Thickness", oriThickness * ((x - 1) * (x - 1)));
+			shockwave.thickness.value = oriThickness * ((x - 1) * (x - 1));
 			waveRadius = Mathf.Lerp(-0.2f, oriRadius, t);
-			shockwave.SetFloat("_Radius", waveRadius);
+			shockwave.radius.value = waveRadius;
 			yield return null;
 		}
-		shockwave.SetFloat("_Thickness", 0.2f);
-		shockwave.SetFloat("_Radius", 1f);
+		shockwave.thickness.value = 0.2f;
+		shockwave.radius.value = 1f;
 
-		shockwave.SetFloat("_CenterX", 0.5f);
-		shockwave.SetFloat("_CenterY", 0.5f);
+		shockwave.center.value = new Vector2(0.5f, 0.5f);
 	}
 
-	
-	private void OnRenderImage(RenderTexture source, RenderTexture destination)
-	{
-		RenderTexture tmp = RenderTexture.GetTemporary(source.width, source.height);
-		Graphics.Blit(source, tmp, chromatic);
-		Graphics.Blit(tmp, destination, shockwave);
-		RenderTexture.ReleaseTemporary(tmp);
-	}
-	
-    private void PlayHitEffect()
+	private void PlayHitEffect()
     {
         hitEffect.Play();
     }

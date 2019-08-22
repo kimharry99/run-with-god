@@ -4846,6 +4846,7 @@ MonoBehaviour:
   shockwave: {fileID: 2100000, guid: a1773ac3c88e6cc4bb3655d8691104c9, type: 2}
   chromatic: {fileID: 2100000, guid: 3c95561b7658c07428556e3ce111b263, type: 2}
   hitEffect: {fileID: 4143568139218777257}
+  ppp: {fileID: 0}
 --- !u!114 &6284213328125706449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4905,7 +4906,9 @@ MonoBehaviour:
   breakBeforeColorGrading: 0
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
-  m_AfterStackBundles: []
+  m_AfterStackBundles:
+  - assemblyQualifiedName: Shockwave, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
 --- !u!1 &7730173942834115298
 GameObject:
   m_ObjectHideFlags: 0
