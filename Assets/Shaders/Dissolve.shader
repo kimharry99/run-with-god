@@ -10,9 +10,20 @@
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
-		LOD 200
+		Tags
+		{
+			"Queue" = "Transparent"
+			"IgnoreProjector" = "True"
+			"RenderType" = "Transparent"
+			"PreviewType" = "Plane"
+			"CanUseSpriteAtlas" = "True"
+		}
+
 		Cull Off
+		Lighting Off
+		ZWrite Off
+		Blend One OneMinusSrcAlpha
+
 		CGPROGRAM
 		#pragma surface surf Lambert
 		#pragma target 3.0
@@ -35,9 +46,9 @@
 				discard;
 			if (tex2D(_NoiseTex, IN.uv_MainTex).r < _Threshold)
 				discard;
-			else if (tex2D(_NoiseTex, IN.uv_MainTex).r < _Threshold + 0.1f)
-				o.Emission = _Glow * _EmissionAmount;
-            o.Albedo = col.rgb;
+			else
+				o.Emission = _Glow * _EmissionAmount * pow(1 - (tex2D(_NoiseTex, IN.uv_MainTex).r - _Threshold),10);
+			o.Albedo = col.rgb;
             o.Alpha = col.a;
         }
         ENDCG
