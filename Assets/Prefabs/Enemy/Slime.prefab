@@ -52,7 +52,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 26e945b099014ed48a1be3407f6e20e2, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -145,7 +145,7 @@ MonoBehaviour:
   maxHealth: 4
   speed: 2
   acceleration: 0
-  range: 20
+  size: {x: 0, y: 0}
   attack: 1
   hitEffect: {fileID: 851367709670752856}
   dissolve: {fileID: 4800000, guid: 588349a7a5b2c584f8732a9b5c4ba62c, type: 3}
@@ -154,7 +154,9 @@ MonoBehaviour:
   bulletPrefab: {fileID: 0}
   shotSFX: {fileID: 0}
   deathSFX: {fileID: 0}
-  hitSFX: {fileID: 0}
+  hit: {fileID: 0}
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  hitColor: {r: 1, g: 0.75, b: 0, a: 1}
 --- !u!1001 &4787688833260070744
 PrefabInstance:
   m_ObjectHideFlags: 0
