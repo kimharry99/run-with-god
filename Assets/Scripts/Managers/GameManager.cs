@@ -301,6 +301,7 @@ public class GameManager : SingletonBehaviour<GameManager>
                         if (mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty > 0)
                         {
                             difficultyCount[tier][mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty]++;
+                            i--;
                             continue;
                         }
                         break;
@@ -309,6 +310,7 @@ public class GameManager : SingletonBehaviour<GameManager>
                         if (mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty > 0)
                         {
                             difficultyCount[tier][mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty]++;
+                            i--;
                             continue;
                         }
                         break;
@@ -317,6 +319,7 @@ public class GameManager : SingletonBehaviour<GameManager>
                         if (mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty > 1)
                         {
                             difficultyCount[tier][mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty]++;
+                            i--;
                             continue;
                         }
                         break;
@@ -325,6 +328,7 @@ public class GameManager : SingletonBehaviour<GameManager>
                         if (mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty > 1)
                         {
                             difficultyCount[tier][mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty]++;
+                            i--;
                             continue;
                         }
                         break;
@@ -332,6 +336,7 @@ public class GameManager : SingletonBehaviour<GameManager>
                         if (mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty > 1)
                         {
                             difficultyCount[tier][mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty]++;
+                            i--;
                             continue;
                         }
                         break;
