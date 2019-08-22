@@ -76,6 +76,7 @@ public class EnemyInViewTrust : Trust
     public override void Init()
     {
         isDone = true;
+        enemyCount = 0;
         inRangeTime = 0f;
         camera = Camera.main;
 
@@ -85,8 +86,10 @@ public class EnemyInViewTrust : Trust
 
     public override string TrustToText()
     {
-        string time = "Time : " + Mathf.Min(inRangeTime, limitTime) + " / " + limitTime;
-        string count = "Count : " + Mathf.Min(enemyCount, limitEnemycount) + " / " + limitEnemycount;
+        string rangeTime = string.Format("{0:0.##}", inRangeTime);
+
+        string time = "Time : " + (inRangeTime < limitTime? rangeTime : ((int)limitTime).ToString()) + " / " + limitTime;
+        string count = "Count : " + (isDone? Mathf.Min(enemyCount, limitEnemycount) : limitEnemycount) + " / " + limitEnemycount;
 
         return time + "\n" + count;
     }

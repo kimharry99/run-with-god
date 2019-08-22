@@ -58,6 +58,8 @@ public class OnGroundTrust : Trust
 
     public override string TrustToText()
     {
-        return Mathf.Min(inAirTime , limitTime) + " / " + limitTime ;
+        string leftTime = inAirTime < limitTime ? string.Format("{0:0.##}", inAirTime) : limitTime.ToString();
+
+        return leftTime + " / " + limitTime ;
     }
 }
