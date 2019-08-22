@@ -254,6 +254,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	#region Initialize Functions
 	public void ResetPlayer()
 	{
+		rb.simulated = true;
 		foreach (var renderer in GetComponentsInChildren<SpriteRenderer>())
 		{
 			renderer.color = Color.white;

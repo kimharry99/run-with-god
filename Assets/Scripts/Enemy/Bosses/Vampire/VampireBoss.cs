@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VampireBoss : NormalEnemy
+public class VampireBoss : Boss
 {
     public Bounds mapBounds;
 
@@ -49,26 +49,6 @@ public class VampireBoss : NormalEnemy
     protected override void Update()
     {
         base.Update();
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            StartCoroutine(BloodLaserRoutine());
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            StartCoroutine(TeleportRoutine(BloodLaserRoutine()));
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            StartCoroutine(MakeAlterRoutine());
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            StartCoroutine(MakeBloodPillarRoutine());
-        }
-		if (Input.GetKeyDown(KeyCode.Alpha5))
-		{
-			StartCoroutine(TeleportRoutine(MakeBloodProjectileRoutine()));
-		}
 		nextPatternTimer -= Time.deltaTime;
     }
 
@@ -82,6 +62,8 @@ public class VampireBoss : NormalEnemy
 		State pattern4 = new State();
 
 		State p1to2 = new State();
+
+		State dead = new State();
 
 		phase1.Enter += delegate { nextPatternTimer = 6; };
 		phase1.StateUpdate += delegate {
@@ -118,13 +100,9 @@ public class VampireBoss : NormalEnemy
 
 		stateMachine.AddNewState("p1to2", p1to2);
 
-		stateMachine.Transition("phase1");
-	}
+		stateMachine.AddNewState("dead", dead);
 
-	public override void GetDamaged(int damage)
-	{
-		base.GetDamaged(damage);
-		InGameUIManager.inst.UpdateBossHelthUI((float)Health / maxHealth);
+		stateMachine.Transition("phase1");
 	}
 
 	public override void GetDamagedToDeath()
@@ -256,5 +234,12 @@ public class VampireBoss : NormalEnemy
 		col.enabled = true;
 		phase = 2;
 		stateMachine.Transition("phase" + phase.ToString());
+	}
+
+	protected override void OnDead()
+	{
+		base.OnDead();
+		stateMachine.Transition("dead");
+		GameManager.inst.GameClear();
 	}
 }

@@ -345,14 +345,23 @@ public class GameManager : SingletonBehaviour<GameManager>
 
 	private void GenerateBossMap()
 	{
+		MapBlock mapBlock;
 		if (SelectedTrust != null)
-			PlayerController.inst.transform.position = Instantiate(bossMapBlockPrefabs[(int)SelectedTrust.trustType]).GetComponent<MapBlock>().startPoint.position;
+		{
+			mapBlock = Instantiate(bossMapBlockPrefabs[(int)SelectedTrust.trustType]).GetComponent<MapBlock>();
+			mapBlock.difficulty = SelectedTrust.tier;
+		}
 		else
-			PlayerController.inst.transform.position = Instantiate(bossMapBlockPrefabs[0]).GetComponent<MapBlock>().startPoint.position;
+		{
+			mapBlock = Instantiate(bossMapBlockPrefabs[0]).GetComponent<MapBlock>();
+		}
+		PlayerController.inst.transform.position = mapBlock.startPoint.position;
 	}
 
 	public void GameClear()
 	{
+		GameObject player = PlayerController.inst.gameObject;
+		player.GetComponent<Rigidbody2D>().simulated = false;
 		do
 		{
 			if (SelectedTrust == null)

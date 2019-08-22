@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Butcher : NormalEnemy
+public class Butcher : Boss
 {
     public override EnemyType Type { get { return EnemyType.ALL; } }
     public Transform anchor;
@@ -36,6 +36,8 @@ public class Butcher : NormalEnemy
         State pattern3 = new State();
         State pattern4 = new State();
         State pattern5 = new State();
+
+		State dead = new State();
 
 		move.Enter += delegate { nextPatternTimer = Random.Range(3f, 5f); };
 
@@ -73,13 +75,9 @@ public class Butcher : NormalEnemy
 		stateMachine.AddNewState("pattern4", pattern4);
 		stateMachine.AddNewState("pattern5", pattern5);
 
-		stateMachine.Transition("move");
-	}
+		stateMachine.AddNewState("dead", dead);
 
-	public override void GetDamaged(int damage)
-	{
-		base.GetDamaged(damage);
-		InGameUIManager.inst.UpdateBossHelthUI((float)Health / maxHealth);
+		stateMachine.Transition("move");
 	}
 
 	public override void GetDamagedToDeath()
@@ -195,5 +193,12 @@ public class Butcher : NormalEnemy
 		tombstones[0].Summon();
 		tombstones[1].Summon();
 		stateMachine.Transition("move");
+	}
+
+	protected override void OnDead()
+	{
+		base.OnDead();
+		stateMachine.Transition("dead");
+		GameManager.inst.GameClear();
 	}
 }

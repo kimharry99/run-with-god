@@ -130,6 +130,7 @@ public abstract class NormalEnemy : MonoBehaviour
     //기본 함수들
     #region Monster Basic Functions
     protected abstract void InitEnemy();
+
 	public virtual void GetDamaged(int damage)
 	{
 		if (hit != null)
