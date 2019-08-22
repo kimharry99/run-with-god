@@ -307,8 +307,7 @@ public abstract class NormalEnemy : MonoBehaviour
         bullet.transform.position = shotPosition.position;
         bullet.GetComponent<Rigidbody2D>().velocity = ShotDirection * shotSpeed;
         bullet.transform.rotation = Quaternion.Euler(0,0, Vector2.SignedAngle(Vector2.right, ShotDirection));
-
-        //SoundManager.inst.PlaySFX(gameObject, shotSFX);
+        SoundManager.inst.PlaySFX(gameObject, shotSFX);
     }
 
     protected void SeePlayer()  //플레이어를 보는 함수
