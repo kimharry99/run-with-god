@@ -84,6 +84,7 @@ MonoBehaviour:
   rightJoint: {fileID: 5642748235375110442}
   startPoint: {fileID: 1002323722516015150}
   difficulty: 1
+  isMonster: 01000000010001
 --- !u!1 &4495802388706790392
 GameObject:
   m_ObjectHideFlags: 0
@@ -3682,6 +3683,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.x
       value: 14.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 1091981381661232598, guid: ee8fe5696ad8ad5419d11b08291cd770,
+        type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.x
+      value: 126.485466
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee8fe5696ad8ad5419d11b08291cd770, type: 3}

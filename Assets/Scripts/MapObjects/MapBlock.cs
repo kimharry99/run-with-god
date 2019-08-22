@@ -7,6 +7,8 @@ public class MapBlock : MonoBehaviour
 	public Transform leftJoint, rightJoint, startPoint;
     public int difficulty=0;
 
+    public bool[] isMonster = new bool[7];
+
 	public void ConnectNextTo(MapBlock block)
 	{
 		transform.position = block.transform.position + block.rightJoint.localPosition - leftJoint.localPosition;
