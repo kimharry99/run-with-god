@@ -39,19 +39,19 @@ public class CameraController : MonoBehaviour
 	private void LateUpdate()
 	{
         //offsetY = Input.GetAxis("Vertical") * 0.5f;
-        offsetX = Input.GetAxis("Horizontal") * 1;
-        print(offsetX);
+        offsetX = Input.GetAxis("HorizontalCamera") * 0.5f;
         timeCount += Time.deltaTime;
-        if (timeCount > 0.01f)
+        //isFollowingPlayer = offsetX * offsetX >= 1;
+        if (isFollowingPlayer)
         {
-            if (isFollowingPlayer)
-            {
-                //transform.position = Vector3.Lerp(transform.position, target.position + new Vector3(offsetX, offsetY, offsetZ), 0.1f);
-                timeCount = 0;
-            }
-            
+            transform.position = Vector3.Lerp(transform.position, target.position + new Vector3(offsetX, offsetY, offsetZ), 0.1f);
         }
-        transform.position = Vector3.Lerp(transform.position, target.position + new Vector3(offsetX, offsetY, offsetZ), 0.1f);
+        /*
+        else
+        {
+            transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x,target.position.y,target.position.z) + new Vector3(offsetX, offsetY, offsetZ), 0.1f);
+        }
+        */
 	}
 
     public void SetCameraOffset(float x, float y)
