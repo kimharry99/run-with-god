@@ -47,6 +47,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 	private Dictionary<Tuple<TrustType, int>, List<Trust>> playedTrusts = new Dictionary<Tuple<TrustType, int>, List<Trust>>();
 
 	public int mapSeed;
+    public GameObject tutorialMapBlockPrefab;
     public GameObject firstMapBlockPrefab;
     public GameObject lastMapBlockPrefab;
 	public List<GameObject> mapBlockPrefabs = new List<GameObject>();
@@ -259,11 +260,22 @@ public class GameManager : SingletonBehaviour<GameManager>
     
     //for Development, tier -> SelectedTruth.tier
     public int tier;
+    [SerializeField]
+    private bool isFirstPlay;
     private void GenerateMap()
     {
         UnityEngine.Random.InitState(mapSeed);
 
-        MapBlock prevBlock = Instantiate(firstMapBlockPrefab).GetComponent<MapBlock>();
+        MapBlock prevBlock;
+        if (isFirstPlay)
+        {
+            prevBlock = Instantiate(tutorialMapBlockPrefab).GetComponent<MapBlock>();
+            isFirstPlay = false;
+        }
+        else
+        {
+            prevBlock = Instantiate(firstMapBlockPrefab).GetComponent<MapBlock>();
+        }
         PlayerController.inst.transform.position = prevBlock.startPoint.position;
 
         int[/*tier*/][/*difficulty*/] difficultyCount = { new int[] { 7, 2, 0, 0 }, new int[] { 5, 3, 1, 0 }, new int[] { 0, 5, 3, 1 }, new int[] { 0, 3, 4, 2 } };
