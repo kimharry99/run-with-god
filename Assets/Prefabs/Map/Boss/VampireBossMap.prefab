@@ -562,6 +562,7 @@ GameObject:
   - component: {fileID: 493570232780804230}
   - component: {fileID: 493570232780804232}
   - component: {fileID: 5233636841663223253}
+  - component: {fileID: 5414645908700649748}
   m_Layer: 14
   m_Name: Vampire
   m_TagString: Enemy
@@ -751,6 +752,25 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 12.284502, y: 20.004885}
   m_EdgeRadius: 0
+--- !u!95 &5414645908700649748
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 493570232780804235}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d63f12190d300504fa7c033a7d603622, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1588930065061440196
 GameObject:
   m_ObjectHideFlags: 0
