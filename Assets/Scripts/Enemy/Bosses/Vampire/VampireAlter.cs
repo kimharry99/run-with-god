@@ -13,7 +13,14 @@ public class VampireAlter : NormalEnemy
 
     [SerializeField]
     private GameObject projectilePrefab;
-    
+
+    private Animator anim;
+
+    private void Awake()
+    {
+        anim = GetComponent<Animator>();
+    }
+
     protected override void InitEnemy()
     {
 
@@ -24,6 +31,11 @@ public class VampireAlter : NormalEnemy
         base.Update();
 		shotTimer -= Time.deltaTime;
 		healTimer -= Time.deltaTime;
+
+        if (shotTimer <= 1.5f)
+        {
+            anim.SetTrigger("Attack1");
+        }
 
         if (shotTimer <= 0)
         {

@@ -33,6 +33,8 @@ public class VampireBoss : Boss
 
 	private Vector3 destination;
 
+    private Animator anim;
+
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
@@ -41,6 +43,11 @@ public class VampireBoss : Boss
 
 #endif
     public override EnemyType Type { get { return EnemyType.ALL; } }
+
+    private void Awake()
+    {
+        anim = GetComponent<Animator>();
+    }
 
     protected override void Start()
     {
@@ -90,7 +97,7 @@ public class VampireBoss : Boss
 		};
 
 		pattern1.Enter += delegate { StartCoroutine(MakeAlterRoutine()); };
-		pattern2.Enter += delegate { StartCoroutine(TeleportRoutine(MakeBloodPillarRoutine())); };
+		pattern2.Enter += delegate { StartCoroutine(TeleportRoutine(MakeBloodPillarRoutine()));  };
 		pattern3.Enter += delegate { StartCoroutine(TeleportRoutine(MakeBloodProjectileRoutine())); };
 		pattern4.Enter += delegate { StartCoroutine(TeleportRoutine(BloodLaserRoutine())); };
 
@@ -117,6 +124,7 @@ public class VampireBoss : Boss
 
     private IEnumerator MakeAlterRoutine()
     {
+        anim.SetTrigger("Attack2");
         yield return new WaitForSeconds(1);
         for (int i = 0; i < 2; i++)
         {
@@ -146,8 +154,9 @@ public class VampireBoss : Boss
 
     private IEnumerator TeleportRoutine(IEnumerator nextRoutine)
     {
+        anim.SetTrigger("Teleport");
         col.enabled = false;
-        const float teleportTimer = 0.2f;
+        const float teleportTimer = 1.2f;
 
         Color color = baseColor;
         for (float t= 0; t<teleportTimer; t += Time.deltaTime)
@@ -171,6 +180,7 @@ public class VampireBoss : Boss
 
     private IEnumerator BloodLaserRoutine()
     {
+        anim.SetTrigger("Attack1");
 		const float laserTime = 5;
 		yield return new WaitForSeconds(2);
 		bloodLaser.enabled = true;
@@ -198,6 +208,7 @@ public class VampireBoss : Boss
 
     private IEnumerator MakeBloodPillarRoutine()
     {
+        anim.SetTrigger("Attack2");
         yield return new WaitForSeconds(2);
         for (int i = 0; i < 3; i++)
         {
@@ -210,7 +221,8 @@ public class VampireBoss : Boss
 
 	private IEnumerator MakeBloodProjectileRoutine()
 	{
-		yield return new WaitForSeconds(1);
+        anim.SetTrigger("Attack1");
+        yield return new WaitForSeconds(1);
 		for (int i = 0; i < 4; i++)
 		{
 			GameObject projectile = Instantiate(bloodProjectilePrefab, transform.position, transform.rotation);

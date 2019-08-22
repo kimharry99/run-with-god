@@ -91,6 +91,7 @@ GameObject:
   - component: {fileID: 5610986440630625320}
   - component: {fileID: 138901990176859265}
   - component: {fileID: 7630828575138366070}
+  - component: {fileID: -3790943719870889372}
   m_Layer: 14
   m_Name: VampireAlter
   m_TagString: Enemy
@@ -190,7 +191,7 @@ MonoBehaviour:
   baseColor: {r: 0.39215687, g: 0.46666667, b: 1, a: 0.62352943}
   hitColor: {r: 1, g: 0.7490196, b: 0, a: 0}
   vampire: {fileID: 0}
-  projectilePrefab: {fileID: 8255848804799629962, guid: cfcc9bb1b8f3f32419905ed6de00e418,
+  projectilePrefab: {fileID: 8255848804799629962, guid: b810dc1fd56a4294db54376065102761,
     type: 3}
 --- !u!61 &7630828575138366070
 BoxCollider2D:
@@ -218,3 +219,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 12.203468, y: 20.004885}
   m_EdgeRadius: 0
+--- !u!95 &-3790943719870889372
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5610986440630625322}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d63f12190d300504fa7c033a7d603622, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

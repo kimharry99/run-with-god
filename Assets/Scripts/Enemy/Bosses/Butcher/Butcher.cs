@@ -20,7 +20,14 @@ public class Butcher : Boss
 	[SerializeField]
 	private Tombstone[] tombstones = new Tombstone[2];
 
-	protected override void Update()
+    private Animator anim;
+
+    private void Awake()
+    {
+        anim = GetComponent<Animator>();
+    }
+
+    protected override void Update()
 	{
 		base.Update();
 		if (nextPatternTimer > 0)
@@ -39,7 +46,7 @@ public class Butcher : Boss
 
 		State dead = new State();
 
-		move.Enter += delegate { nextPatternTimer = Random.Range(3f, 5f); };
+		move.Enter += delegate { nextPatternTimer = Random.Range(3f, 5f); anim.SetBool("isWalking", true); };
 
 		move.StateUpdate += delegate
 		{
@@ -58,11 +65,11 @@ public class Butcher : Boss
 			}
 		};
 
-		move.Exit += delegate { rb.velocity = Vector2.zero; };
+		move.Exit += delegate { rb.velocity = Vector2.zero; anim.SetBool("isWalking", false); };
 
 		pattern1.Enter += delegate { StartCoroutine(AttackRoutine()); };
 
-		pattern1.Enter += delegate { StartCoroutine(ThrowAnchorRoutine()); };
+		pattern1.Enter += delegate { StartCoroutine(ThrowAnchorRoutine());  };
 		pattern2.Enter += delegate { stateMachine.Transition("move"); };
         pattern3.Enter += delegate { StartCoroutine(AnchorAttackRoutine()); };
 		pattern4.Enter += delegate { StartCoroutine(RushRoutine()); };
@@ -93,14 +100,16 @@ public class Butcher : Boss
 
 	private IEnumerator AttackRoutine()
 	{
-		yield return attackRange.Activate(0.3f, true);
-		yield return new WaitForSeconds(0.2f);
+        yield return attackRange.Activate(0.3f, true);
+        anim.SetTrigger("Attack2");
+        yield return new WaitForSeconds(0.2f);
 		stateMachine.Transition("move");
 	}
 
 	private IEnumerator ThrowAnchorRoutine()
     {
-		Vector3 playerPos = PlayerController.inst.transform.position;
+       
+        Vector3 playerPos = PlayerController.inst.transform.position;
 		Vector3 oriLocalPos = anchor.localPosition;
 		Vector3 oriPos = anchor.position;
 
@@ -111,7 +120,9 @@ public class Butcher : Boss
 
 		anchor.gameObject.SetActive(true);
 
-		while (!col.IsTouchingLayers(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Ground")))
+        anim.SetTrigger("Throw");
+
+        while (!col.IsTouchingLayers(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Ground")))
 		{
 			anchor.position += new Vector3(direction.x, direction.y, 0) * 20 * Time.deltaTime;
 			yield return null;
@@ -128,7 +139,8 @@ public class Butcher : Boss
 				anchor.transform.position = PlayerController.inst.transform.position;
 				yield return null;
 			}
-			Debug.Log("Player Hit");
+            
+            Debug.Log("Player Hit");
 		}
 		else
 		{
@@ -151,12 +163,17 @@ public class Butcher : Boss
 
     private IEnumerator AnchorAttackRoutine()
     {
+
+        
+
         Vector3 playerPos = PlayerController.inst.transform.position;
         Vector3 oriLocalPos = anchor.localPosition;
         Vector3 oriPos = anchor.position;
 
         Vector2 direction = (playerPos - oriPos).normalized;
         float angle = -Vector2.Angle(Vector2.up, direction);
+
+        anim.SetTrigger("Throw");
 
         GameObject tmp = Instantiate(anchorPrefab, transform.position, Quaternion.Euler(0,0,angle));
         tmp.GetComponent<Rigidbody2D>().velocity = direction * 5;
@@ -187,10 +204,14 @@ public class Butcher : Boss
 
 	private IEnumerator SummonTombstonesRoutine()
 	{
-		yield return shockwaveRange.Activate(1f, true);
+
+        anim.SetTrigger("Attack1");
+
+        yield return shockwaveRange.Activate(1f, true);
 		CameraController.Shake(0.2f, 0.5f);
 		yield return new WaitForSeconds(2f);
-		tombstones[0].Summon();
+
+        tombstones[0].Summon();
 		tombstones[1].Summon();
 		stateMachine.Transition("move");
 	}
