@@ -88,6 +88,9 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 	[SerializeField]
 	private ParticleSystem walkEffect;
 
+	[SerializeField]
+	private LayerMask explodeMask;
+
 	#region Unity Functions
 	private void Awake()
 	{
@@ -386,7 +389,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		CameraController.ChromaticAberration();
 		SoundManager.inst.PlaySFX(gameObject, boomSFX);
 
-		foreach (var enemy in Physics2D.OverlapCircleAll(transform.position, explodeRange, 1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Enemy Ghost")))
+		foreach (var enemy in Physics2D.OverlapCircleAll(transform.position, explodeRange, explodeMask))
 		{
 #if UNITY_EDITOR
 			if (IsKill)

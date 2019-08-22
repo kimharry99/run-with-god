@@ -47,7 +47,7 @@ public abstract class NormalEnemy : MonoBehaviour
         {
             _health = value;
 
-            if (Health <= 0)
+            if (_health <= 0)
             {
                 OnDead();
             }

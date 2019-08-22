@@ -140,6 +140,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 		{
 			ResetGame();
 			PlayerController.inst.transform.position = FindObjectOfType<MapBlock>().startPoint.position;
+			mapSeed = UnityEngine.Random.Range(0, int.MaxValue);
 		}
 		if (scene.name == "InGameScene")
 		{
@@ -148,7 +149,6 @@ public class GameManager : SingletonBehaviour<GameManager>
 				SelectedTrust.Init();
 				InGameUIManager.inst.UpdateTrustUI(SelectedTrust);
 			}
-			mapSeed = UnityEngine.Random.Range(0, int.MaxValue);
 			GenerateMap();
 			PlayerController.inst.ResetPlayer();
 		}
