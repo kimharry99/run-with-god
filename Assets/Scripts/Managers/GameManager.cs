@@ -47,6 +47,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 	private Dictionary<Tuple<TrustType, int>, List<Trust>> playedTrusts = new Dictionary<Tuple<TrustType, int>, List<Trust>>();
 
 	public int mapSeed;
+    public GameObject tutorialMapBlockPrefab;
     public GameObject firstMapBlockPrefab;
     public GameObject lastMapBlockPrefab;
 	public List<GameObject> mapBlockPrefabs = new List<GameObject>();
@@ -101,7 +102,6 @@ public class GameManager : SingletonBehaviour<GameManager>
 		SceneManager.sceneLoaded += OnSceneLoaded;
 	}
 
-    /*
 #if UNITY_EDITOR
 
 	private TrustSelector[] selectors;
@@ -131,7 +131,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 		
 	}
 #endif
-*/
+
 	private void Update()
 	{
 		gameState.UpdateStateMachine();
@@ -152,6 +152,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 				SelectedTrust.Init();
 				InGameUIManager.inst.UpdateTrustUI(SelectedTrust);
 			}
+            Playtime=0;
 			GenerateMap();
 			PlayerController.inst.ResetPlayer();
 		}
@@ -176,14 +177,14 @@ public class GameManager : SingletonBehaviour<GameManager>
 		}
 		if (scene.name != "Title")
 			Camera.main.transform.position = PlayerController.inst.transform.position;
-        /*
+        
 #if UNITY_EDITOR
 		if (scene.name == "TrustSelection")
 		{
 			selectors = FindObjectsOfType<TrustSelector>();
 		}
 #endif
-*/
+
 	}
 
 	private void InitGameState()
@@ -262,11 +263,22 @@ public class GameManager : SingletonBehaviour<GameManager>
     
     //for Development, tier -> SelectedTruth.tier
     public int tier;
+    [SerializeField]
+    private bool isFirstPlay;
     private void GenerateMap()
     {
         UnityEngine.Random.InitState(mapSeed);
 
-        MapBlock prevBlock = Instantiate(firstMapBlockPrefab).GetComponent<MapBlock>();
+        MapBlock prevBlock;
+        if (isFirstPlay)
+        {
+            prevBlock = Instantiate(tutorialMapBlockPrefab).GetComponent<MapBlock>();
+            isFirstPlay = false;
+        }
+        else
+        {
+            prevBlock = Instantiate(firstMapBlockPrefab).GetComponent<MapBlock>();
+        }
         PlayerController.inst.transform.position = prevBlock.startPoint.position;
 
         int[/*tier*/][/*difficulty*/] difficultyCount = { new int[] { 7, 2, 0, 0 }, new int[] { 5, 3, 1, 0 }, new int[] { 0, 5, 3, 1 }, new int[] { 0, 3, 4, 2 } };
@@ -292,6 +304,7 @@ public class GameManager : SingletonBehaviour<GameManager>
                         if (mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty > 0)
                         {
                             difficultyCount[tier][mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty]++;
+                            i--;
                             continue;
                         }
                         break;
@@ -300,6 +313,7 @@ public class GameManager : SingletonBehaviour<GameManager>
                         if (mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty > 0)
                         {
                             difficultyCount[tier][mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty]++;
+                            i--;
                             continue;
                         }
                         break;
@@ -308,6 +322,7 @@ public class GameManager : SingletonBehaviour<GameManager>
                         if (mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty > 1)
                         {
                             difficultyCount[tier][mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty]++;
+                            i--;
                             continue;
                         }
                         break;
@@ -316,6 +331,7 @@ public class GameManager : SingletonBehaviour<GameManager>
                         if (mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty > 1)
                         {
                             difficultyCount[tier][mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty]++;
+                            i--;
                             continue;
                         }
                         break;
@@ -323,6 +339,7 @@ public class GameManager : SingletonBehaviour<GameManager>
                         if (mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty > 1)
                         {
                             difficultyCount[tier][mapBlockPrefabs[rand].GetComponent<MapBlock>().difficulty]++;
+                            i--;
                             continue;
                         }
                         break;
@@ -391,6 +408,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 
 	private void ResetGame()
 	{
+        InGameUIManager.inst.BlackPanel.color = new Color(0, 0, 0, 0);
 		TrustSelector.SelectedTrust = null;
 		PlayerController.inst.ResetPlayer();
 		enemyKillCounts = new Dictionary<EnemyType, int>();

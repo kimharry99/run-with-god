@@ -265,7 +265,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 		foreach (var source in GetComponents<AudioSource>())
 		{
-			if (source != move)
+			if (source != move && source != gun.shot)
 				Destroy(source);
 		}
 
@@ -286,6 +286,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		State idle = new State();
 		idle.StateUpdate += PlayerMovementControl;
 		idle.StateUpdate += PlayerAttackControl;
+        idle.StateUpdate += Cheat;
 
 		State hit = new State();
 		hit.Enter += delegate
@@ -427,10 +428,10 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		StopAllCoroutines();
 		StartCoroutine(DeadRoutine());
 	}
-	#endregion
+    #endregion
 
-	#region Action Routine Enumerators
-	private IEnumerator GraceTimeRoutine()
+    #region Action Routine Enumerators
+    private IEnumerator GraceTimeRoutine()
 	{
 		Color oriColor = sr.color;
 		gameObject.layer = LayerMask.NameToLayer("Player Grace");
@@ -568,7 +569,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		yield return new WaitForSeconds(0.3f);
 		Physics2D.IgnoreCollision(col, other, false);
 	}
-	#endregion
+    #endregion
 
     #region Deprecated Functions
     /*
@@ -584,5 +585,23 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		}
 	}
     */
+    #endregion
+
+    //for Debug
+    #region Cheat Functions
+    private void Cheat()
+    {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Life = 3;
+            Debug.Log(Life);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            StartCoroutine(DeadRoutine());
+        }
+    }
+
+
     #endregion
 }
