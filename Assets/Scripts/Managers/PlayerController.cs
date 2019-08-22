@@ -272,7 +272,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		gameObject.layer = LayerMask.NameToLayer("Player");
 		speedScale = 1;
 		graceTimer = 0;
-		Life = 3;
+		Life = 5;
 		ExplodeItem = 5;
 
 		OnJump = null;

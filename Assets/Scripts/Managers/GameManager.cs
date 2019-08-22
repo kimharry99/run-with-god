@@ -364,6 +364,7 @@ public class GameManager : SingletonBehaviour<GameManager>
                 }
             }
 
+            /* generat difficulty 1 ghost map when trust is ATTACK_GHOST 0 */
             if (SelectedTrust.description.Equals("유령을 16마리 처치해라."))
             {
                 if (mapBlockPrefabs[rand].GetComponent<MapBlock>().isMonster[5])

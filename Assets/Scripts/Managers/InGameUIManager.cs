@@ -62,7 +62,7 @@ public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 
 	public void UpdateLifeUI(int lifeCount)
 	{
-		for(int i= 0; i<3; i++)
+		for(int i= 0; i<5; i++)
         {
             lifeUIs[i].SetActive(lifeCount > i);
         }
