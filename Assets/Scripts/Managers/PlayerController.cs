@@ -133,7 +133,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
-		if (scene.name == "InGameScene" || scene.name == "Boss")
+		if (scene.name == "InGameScene" || scene.name.Contains("Boss"))
 		{
 			gameObject.SetActive(true);
 			playerState.Transition("idle");
@@ -145,7 +145,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		}
 		else
 		{
-			//gameObject.SetActive(false);
+			gameObject.SetActive(false);
 		}
 	}
 
@@ -262,11 +262,24 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		{
 			renderer.color = Color.white;
 		}
+
+		foreach (var source in GetComponents<AudioSource>())
+		{
+			if (source != move && source != gun.shot)
+				Destroy(source);
+		}
+
 		gameObject.layer = LayerMask.NameToLayer("Player");
+		speedScale = 1;
 		graceTimer = 0;
 		Life = 3;
 		ExplodeItem = 5;
-	}
+
+		OnJump = null;
+		OnDash = null;
+		GetHit = null;
+		gun.OnShotBullet = null;
+}
 
 	private void InitPlayerStateMachine()
 	{
@@ -513,6 +526,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 		if (targetGround.collider != null)
 		{
 			gameObject.layer = LayerMask.NameToLayer("Player Grace");
+			graceTimer = 9999f;
 			rb.velocity = Vector2.zero;
 			rb.gravityScale = 100;
             //transform.position = targetGround.point + new Vector2(0, GetComponent<Collider2D>().bounds.extents.y);
@@ -525,6 +539,8 @@ public class PlayerController : SingletonBehaviour<PlayerController>
                 }
                 yield return null;
             }
+			graceTimer = 0.3f;
+
 			playerAnimator.SetBool("isRunning", false);
 			playerAnimator.SetBool("isGround", IsGround);
 			rb.gravityScale = 1;
@@ -535,9 +551,11 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			{
 				enemy.GetComponent<NormalEnemy>()?.GetDamagedToDeath();
 			}
-			yield return new WaitForSeconds(0.3f);
-			if (graceTimer <= 0)
-				gameObject.layer = LayerMask.NameToLayer("Player");
+			while (graceTimer > 0)
+			{
+				yield return null;
+			}
+			gameObject.layer = LayerMask.NameToLayer("Player");
 		}
 		playerState.Transition("idle");
 	}

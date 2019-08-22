@@ -55,6 +55,9 @@ public class GameManager : SingletonBehaviour<GameManager>
 	[SerializeField]
 	private List<GameObject> bossMapBlockPrefabs = new List<GameObject>();
 
+	public int galleryDifficulty;
+	public TrustType galleryType;
+
 	private void OnEnable()
 	{
 		//Reset GameManager
@@ -99,7 +102,6 @@ public class GameManager : SingletonBehaviour<GameManager>
 		SceneManager.sceneLoaded += OnSceneLoaded;
 	}
 
-    
 #if UNITY_EDITOR
 
 	private TrustSelector[] selectors;
@@ -160,15 +162,12 @@ public class GameManager : SingletonBehaviour<GameManager>
             //티어별 패턴 선택
             //플레이어 위치 초기화 
 		}
-        else if (scene.name == "Boss_Butcher")
-        {
-
-        }
-        else if (scene.name == "Boss_Vampire")
-        {
-
-        }
-		if (scene.name == "InGameScene" || scene.name == "Boss" || scene.name == "Boss_Butcher" || scene.name == "Boss_Vampire")
+		if (scene.name == "Boss_Gallery")
+		{
+			ResetGame();
+			GenerateGalleryBossMap();
+		}
+		if (scene.name == "InGameScene" || scene.name.Contains("Boss"))
 		{
 			gameState.Transition("play");
 		}
@@ -255,7 +254,10 @@ public class GameManager : SingletonBehaviour<GameManager>
 
 	private IEnumerator GameOverRoutine()
 	{
-		SceneManager.LoadScene("InGameScene");
+		if (SceneManager.GetActiveScene().name == "Boss_Gallery")
+			SceneManager.LoadScene("Title");
+		else
+			SceneManager.LoadScene("InGameScene");
 		yield return null;
 	}
     
@@ -378,27 +380,40 @@ public class GameManager : SingletonBehaviour<GameManager>
 		PlayerController.inst.transform.position = mapBlock.startPoint.position;
 	}
 
+	public void GenerateGalleryBossMap()
+	{
+		MapBlock mapBlock = Instantiate(bossMapBlockPrefabs[(int)galleryType]).GetComponent<MapBlock>();
+		mapBlock.difficulty = galleryDifficulty;
+		PlayerController.inst.transform.position = mapBlock.startPoint.position;
+	}
+
 	public void GameClear()
 	{
 		GameObject player = PlayerController.inst.gameObject;
 		player.GetComponent<Rigidbody2D>().simulated = false;
-		do
-		{
-			if (SelectedTrust == null)
-				break;
-			if (SelectedTrust.IsDone)
-				trustTier[SelectedTrust.trustType]++;
-			else
-				trustTier[SelectedTrust.trustType]--;
-		}
-		while (trustTier[SelectedTrust.trustType] == 0);
-
 		StartCoroutine(GameClearRoutine());
 	}
 	private IEnumerator GameClearRoutine()
 	{
 		yield return InGameUIManager.inst.FadeIn(5);
-		SceneManager.LoadScene("TrustSelection");
+		if (SceneManager.GetActiveScene().name == "Boss")
+		{
+			do
+			{
+				if (SelectedTrust == null)
+					break;
+				if (SelectedTrust.IsDone)
+					trustTier[SelectedTrust.trustType]++;
+				else
+					trustTier[SelectedTrust.trustType]--;
+			}
+			while (trustTier[SelectedTrust.trustType] == 0);
+			SceneManager.LoadScene("TrustSelection");
+		}
+		else
+		{
+			SceneManager.LoadScene("Title");
+		}
 	}
 
 	private void ResetGame()

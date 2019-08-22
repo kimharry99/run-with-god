@@ -30,7 +30,7 @@ public class Gun : MonoBehaviour
     Rigidbody2D rb;
 
     [SerializeField]
-    private AudioSource shot = null;
+    public AudioSource shot = null;
     [SerializeField]
     private Light gunFireLight;
 

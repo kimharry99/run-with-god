@@ -98,7 +98,6 @@ public class CameraController : MonoBehaviour
 		for (float t = 0; t < 1; t += Time.deltaTime)
 		{
 			chromatic.intensity.value = (1 - 4 * (t - 0.5f) * (t - 0.5f));
-			Debug.Log(chromatic.intensity.value);
 			yield return null;
 		}
 		chromatic.intensity.value = 0;

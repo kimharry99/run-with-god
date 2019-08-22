@@ -38,6 +38,7 @@ public class Butcher : Boss
     {
 
         State move = new State();
+		State attack = new State();
         State pattern1 = new State();
         State pattern2 = new State();
         State pattern3 = new State();
@@ -56,7 +57,7 @@ public class Butcher : Boss
 			BoxCollider2D col = GetComponent<BoxCollider2D>();
 			if (Physics2D.OverlapBox(col.bounds.center, col.bounds.size, 0, 1 << LayerMask.NameToLayer("Player")) != null)
 			{
-				stateMachine.Transition("pattern1");
+				stateMachine.Transition("attack");
 			}
 			else if (nextPatternTimer <= 0)
 			{
@@ -67,7 +68,7 @@ public class Butcher : Boss
 
 		move.Exit += delegate { rb.velocity = Vector2.zero; anim.SetBool("isWalking", false); };
 
-		pattern1.Enter += delegate { StartCoroutine(AttackRoutine()); };
+		attack.Enter += delegate { StartCoroutine(AttackRoutine()); };
 
 		pattern1.Enter += delegate { StartCoroutine(ThrowAnchorRoutine());  };
 		pattern2.Enter += delegate { stateMachine.Transition("move"); };
@@ -76,6 +77,7 @@ public class Butcher : Boss
 		pattern5.Enter += delegate { StartCoroutine(SummonTombstonesRoutine()); };
 
 		stateMachine.AddNewState("move", move);
+		stateMachine.AddNewState("attack", attack);
 		stateMachine.AddNewState("pattern1", pattern1);
 		stateMachine.AddNewState("pattern2", pattern2);
 		stateMachine.AddNewState("pattern3", pattern3);
