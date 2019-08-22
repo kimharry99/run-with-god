@@ -31,6 +31,8 @@ public class VampireBoss : Boss
 
 	private int phase = 1;
 
+	private Vector3 destination;
+
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
@@ -75,6 +77,9 @@ public class VampireBoss : Boss
 			{
 				stateMachine.Transition("p1to2");
 			}
+			transform.position += (destination - transform.position).normalized * Time.deltaTime;
+			if (Vector3.Distance(transform.position, destination) < 0.01f)
+				destination = RandomInsideMap;
 		};
 		phase2.Enter += delegate { nextPatternTimer = 3; };
 		phase2.StateUpdate += delegate {
@@ -144,7 +149,7 @@ public class VampireBoss : Boss
         col.enabled = false;
         const float teleportTimer = 0.2f;
 
-        Color color = sr.color;
+        Color color = baseColor;
         for (float t= 0; t<teleportTimer; t += Time.deltaTime)
         {
             sr.color = new Color(color.r, color.g, color.b, Mathf.Lerp(1, 0, t / teleportTimer));
