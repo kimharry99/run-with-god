@@ -50,7 +50,6 @@ public class TrustSelectionUIManager : SingletonBehaviour<TrustSelectionUIManage
 			Debug.LogWarning("SelectedTrust is null");
 			return;
 		}
-        GameManager.inst.mapSeed = Random.Range(0, 1000);
 		SceneManager.LoadScene("InGameScene");
 	}
 
