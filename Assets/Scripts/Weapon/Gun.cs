@@ -36,6 +36,8 @@ public class Gun : MonoBehaviour
 
     public Action OnShotBullet;
 
+	private float afterShotTimer = 2f;
+
     private void Awake()
     {
         SwitchGun(GunType.RIFLE);
@@ -52,6 +54,8 @@ public class Gun : MonoBehaviour
         gunFireLight.enabled = gunFireLight.intensity >= 0;
         if (shotCooltime > 0)
             shotCooltime -= Time.deltaTime;
+		if (afterShotTimer > 0)
+			afterShotTimer -= Time.deltaTime;
     }
 
     private void InitGunStateMachine()
@@ -59,7 +63,7 @@ public class Gun : MonoBehaviour
         State idle = new State();
         idle.Enter += delegate
         {
-            playerAnimator.SetBool("isShooting", false);
+            
         };
 
         idle.StateUpdate += delegate
@@ -78,7 +82,8 @@ public class Gun : MonoBehaviour
                 Shot();
             }
             InGameUIManager.inst.UpdateWeapon(Guntype);
-        };
+			playerAnimator.SetBool("isShooting", afterShotTimer > 0);
+		};
 
         State fire = new State();
 
@@ -86,6 +91,7 @@ public class Gun : MonoBehaviour
         {
             shotCooltime = 0;
             shotCount = shotMethod.bulletsPerShot;
+			afterShotTimer = 2f;
             playerAnimator.SetBool("isShooting", true);
         };
 
