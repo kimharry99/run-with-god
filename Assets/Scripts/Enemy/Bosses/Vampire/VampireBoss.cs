@@ -21,6 +21,10 @@ public class VampireBoss : Boss
 	private float nextPatternTimer;
 
     [SerializeField]
+    private float[] nextPatternTimePhase1;
+    [SerializeField]
+    private float[] nextPatternTimePhase2;
+    [SerializeField]
     private GameObject alterPrefab;
     [SerializeField]
     private GameObject bloodPillarPrefab;
@@ -74,7 +78,7 @@ public class VampireBoss : Boss
 
 		State dead = new State();
 
-		phase1.Enter += delegate { nextPatternTimer = 6; };
+		phase1.Enter += delegate { nextPatternTimer = nextPatternTimePhase1[difficulty+3]; };
 		phase1.StateUpdate += delegate {
 			if (nextPatternTimer <= 0)
 			{
@@ -89,7 +93,7 @@ public class VampireBoss : Boss
 			if (Vector3.Distance(transform.position, destination) < 0.01f)
 				destination = RandomInsideMap;
 		};
-		phase2.Enter += delegate { nextPatternTimer = 3; };
+		phase2.Enter += delegate { nextPatternTimer = nextPatternTimePhase2[difficulty+3]; };
 		phase2.StateUpdate += delegate {
 			if (nextPatternTimer <= 0)
 			{

@@ -720,6 +720,22 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   bloodEffect: {fileID: 5726432795947309949}
+  nextPatternTimePhase1:
+  - 2.5
+  - 4
+  - 5
+  - 6
+  - 6
+  - 6
+  - 6
+  nextPatternTimePhase2:
+  - 1.5
+  - 3
+  - 5
+  - 6
+  - 6
+  - 6
+  - 6
   alterPrefab: {fileID: 5610986440630625322, guid: e897e37f46123a2429aa2177cdf8206a,
     type: 3}
   bloodPillarPrefab: {fileID: 446800227978912703, guid: e64f4d580bb7398499ae67b44be0cd2b,
@@ -4516,6 +4532,7 @@ MonoBehaviour:
   rightJoint: {fileID: 0}
   startPoint: {fileID: 959294346707574916}
   difficulty: 0
+  isMonster: 00000000000000
 --- !u!1 &3833542659040470654
 GameObject:
   m_ObjectHideFlags: 0
