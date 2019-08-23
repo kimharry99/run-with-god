@@ -14,12 +14,18 @@ public class VampireBoss : Boss
     public AnimationCurve laserCurve;
 
     [SerializeField]
-    private ParticleSystem bloodEffect;
+    private ParticleSystem bloodEffect0, bloodEffect1;
     
     private Collider2D col;
 
 	private float nextPatternTimer;
 
+    [SerializeField]
+    private float[] nextPatternTimePhase1;
+    [SerializeField]
+    private float[] nextPatternTimePhase2;
+    [SerializeField]
+    private float[] patternDelayCoffiecient;
     [SerializeField]
     private GameObject alterPrefab;
     [SerializeField]
@@ -34,6 +40,9 @@ public class VampireBoss : Boss
 	private Vector3 destination;
 
     private Animator anim;
+
+	private int alterCount = 1;
+	private int bloodPillarCount = 1;
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
@@ -74,21 +83,22 @@ public class VampireBoss : Boss
 
 		State dead = new State();
 
-		phase1.Enter += delegate { nextPatternTimer = 6; };
+		phase1.Enter += delegate { nextPatternTimer = nextPatternTimePhase1[difficulty+3]; };
 		phase1.StateUpdate += delegate {
 			if (nextPatternTimer <= 0)
 			{
 				stateMachine.Transition("pattern" + Random.Range(1, 5).ToString());
 			}
-			if (Health <= maxHealth / 2)
-			{
-				stateMachine.Transition("p1to2");
-			}
+            if(!(difficulty<2&&difficulty>-2))
+			    if (Health <= maxHealth / 2)
+			    {
+				    stateMachine.Transition("p1to2");
+			    }
 			transform.position += (destination - transform.position).normalized * Time.deltaTime;
 			if (Vector3.Distance(transform.position, destination) < 0.01f)
 				destination = RandomInsideMap;
 		};
-		phase2.Enter += delegate { nextPatternTimer = 3; };
+		phase2.Enter += delegate { nextPatternTimer = nextPatternTimePhase2[difficulty+3]; };
 		phase2.StateUpdate += delegate {
 			if (nextPatternTimer <= 0)
 			{
@@ -115,6 +125,23 @@ public class VampireBoss : Boss
 		stateMachine.AddNewState("dead", dead);
 
 		stateMachine.Transition("phase1");
+
+		switch (difficulty)
+		{
+			case 0:
+				alterCount = 1;
+				bloodPillarCount = 1;
+				break;
+			case 1: case -1:
+			case -2: case -3:
+				alterCount = 2;
+				bloodPillarCount = 3;
+				break;
+			default:
+				alterCount = difficulty + 1;
+				bloodPillarCount = difficulty + 2;
+				break;
+		}
 	}
 
 	public override void GetDamagedToDeath()
@@ -126,12 +153,14 @@ public class VampireBoss : Boss
     {
         anim.SetTrigger("Attack2");
         yield return new WaitForSeconds(1);
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < alterCount; i++)
         {
 			GameObject alter = Instantiate(alterPrefab, transform.position, transform.rotation);
 			alter.GetComponent<VampireAlter>().vampire = this;
 			StartCoroutine(MoveTo(alter.transform, RandomInsideMap, 3));
         }
+		if (difficulty > 1)
+			StartCoroutine(MakeBloodPillarRoutine(1));
 		stateMachine.Transition("phase" + phase.ToString());
 	}
 
@@ -181,10 +210,13 @@ public class VampireBoss : Boss
     private IEnumerator BloodLaserRoutine()
     {
         anim.SetTrigger("Attack1");
-		const float laserTime = 5;
-		yield return new WaitForSeconds(2);
+		float laserTime = difficulty < -1 ? 2.5f : 5f;
+		yield return new WaitForSeconds(2*patternDelayCoffiecient[difficulty+3]);
 		bloodLaser.enabled = true;
-		bloodLaser.SetPosition(0, transform.position+new Vector3(0,0.15f,0));
+		bloodLaser.positionCount = difficulty > 1 ? 4 : 2;
+		bloodLaser.SetPosition(0, transform.position + new Vector3(0, 0.15f, 0));
+		if (difficulty > 1)
+			bloodLaser.SetPosition(2, transform.position + new Vector3(0, 0.15f, 0));
 		for (float t = 0; t < laserTime; t += Time.deltaTime)
         {
             float rotationZ = 360 * laserCurve.Evaluate(t / laserTime);
@@ -197,10 +229,25 @@ public class VampireBoss : Boss
                     hit.collider.GetComponent<PlayerController>().GetDamaged();
                 }
                 bloodLaser.SetPosition(1, hit.point);
-                bloodEffect.transform.position = hit.point;
-                bloodEffect.Play();
+                bloodEffect0.transform.position = hit.point;
+                bloodEffect0.Play();
             }
-            yield return new WaitForFixedUpdate();
+			if (difficulty > 1)
+			{
+				hit = Physics2D.Raycast(transform.position, Quaternion.Euler(0, 0, -rotationZ) * Vector2.up, 50, bloodLaserMask);
+				if (hit.collider != null)
+				{
+					PlayerController pc = hit.collider.GetComponent<PlayerController>();
+					if (pc != null && pc.IsDamagable)
+					{
+						hit.collider.GetComponent<PlayerController>().GetDamaged();
+					}
+					bloodLaser.SetPosition(3, hit.point);
+					bloodEffect1.transform.position = hit.point;
+					bloodEffect1.Play();
+				}
+			}
+			yield return new WaitForFixedUpdate();
         }
         bloodLaser.enabled = false;
 		stateMachine.Transition("phase" + phase.ToString());
@@ -210,7 +257,7 @@ public class VampireBoss : Boss
     {
         anim.SetTrigger("Attack2");
         yield return new WaitForSeconds(2);
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < bloodPillarCount; i++)
         {
             Instantiate(bloodPillarPrefab, new Vector3(Random.Range(mapBounds.min.x / 2, mapBounds.max.x / 2), 0), transform.rotation)
                 .GetComponent<BloodPillar>().Initialize(new Vector2(Random.Range(-1f, 1f), 0), 10);
@@ -218,6 +265,16 @@ public class VampireBoss : Boss
         }
 		stateMachine.Transition("phase" + phase.ToString());
     }
+
+	private IEnumerator MakeBloodPillarRoutine(int count)
+	{
+		for (int i = 0; i < count; i++)
+		{
+			Instantiate(bloodPillarPrefab, new Vector3(Random.Range(mapBounds.min.x / 2, mapBounds.max.x / 2), 0), transform.rotation)
+				.GetComponent<BloodPillar>().Initialize(new Vector2(Random.Range(-1f, 1f), 0), 10);
+			yield return new WaitForSeconds(Random.Range(0.2f, 0.5f));
+		}
+	}
 
 	private IEnumerator MakeBloodProjectileRoutine()
 	{
@@ -229,6 +286,8 @@ public class VampireBoss : Boss
 			projectile.GetComponent<BloodProjectile>().SetStartValues(transform.position, 90 * i);
 			Destroy(projectile, 2);
 		}
+		if (difficulty > 1)
+			StartCoroutine(MakeBloodPillarRoutine(1));
 		stateMachine.Transition("phase" + phase.ToString());
 	}
 
