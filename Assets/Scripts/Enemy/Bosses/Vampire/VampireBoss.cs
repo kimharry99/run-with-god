@@ -25,6 +25,8 @@ public class VampireBoss : Boss
     [SerializeField]
     private float[] nextPatternTimePhase2;
     [SerializeField]
+    private float[] patternDelayCoffiecient;
+    [SerializeField]
     private GameObject alterPrefab;
     [SerializeField]
     private GameObject bloodPillarPrefab;
@@ -187,7 +189,7 @@ public class VampireBoss : Boss
     {
         anim.SetTrigger("Attack1");
 		const float laserTime = 5;
-		yield return new WaitForSeconds(2);
+		yield return new WaitForSeconds(2*patternDelayCoffiecient[difficulty+3]);
 		bloodLaser.enabled = true;
 		bloodLaser.SetPosition(0, transform.position+new Vector3(0,0.15f,0));
 		for (float t = 0; t < laserTime; t += Time.deltaTime)
