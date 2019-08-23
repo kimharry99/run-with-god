@@ -151,6 +151,7 @@ public class GameManager : SingletonBehaviour<GameManager>
             if (SelectedTrust != null)
 			{
 				SelectedTrust.Init();
+                InGameUIManager.inst.trustUI.SetActive(true);
 				InGameUIManager.inst.UpdateTrustUI(SelectedTrust);
 			}
             Playtime=0;
@@ -402,6 +403,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 			mapBlock = Instantiate(bossMapBlockPrefabs[0]).GetComponent<MapBlock>();
 		}
 		PlayerController.inst.transform.position = mapBlock.startPoint.position;
+        InGameUIManager.inst.trustUI.SetActive(false);
 	}
 
 	public void GenerateGalleryBossMap()

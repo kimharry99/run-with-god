@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 public class InGameUIManager : SingletonBehaviour<InGameUIManager>
 {
 	public Text trustText;
+    public GameObject trustUI;
 
 	public GameObject[] lifeUIs = new GameObject[3];
     public GameObject[] ExplodeUIs = new GameObject[5];
