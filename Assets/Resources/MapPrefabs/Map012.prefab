@@ -84,6 +84,32 @@ MonoBehaviour:
   startPoint: {fileID: 4578226786758679443}
   difficulty: 0
   isMonster: 01010100000000
+--- !u!61 &8436425040888137037
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7740206019059873731}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.00013542175, y: 11.089456}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 10, y: 10}
+    newSize: {x: 103.75, y: 5}
+    adaptiveTilingThreshold: 0.4
+    drawMode: 2
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 104.45186, y: 24.531}
+  m_EdgeRadius: 0
 --- !u!1 &4251854229170920404
 GameObject:
   m_ObjectHideFlags: 0
@@ -1789,17 +1815,17 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: 0.125
       objectReference: {fileID: 0}
+    - target: {fileID: 6252474147595315179, guid: d3827c7588dc9de408f9da00ea6a91ff,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 5.45
+      objectReference: {fileID: 0}
     - target: {fileID: 8002748743059133978, guid: d3827c7588dc9de408f9da00ea6a91ff,
         type: 3}
       propertyPath: m_SpriteTilingProperty.newSize.y
       value: 5.45
       objectReference: {fileID: 0}
     - target: {fileID: 8002748743059133978, guid: d3827c7588dc9de408f9da00ea6a91ff,
-        type: 3}
-      propertyPath: m_Size.y
-      value: 5.45
-      objectReference: {fileID: 0}
-    - target: {fileID: 6252474147595315179, guid: d3827c7588dc9de408f9da00ea6a91ff,
         type: 3}
       propertyPath: m_Size.y
       value: 5.45
@@ -2131,6 +2157,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 59025678414299b4ba29ea0c67e0863f, type: 3}
+--- !u!1 &7740206019059873731 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6844019854227740552, guid: 59025678414299b4ba29ea0c67e0863f,
+    type: 3}
+  m_PrefabInstance: {fileID: 3859703175742251083}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7534362891230031590 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6710087157122780845, guid: 59025678414299b4ba29ea0c67e0863f,
