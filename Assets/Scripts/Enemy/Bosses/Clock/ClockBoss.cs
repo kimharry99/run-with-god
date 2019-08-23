@@ -189,10 +189,12 @@ public class ClockBoss : Boss
         float rand = Random.Range(0f, 100f);
         if (rand < 25)
         {
+            anim.SetTrigger("Backward");
             StartCoroutine(ChangeTimeSpeedRoutine(-1f));
         }
         else if (rand < 50)
         {
+            anim.SetTrigger("Slowdown");
             StartCoroutine(ChangeTimeSpeedRoutine(0.5f));
         }
         else if (rand < 75)
@@ -201,6 +203,7 @@ public class ClockBoss : Boss
         }
         else
         {
+            anim.SetTrigger("Forward");
             StartCoroutine(ChangeTimeSpeedRoutine(2f));
         }
     }
