@@ -27,6 +27,8 @@ public class VampireBoss : Boss
     [SerializeField]
     private float[] patternDelayCoffiecient;
     [SerializeField]
+    private float[] patternVelocity;
+    [SerializeField]
     private GameObject alterPrefab;
     [SerializeField]
     private GameObject bloodPillarPrefab;
@@ -94,9 +96,9 @@ public class VampireBoss : Boss
 			    {
 				    stateMachine.Transition("p1to2");
 			    }
-			transform.position += (destination - transform.position).normalized * Time.deltaTime;
-			if (Vector3.Distance(transform.position, destination) < 0.01f)
-				destination = RandomInsideMap;
+			transform.position += (destination - transform.position).normalized * Time.deltaTime*patternVelocity[difficulty+3];
+            if (Vector3.Distance(transform.position, destination) < 0.01f)
+                destination = Vector3.Lerp(RandomInsideMap, transform.position,0.5f);
 		};
 		phase2.Enter += delegate { nextPatternTimer = nextPatternTimePhase2[difficulty+3]; };
 		phase2.StateUpdate += delegate {
