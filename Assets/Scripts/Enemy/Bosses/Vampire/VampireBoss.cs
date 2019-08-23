@@ -184,7 +184,7 @@ public class VampireBoss : Boss
 		const float laserTime = 5;
 		yield return new WaitForSeconds(2);
 		bloodLaser.enabled = true;
-		bloodLaser.SetPosition(0, transform.position);
+		bloodLaser.SetPosition(0, transform.position+new Vector3(0,0.15f,0));
 		for (float t = 0; t < laserTime; t += Time.deltaTime)
         {
             float rotationZ = 360 * laserCurve.Evaluate(t / laserTime);
