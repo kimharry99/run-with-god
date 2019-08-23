@@ -596,12 +596,16 @@ public class PlayerController : SingletonBehaviour<PlayerController>
     {
         if (Input.GetKeyDown(KeyCode.K))
         {
-            Life = 3;
-            Debug.Log(Life);
+            Life = 5;
         }
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             StartCoroutine(DeadRoutine());
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            if(SceneManager.GetActiveScene().name == "InGameScene")
+            SceneManager.LoadScene("TrustSelection");
         }
     }
 
