@@ -147,14 +147,14 @@ public class GameManager : SingletonBehaviour<GameManager>
 		}
 		if (scene.name == "InGameScene")
 		{
-			if (SelectedTrust != null)
+            PlayerController.inst.ResetPlayer();
+            if (SelectedTrust != null)
 			{
 				SelectedTrust.Init();
 				InGameUIManager.inst.UpdateTrustUI(SelectedTrust);
 			}
             Playtime=0;
 			GenerateMap();
-			PlayerController.inst.ResetPlayer();
 		}
 		if (scene.name == "Boss")
 		{
