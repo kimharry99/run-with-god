@@ -5,11 +5,16 @@ using UnityEngine;
 public abstract class Boss : NormalEnemy
 {
 	public int difficulty;
+    public float[] healthCoifficient;
 
 	protected override void Start()
 	{
-		base.Start();
-		difficulty = GetComponentInParent<MapBlock>().difficulty;
+        base.Start();
+        difficulty = GetComponentInParent<MapBlock>().difficulty;
+        Health = (int)(maxHealth * healthCoifficient[difficulty+3]);
+        print(difficulty+3);
+        maxHealth = Health;
+        print(Health);
 		InGameUIManager.inst.UpdateBossHelthUI(Health);
 	}
 
