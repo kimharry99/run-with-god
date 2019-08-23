@@ -50,7 +50,11 @@ public class TrustSelector : MonoBehaviour
 
 	public void InitTrustSelector(Trust trust)
 	{
-		this.Trust = trust;
+        this.Trust = trust;
+        if (trust == null)
+        {
+            gameObject.SetActive(false);
+        }
 	}
     /// <summary>
     /// Called when player is nearby

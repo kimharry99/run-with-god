@@ -347,6 +347,14 @@ MonoBehaviour:
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   hitColor: {r: 1, g: 0.75, b: 0, a: 1}
   difficulty: 0
+  healthCoifficient:
+  - 1.2
+  - 1
+  - 0.8
+  - 0.6
+  - 0.8
+  - 1
+  - 1.2
   anchor: {fileID: 2414646356870268181}
   attackRange: {fileID: 1938621065925136768}
   shockwaveRange: {fileID: 2414646356313441050}
@@ -465,7 +473,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 1829785b7147d3549bd89b5710128896, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3f6a5723a65a36c4896fd9303863719f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -522,7 +530,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 4.2, y: 4.6}
+    oldSize: {x: 4, y: 4.5}
     newSize: {x: 4.2, y: 4.6}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -772,7 +780,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 1829785b7147d3549bd89b5710128896, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3f6a5723a65a36c4896fd9303863719f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -829,7 +837,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 4.2, y: 4.6}
+    oldSize: {x: 4, y: 4.5}
     newSize: {x: 4.2, y: 4.6}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -3031,21 +3039,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2414646354900786784}
     m_Modifications:
-    - target: {fileID: 6844019854227740552, guid: edac695b8400f2d489f134c43bc07efe,
-        type: 3}
-      propertyPath: m_Name
-      value: stoneBackGroundTile (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
-        type: 3}
-      propertyPath: m_Size.x
-      value: 108.54121
-      objectReference: {fileID: 0}
-    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
-        type: 3}
-      propertyPath: m_Size.y
-      value: 90.74091
-      objectReference: {fileID: 0}
     - target: {fileID: 6710087157122780845, guid: edac695b8400f2d489f134c43bc07efe,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3100,6 +3093,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6844019854227740552, guid: edac695b8400f2d489f134c43bc07efe,
+        type: 3}
+      propertyPath: m_Name
+      value: stoneBackGroundTile (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 108.54121
+      objectReference: {fileID: 0}
+    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 90.74091
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: edac695b8400f2d489f134c43bc07efe, type: 3}
@@ -3801,36 +3809,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2414646354900786784}
     m_Modifications:
-    - target: {fileID: 6844019854227740552, guid: edac695b8400f2d489f134c43bc07efe,
-        type: 3}
-      propertyPath: m_Name
-      value: stoneBackGroundTile
-      objectReference: {fileID: 0}
-    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 0.4528302
-      objectReference: {fileID: 0}
-    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 0.4528302
-      objectReference: {fileID: 0}
-    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 0.4528302
-      objectReference: {fileID: 0}
-    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
-        type: 3}
-      propertyPath: m_Size.x
-      value: 19.099674
-      objectReference: {fileID: 0}
-    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
-        type: 3}
-      propertyPath: m_Size.y
-      value: 126.088394
-      objectReference: {fileID: 0}
     - target: {fileID: 6710087157122780845, guid: edac695b8400f2d489f134c43bc07efe,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3895,6 +3873,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.y
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6844019854227740552, guid: edac695b8400f2d489f134c43bc07efe,
+        type: 3}
+      propertyPath: m_Name
+      value: stoneBackGroundTile
+      objectReference: {fileID: 0}
+    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.4528302
+      objectReference: {fileID: 0}
+    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.4528302
+      objectReference: {fileID: 0}
+    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.4528302
+      objectReference: {fileID: 0}
+    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 19.099674
+      objectReference: {fileID: 0}
+    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 126.088394
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: edac695b8400f2d489f134c43bc07efe, type: 3}
@@ -4421,36 +4429,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2414646354900786784}
     m_Modifications:
-    - target: {fileID: 6844019854227740552, guid: edac695b8400f2d489f134c43bc07efe,
-        type: 3}
-      propertyPath: m_Name
-      value: stoneBackGroundTile (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
-        type: 3}
-      propertyPath: m_Size.x
-      value: 19.099674
-      objectReference: {fileID: 0}
-    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
-        type: 3}
-      propertyPath: m_Size.y
-      value: 126.088394
-      objectReference: {fileID: 0}
-    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 0.4528302
-      objectReference: {fileID: 0}
-    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 0.4528302
-      objectReference: {fileID: 0}
-    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 0.4528302
-      objectReference: {fileID: 0}
     - target: {fileID: 6710087157122780845, guid: edac695b8400f2d489f134c43bc07efe,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4515,6 +4493,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.y
       value: 0.099999994
+      objectReference: {fileID: 0}
+    - target: {fileID: 6844019854227740552, guid: edac695b8400f2d489f134c43bc07efe,
+        type: 3}
+      propertyPath: m_Name
+      value: stoneBackGroundTile (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 19.099674
+      objectReference: {fileID: 0}
+    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 126.088394
+      objectReference: {fileID: 0}
+    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.4528302
+      objectReference: {fileID: 0}
+    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.4528302
+      objectReference: {fileID: 0}
+    - target: {fileID: 5510749459343939647, guid: edac695b8400f2d489f134c43bc07efe,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.4528302
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: edac695b8400f2d489f134c43bc07efe, type: 3}
