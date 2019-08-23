@@ -9733,6 +9733,9 @@ MonoBehaviour:
   shotSFX: {fileID: 0}
   deathSFX: {fileID: 0}
   hit: {fileID: 937717127}
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  hitColor: {r: 1, g: 0.75, b: 0, a: 1}
+  difficulty: 0
   handOrigin: {fileID: 3408166795411779872}
   hourHand: {fileID: 6328113979906446588}
   minuteHand: {fileID: 5190599752779090849}
@@ -10387,6 +10390,7 @@ MonoBehaviour:
   rightJoint: {fileID: 0}
   startPoint: {fileID: 2514380951234378670}
   difficulty: 0
+  isMonster: 00000000000000
 --- !u!1 &4015426589374412563
 GameObject:
   m_ObjectHideFlags: 0
@@ -11755,11 +11759,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3408166795567611032}
     m_Modifications:
-    - target: {fileID: 7510235709339390430, guid: cf5b43d29a393fa4cb369c6042b07403,
-        type: 3}
-      propertyPath: m_Name
-      value: HitEffect
-      objectReference: {fileID: 0}
     - target: {fileID: 5305772299146487040, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
       propertyPath: moveWithTransform
@@ -11879,6 +11878,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7510235709339390430, guid: cf5b43d29a393fa4cb369c6042b07403,
+        type: 3}
+      propertyPath: m_Name
+      value: HitEffect
       objectReference: {fileID: 0}
     - target: {fileID: 4138772146777199517, guid: cf5b43d29a393fa4cb369c6042b07403,
         type: 3}
@@ -12641,6 +12645,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3408166796621750012}
     m_Modifications:
+    - target: {fileID: 6844019854227740552, guid: 59025678414299b4ba29ea0c67e0863f,
+        type: 3}
+      propertyPath: m_Name
+      value: stoneBackGroundTile
+      objectReference: {fileID: 0}
     - target: {fileID: 6710087157122780845, guid: 59025678414299b4ba29ea0c67e0863f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -12696,11 +12705,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6844019854227740552, guid: 59025678414299b4ba29ea0c67e0863f,
-        type: 3}
-      propertyPath: m_Name
-      value: stoneBackGroundTile
-      objectReference: {fileID: 0}
     - target: {fileID: 5510749459343939647, guid: 59025678414299b4ba29ea0c67e0863f,
         type: 3}
       propertyPath: m_SortingLayerID
@@ -12741,6 +12745,11 @@ PrefabInstance:
       propertyPath: m_Size.y
       value: 104.39671
       objectReference: {fileID: 0}
+    - target: {fileID: 5510749459343939647, guid: 59025678414299b4ba29ea0c67e0863f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: cb4163bc56f9fc140b5f80f83941dc61, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 59025678414299b4ba29ea0c67e0863f, type: 3}
 --- !u!4 &4056004315326541067 stripped
