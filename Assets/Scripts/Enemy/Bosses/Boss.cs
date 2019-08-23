@@ -11,10 +11,8 @@ public abstract class Boss : NormalEnemy
 	{
         base.Start();
         difficulty = GetComponentInParent<MapBlock>().difficulty;
-        Health = (int)(maxHealth * healthCoifficient[difficulty+3]);
-        print(difficulty+3);
-        maxHealth = Health;
-        print(Health);
+        maxHealth = (int)(maxHealth * healthCoifficient[difficulty+3]);
+        Health = maxHealth;
 		InGameUIManager.inst.UpdateBossHelthUI(Health);
 	}
 
