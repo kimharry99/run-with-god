@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class TitleUIManager : MonoBehaviour
 {
 	public Slider difficultySlider;
+    public GameObject upperCanvas;
 
 	public void SetGalleryDifficulty()
 	{
@@ -22,4 +23,14 @@ public class TitleUIManager : MonoBehaviour
 	{
 		SceneManager.LoadScene("Boss_Gallery");
 	}
+
+    public void OnSelectMainGameButtonClicked()
+    {
+        SceneManager.LoadScene("TrustSelection");
+    }
+
+    public void OnBossGalleryButtonClicked()
+    {
+        upperCanvas.SetActive(false);
+    }
 }
