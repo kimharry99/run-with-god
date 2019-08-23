@@ -664,6 +664,14 @@ MonoBehaviour:
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   hitColor: {r: 1, g: 0.75, b: 0, a: 1}
   difficulty: 0
+  healthCoifficient:
+  - 0.7
+  - 0.7
+  - 0.5
+  - 0.5
+  - 0.6
+  - 0.8
+  - 1
   mapBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 8, y: 9, z: 0}
@@ -4516,6 +4524,7 @@ MonoBehaviour:
   rightJoint: {fileID: 0}
   startPoint: {fileID: 959294346707574916}
   difficulty: 0
+  isMonster: 00000000000000
 --- !u!1 &3833542659040470654
 GameObject:
   m_ObjectHideFlags: 0
