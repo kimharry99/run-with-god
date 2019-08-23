@@ -539,10 +539,12 @@ public class PlayerController : SingletonBehaviour<PlayerController>
                 }
                 yield return null;
             }
+			
 			graceTimer = 0.3f;
 
-			playerAnimator.SetBool("isRunning", false);
-			playerAnimator.SetBool("isGround", IsGround);
+			playerAnimator.SetBool("isStamp", true);
+			//playerAnimator.SetBool("isRunning", false);
+			//playerAnimator.SetBool("isGround", IsGround);
 			rb.gravityScale = 1;
 			CameraController.Shake(0.2f, 0.5f);
 			SoundManager.inst.PlaySFX(gameObject, boomSFX);
@@ -557,6 +559,7 @@ public class PlayerController : SingletonBehaviour<PlayerController>
 			}
 			gameObject.layer = LayerMask.NameToLayer("Player");
 		}
+		playerAnimator.SetBool("isStamp", false);
 		playerState.Transition("idle");
 	}
 
