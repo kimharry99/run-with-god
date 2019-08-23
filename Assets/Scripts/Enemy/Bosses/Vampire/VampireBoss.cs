@@ -80,10 +80,11 @@ public class VampireBoss : Boss
 			{
 				stateMachine.Transition("pattern" + Random.Range(1, 5).ToString());
 			}
-			if (Health <= maxHealth / 2)
-			{
-				stateMachine.Transition("p1to2");
-			}
+            if(!(difficulty<2&&difficulty>-2))
+			    if (Health <= maxHealth / 2)
+			    {
+				    stateMachine.Transition("p1to2");
+			    }
 			transform.position += (destination - transform.position).normalized * Time.deltaTime;
 			if (Vector3.Distance(transform.position, destination) < 0.01f)
 				destination = RandomInsideMap;
