@@ -179,9 +179,10 @@ public abstract class NormalEnemy : MonoBehaviour
 	{
         if (rb != null)
             rb.simulated = false;
+        if (GetComponent<Collider2D>().enabled)
+            GameManager.inst.OnEnemyKill(Type);
         if (GetComponent<Collider2D>() != null)
             GetComponent<Collider2D>().enabled = false;
-		GameManager.inst.OnEnemyKill(Type);
         if (deathSFX != null)
             SoundManager.inst.PlaySFX(gameObject, deathSFX, 0.5f);
         StartCoroutine(DissolveEffectRoutine(1));
